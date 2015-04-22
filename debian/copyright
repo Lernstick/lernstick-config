@@ -1,7 +1,4 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: live-config-foobar
-Upstream-Contact: John Doe <john@example.org>
-Source: http://www.example.org/foobar/
 Comment:
  This package is based on the live-config-foobar example package
  included in live-config which can be obtained from
@@ -9,7 +6,8 @@ Comment:
 
 Files: *
 Copyright: 2006-2014 Daniel Baumann <mail@daniel-baumann.ch>
-           2014 John Doe <john@example.org>
+           2015 Ronny Standtke <ronny.standtke@fhnw.ch>
+           2015 Gaudenz Steinlin <gaudenz@debian.org>
 License: GPL-3+
 
 License: GPL-3+

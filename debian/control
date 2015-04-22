@@ -1,18 +1,19 @@
-Source: live-config-foobar
+Source: lernstick-config
 Section: misc
 Priority: extra
-Maintainer: John Doe <john@example.org>
+Maintainer: Ronny Standtke <ronny.standtke@fhnw.ch>
+Uploaders: Gaudenz Steinlin <gaudenz@debian.org>
 Build-Depends: debhelper (>= 9)
 Standards-Version: 3.9.4
-Homepage: http://www.example.org/foobar/
-Vcs-Browser: http://git.example.org/?p=live-config-foobar.git
-Vcs-Git: git://git.example.org/git/live-config-foobar.git
+Homepage: http://www.imedias.ch/lernstick/
+Vcs-Browser: https://github.com/imedias/lernstick-config
+Vcs-Git: https://github.com/imedias/lernstick-config.git
 
-Package: live-config-foobar
+Package: lernstick-config
 Architecture: all
 Depends: ${misc:Depends}, live-config (>= 4), live-config (<< 5)
-Description: Additional Live System Configuration Components (foobar)
+Description: Lernstick Live System Configuration Components
  live-config contains the components that configure a live system during the
  boot process (late userspace).
  .
- This package contains the additional foobar component(s).
+ This package contains the additional Lernstick components.
