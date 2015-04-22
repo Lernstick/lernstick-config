@@ -1,0 +1,9 @@
+#!/bin/sh -e
+#
+# Description: Remove the phonon source device config file. This contains
+#              device specific configuration and may be different on different
+#              hardware
+#
+
+echo -n " lernstick-phonon"
+rm -f /home/user/.kde/share/config/phonondevicesrc
