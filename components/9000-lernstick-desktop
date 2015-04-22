@@ -1,0 +1,75 @@
+#!/bin/sh -e
+#
+# Description: Desktop selection, configures x-session-manager and default display manager
+#              Must run after 1140-xserver-xorg from live-config
+#
+
+echo -n " lernstick-desktop"
+
+LOGFILE=/var/log/lernstick-desktop
+
+for _PARAMETER in $(cat /proc/cmdline)
+do
+	case "${_PARAMETER}" in
+		desktop=*)
+			LERNSTICK_DESKTOP="${_PARAMETER#*desktop=}"
+			;;
+	esac
+done
+
+echo "LERNSTICK_DESKTOP: \"${LERNSTICK_DESKTOP}\"" > ${LOGFILE}
+
+# sometimes users end up with an empty .dmrc file
+# this heavily confuses kdm (it starts just gnome-terminal) and makes users mad
+# therefore we always remove this file here
+rm -f /home/user/.dmrc
+
+case "${LERNSTICK_DESKTOP}" in
+        kde)
+                echo "setting up kde as default desktop" >> ${LOGFILE}
+                update-alternatives --set x-session-manager /usr/bin/startkde >> ${LOGFILE} 2>&1
+                echo "/usr/bin/kdm" > /etc/X11/default-display-manager
+                ;;
+
+        gnome)
+                echo "setting up gnome as default desktop" >> ${LOGFILE}
+                update-alternatives --set x-session-manager /usr/bin/gnome-session >> ${LOGFILE} 2>&1
+                echo "/usr/sbin/gdm3" > /etc/X11/default-display-manager
+                ;;
+
+        xfce)
+                echo "setting up xfce as default desktop" >> ${LOGFILE}
+		cat > /home/user/.dmrc << EOF
+[Desktop]
+Session=xfce
+EOF
+                echo "/usr/bin/kdm" > /etc/X11/default-display-manager
+                ;;
+
+
+        lxde)
+                echo "setting up lxde as default desktop" >> ${LOGFILE}
+		cat > /home/user/.dmrc << EOF
+[Desktop]
+Session=LXDE
+EOF
+                echo "/usr/bin/kdm" > /etc/X11/default-display-manager
+                ;;
+
+        sugar)
+                echo "setting up sugar as default desktop" >> ${LOGFILE}
+		cat > /home/user/.dmrc << EOF
+[Desktop]
+Session=sugar
+EOF
+                echo "/usr/bin/kdm" > /etc/X11/default-display-manager
+                ;;
+
+        no)
+                echo "setting up terminal as default desktop" >> ${LOGFILE}
+                echo "" > /etc/X11/default-display-manager
+                ;;
+esac
+
+echo "done." >> ${LOGFILE}
+
