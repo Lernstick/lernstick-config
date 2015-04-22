@@ -1,0 +1,203 @@
+#!/bin/bash -e
+#
+# Description: Set the current values as defaults for the next boot in
+#              isolinux/syslinux and grub config
+#
+
+IMAGE_DIR="/lib/live/mount/medium/"
+
+# the image directory must be remounted writeable
+# so that we can edit the config files
+if ! mount -o remount,rw ${IMAGE_DIR}
+then
+	# it's ok, system was probably booted from iso...
+	exit 0
+fi
+
+echo " lernstick-update-bootmenu"
+
+# determine correct configuration directory
+if [ -d ${IMAGE_DIR}/isolinux/ ]
+then
+	CONFIG_DIR="${IMAGE_DIR}/isolinux"
+elif [ -d ${IMAGE_DIR}/syslinux/ ]
+then
+	CONFIG_DIR="${IMAGE_DIR}/syslinux"
+else
+	echo "no supported configuration found"
+	exit 1
+fi
+
+# check writability of configuration directory
+#
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# ! This test only works reliably with bash on      !
+# ! read-only filesystems! Therefore, do not change !
+# ! the first line with /bin/bash in this script!   !
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+if [ ! -w ${CONFIG_DIR} ]
+then
+	# it's ok, system was probably booted from iso...
+	exit 0
+fi
+
+XMLBOOT_CONFIG="${CONFIG_DIR}/xmlboot.config"
+GRUB_CONFIG="${IMAGE_DIR}/boot/grub/grub.cfg"
+
+# get current append line
+APPEND="$(cat /proc/cmdline | sed -e 's| BOOT_IMAGE=.*||')"
+
+# update configs in xmlboot config file
+select_config()
+{
+	CONFIG_ID="${1}"
+	ATTRIBUTE_ID="${2}"
+	ATTRIBUTE_VALUE="${3}"
+	cat ${XMLBOOT_CONFIG} | \
+	xmlstarlet ed -d "/xmlboot/configs/config[@id='${CONFIG_ID}']/option/@selected" | \
+	xmlstarlet ed -i "/xmlboot/configs/config[@id='${CONFIG_ID}']/option[@${ATTRIBUTE_ID}='${ATTRIBUTE_VALUE}']" \
+		--type attr -n selected -v true > ${XMLBOOT_CONFIG}.tmp
+	mv ${XMLBOOT_CONFIG}.tmp ${XMLBOOT_CONFIG}
+}
+
+set_grub_config()
+{
+	ATTRIBUTE_ID="${1}"
+	ATTRIBUTE_VALUE="${2}"
+	sed -i "0,/${ATTRIBUTE_ID}/{s/${ATTRIBUTE_ID}=.*/${ATTRIBUTE_ID}=\"${ATTRIBUTE_VALUE}\"/}" "${GRUB_CONFIG}"
+}
+
+for _PARAMETER in ${APPEND}
+do
+	case "${_PARAMETER}" in
+		locales=*)
+			select_config "language" "append" "${_PARAMETER}"
+			LIVE_LOCALES="${_PARAMETER#*locales=}"
+			set_grub_config "LOCALES" "${LIVE_LOCALES}"
+			;;
+
+		keyboard-layouts=*)
+			select_config "keyboard" "append" "${_PARAMETER}"
+			LIVE_KEYBOARD="${_PARAMETER#*keyboard-layouts=}"
+			set_grub_config "KEYBOARD" "${LIVE_KEYBOARD}"
+			;;
+
+		desktop*)
+			LIVE_DESKTOP="${_PARAMETER#*desktop=}"
+			select_config "desktop" "id" "${LIVE_DESKTOP}"
+			if [ "${LIVE_DESKTOP}" = "no" ]
+			then
+				set_grub_config "DESKTOP" "${LIVE_DESKTOP}"
+			else
+				set_grub_config "DESKTOP" "${LIVE_DESKTOP} nottyautologin"
+			fi
+	esac
+done
+
+# special handling for live-media config
+if grep -q "live-media=removable-usb" /proc/cmdline
+then
+	select_config "live-media" "id" "removable-usb"
+	set_grub_config "LIVE_MEDIA" "live-media=removable-usb live-media-timeout=10"
+elif grep -q "live-media=removable" /proc/cmdline
+then
+	select_config "live-media" "id" "removable"
+	set_grub_config "LIVE_MEDIA" "live-media=removable live-media-timeout=10"
+else
+	select_config "live-media" "id" "any"
+	set_grub_config "LIVE_MEDIA" ""
+fi
+
+# update options in xmlboot config file
+deselect_option()
+{
+	cat ${XMLBOOT_CONFIG} | \
+	xmlstarlet ed -d "/xmlboot/options/option[@id='${1}']/@selected" \
+		> ${XMLBOOT_CONFIG}.tmp
+	mv ${XMLBOOT_CONFIG}.tmp ${XMLBOOT_CONFIG}
+}
+
+select_option()
+{
+	cat ${XMLBOOT_CONFIG} | \
+	xmlstarlet ed -d "/xmlboot/options/option[@id='${1}']/@selected" | \
+	xmlstarlet ed -i "/xmlboot/options/option[@id='${1}']" \
+		--type attr -n selected -v true > ${XMLBOOT_CONFIG}.tmp
+	mv ${XMLBOOT_CONFIG}.tmp ${XMLBOOT_CONFIG}
+}
+
+update_selected_option()
+{
+	if grep -q "${1}" /proc/cmdline
+	then
+		select_option "${2}"
+	else
+		deselect_option "${2}"
+	fi
+}
+update_selected_option "swapon" "swap_partition"
+update_selected_option "swapfile=auto" "swap_file"
+update_selected_option "debug=1" "debug"
+
+update_nonselected_option()
+{
+	if ! grep -q "${1}" /proc/cmdline
+	then
+		select_option "${2}"
+	else
+		deselect_option "${2}"
+	fi
+}
+update_nonselected_option "quiet splash" "messages"
+update_nonselected_option "nolapic_timer" "lapic_timer"
+update_nonselected_option "nohz=off" "dynamic_ticks"
+
+CUSTOM_OPTIONS="$(cat /proc/cmdline | grep "custom_options" | sed 's|.*custom_options \(.*\)|\1|1')"
+cat ${XMLBOOT_CONFIG} | \
+xmlstarlet ed -u "/xmlboot/custom_options/@text" -v "${CUSTOM_OPTIONS}" > ${XMLBOOT_CONFIG}.tmp
+mv ${XMLBOOT_CONFIG}.tmp ${XMLBOOT_CONFIG}
+
+# special handling for PAE
+if grep -q initrd2 /proc/cmdline
+then
+	select_option "pae"
+else
+	deselect_option "pae"
+fi
+
+# some more grub specific handling
+update_selected_grub_option()
+{
+	PARAMETER="${1}"
+	ATTRIBUTE_ID="${2}"
+	ATTRIBUTE_VALUE="${3}"
+	if grep -q "${PARAMETER}" /proc/cmdline
+	then
+		set_grub_config "${ATTRIBUTE_ID}" "${ATTRIBUTE_VALUE}"
+	else
+		set_grub_config "${ATTRIBUTE_ID}" ""
+	fi
+}
+update_selected_grub_option "swapon" "SWAP" "swapon"
+update_selected_grub_option "swapfile=auto" "SWAP_FILE" "swapfile=auto"
+update_selected_grub_option "quiet" "QUIET" "quiet splash"
+
+# special handling for persistence
+if grep -q "persistence" /proc/cmdline
+then
+	if grep -q "persistence-read-only" /proc/cmdline
+	then
+		select_config "persistence" "id" "ro"
+		set_grub_config "PERSISTENCE" "persistence persistence-read-only"
+	else
+		select_config "persistence" "id" "rw"
+		set_grub_config "PERSISTENCE" "persistence"
+	fi
+
+else
+	select_config "persistence" "id" "no"
+	set_grub_config "PERSISTENCE" ""
+fi
+
+# remount /live/image read-only
+mount -o remount,ro ${IMAGE_DIR}
