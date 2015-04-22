@@ -50,7 +50,7 @@ activate_fglrx()
 }
 
 # mesa-diverted is the active alternative when xorg drivers are used
-activate_mesa-diverted()
+activate_mesa_diverted()
 {
 	# remove ATI and NVIDIA settings
 	remove_fglrx_settings
@@ -72,7 +72,7 @@ remove_nvidia_settings()
 find_driver() {
     # live-configs X11 driver detection is run first, detect driver from
     # glx alternative, this prints the choosen alternative
-    update-alternatives --display glx | sed -e '2 s|.* /usr/lib/|| ; 2 ! d'
+    update-alternatives --display glx | sed -e '2 s|.* /usr/lib/|| ; 2 ! d ; 2 s|-|_|'
 }
 
 echo -n " lernstick-proprietary-x11-settings-tools"
