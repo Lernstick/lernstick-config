@@ -4,7 +4,7 @@ Priority: extra
 Maintainer: Ronny Standtke <ronny.standtke@fhnw.ch>
 Uploaders: Gaudenz Steinlin <gaudenz@debian.org>
 Build-Depends: debhelper (>= 9)
-Standards-Version: 3.9.4
+Standards-Version: 3.9.6
 Homepage: http://www.imedias.ch/lernstick/
 Vcs-Browser: https://github.com/imedias/lernstick-config
 Vcs-Git: https://github.com/imedias/lernstick-config.git
