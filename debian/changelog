@@ -1,6 +1,17 @@
-lernstick-config (1) UNRELEASED; urgency=low
+lernstick-config (1) lernstick-8; urgency=low
 
   * Initial release based on the live-config-foobar example package
     included in live-config.
+  * [cfae] Initial package skeleton
+  * [3d00] Remove custom compression rule
+  * [83c2] Remove dpkg-source local-options
+  * [6f96] Add Lernstick desktop selection script
+  * [a5f6] Add lernstick-proprietary-x11-settings-tools component
+  * [a07d] Add lernstick-locale component
+  * [62a9] Add lernstick-phonon component
+  * [8b74] Add lernstick-update-bootmenu component
+  * [b2a7] Update Debian standards version to 3.9.6
+  * [65bf] - is not allowed in a POSIX shell function name
+  * [dfd1] Silence test mount command
 
- --
+ -- Gaudenz Steinlin <gaudenz@debian.org>  Wed, 22 Apr 2015 16:05:14 +0200
