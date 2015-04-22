@@ -8,7 +8,7 @@ IMAGE_DIR="/lib/live/mount/medium/"
 
 # the image directory must be remounted writeable
 # so that we can edit the config files
-if ! mount -o remount,rw ${IMAGE_DIR}
+if ! mount -o remount,rw ${IMAGE_DIR} >/dev/null 2>&1
 then
 	# it's ok, system was probably booted from iso...
 	exit 0
