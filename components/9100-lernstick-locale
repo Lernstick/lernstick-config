@@ -1,0 +1,234 @@
+#!/bin/sh -e
+#
+# Description: Configure l10n user settings
+#
+
+# script version, increment if script should rerun even if not changing the
+# language
+VERSION=1
+
+echo -n " lernstick-locale"
+
+# Reading kernel arguments
+for ARGUMENT in $(cat /proc/cmdline)
+do
+	case "${ARGUMENT}" in
+		locales=*)
+			LOCALE="${ARGUMENT#*=}"
+			LANGUAGE=$(echo "${LOCALE}" | awk -F_ '{ print $1 }')
+			;;
+
+	esac
+done
+
+# state file, format LOCALE;VERSION
+LOCALE_STATE_FILE="/var/lib/live/config/lernstick-locale"
+if [ -r ${LOCALE_STATE_FILE} ] && [ "${LOCALE};${VERSION}" = "$(cat ${LOCALE_STATE_FILE})" ]
+then
+    # locale already set, nothing to do
+    exit 0
+else
+    echo "${LOCALE};${VERSION}" > $LOCALE_STATE_FILE
+fi
+
+# Audacity
+if [ -e /home/user/.audacity-data/audacity.cfg ]
+then
+	sed -i -e 's|Language=.*|Language='"${LANGUAGE}"'|1' \
+		/home/user/.audacity-data/audacity.cfg
+fi
+
+# CMAPTools
+if [ -e /home/user/.cmaptools/profile.xml ]
+then
+	sed -i -e '/<property name="language">/,/<\/property>/ s/<string>.*<\/string>/<string>'"${LANGUAGE}"'<\/string>/1' \
+		/home/user/.cmaptools/profile.xml
+fi
+
+# bluej
+BLUEJ_CONFIG_FILE="/home/user/.bluej/bluej.properties"
+set_bluej_language() 
+{
+	if grep -q bluej.language ${BLUEJ_CONFIG_FILE}
+	then
+       	        sed -i -e "s|bluej.language=.*|bluej.language=${1}|1" ${BLUEJ_CONFIG_FILE}
+	else
+       	        echo "bluej.language=${1}" >> ${BLUEJ_CONFIG_FILE}
+	fi
+}
+if [ -e ${BLUEJ_CONFIG_FILE} ]
+then
+	case "${LANGUAGE}" in
+        	de)
+			set_bluej_language "german"
+	                ;;
+
+        	es)
+			set_bluej_language "spanish"
+	                ;;
+
+        	fr)
+			set_bluej_language "french"
+	                ;;
+
+        	it)
+			set_bluej_language "italian"
+        	        ;;
+
+        	pt)
+			set_bluej_language "portuguese"
+        	        ;;
+
+        	ru)
+			set_bluej_language "russian"
+        	        ;;
+
+	        *)
+        	        sed -i -e '/bluej.language=.*/d' ${BLUEJ_CONFIG_FILE}
+                	;;
+	esac
+fi
+
+# tuxtype
+TUXTYPE_CONFIG_FILE="/home/user/.tuxtype/settings.txt"
+if [ -e ${TUXTYPE_CONFIG_FILE} ]
+then
+	case "${LANGUAGE}" in
+        	de)
+        	        sed -i -e 's|lang=.*|lang=deutsch|1' ${TUXTYPE_CONFIG_FILE}
+	                ;;
+
+        	es)
+        	        sed -i -e 's|lang=.*|lang=espanol|1' ${TUXTYPE_CONFIG_FILE}
+	                ;;
+
+        	fr)
+        	        sed -i -e 's|lang=.*|lang=french|1' ${TUXTYPE_CONFIG_FILE}
+	                ;;
+
+        	it)
+        	        sed -i -e 's|lang=.*|lang=italian|1' ${TUXTYPE_CONFIG_FILE}
+        	        ;;
+
+	        *)
+        	        sed -i -e 's|lang=.*|lang=english|1' ${TUXTYPE_CONFIG_FILE}
+                	;;
+	esac
+fi
+
+# armagetronad
+ARMAGETRONAD_CONFIG_FILE="/home/user/.armagetronad/var/user.cfg"
+if [ -e ${ARMAGETRONAD_CONFIG_FILE} ]
+then
+	case "${LANGUAGE}" in
+        	de)
+			ARMAGETRON_LANGUAGE="Deutsch"
+			PLAYER="Spieler"
+	                ;;
+
+        	es)
+			ARMAGETRON_LANGUAGE="Spanish"
+			PLAYER="Jugador"
+	                ;;
+
+        	fr)
+			ARMAGETRON_LANGUAGE="Francais"
+			PLAYER="Joueur"
+	                ;;
+
+	        *)
+			ARMAGETRON_LANGUAGE="American English"
+			PLAYER="Player"
+                	;;
+	esac
+	sed -i -e 's|LANGUAGE_FIRST .*|LANGUAGE_FIRST '"${ARMAGETRON_LANGUAGE}"'|1' \
+		-e 's|LANGUAGE_SECOND .*|LANGUAGE_SECOND '"${ARMAGETRON_LANGUAGE}"'|1' \
+		-e 's| PLAYER_1 .*| PLAYER_1 '"${PLAYER}"' 1|1' \
+		-e 's| PLAYER_2 .*| PLAYER_2 '"${PLAYER}"' 2|1' \
+		-e 's| PLAYER_3 .*| PLAYER_3 '"${PLAYER}"' 3|1' \
+		-e 's| PLAYER_4 .*| PLAYER_4 '"${PLAYER}"' 4|1' \
+		${ARMAGETRONAD_CONFIG_FILE}
+fi
+
+# extremetuxracer
+ETRACER_CONFIG_FILE="/home/user/.etracer/options"
+if [ -e ${ETRACER_CONFIG_FILE} ]
+then
+	case "${LANGUAGE}" in
+        	de)
+			ETRACER_LANGUAGE="de_DE"
+	                ;;
+
+        	es)
+			ETRACER_LANGUAGE="es_ES"
+	                ;;
+
+        	fr)
+			ETRACER_LANGUAGE="fr_FR"
+	                ;;
+
+        	it)
+			ETRACER_LANGUAGE="it_IT"
+	                ;;
+
+	        *)
+			ETRACER_LANGUAGE="en_GB"
+                	;;
+	esac
+	sed -i -e 's|set ui_language .*|set ui_language "'"${ETRACER_LANGUAGE}"'"|1' \
+		${ETRACER_CONFIG_FILE}
+fi
+
+# xmoto
+XMOTO_CONFIG_FILE="/home/user/.xmoto/xm.db"
+if [ -e ${XMOTO_CONFIG_FILE} ]
+then
+	case "${LANGUAGE}" in
+        	de)
+			XMOTO_LANGUAGE="de_DE"
+	                ;;
+
+        	es)
+			XMOTO_LANGUAGE="es_ES"
+	                ;;
+
+        	fr)
+			XMOTO_LANGUAGE="fr_FR"
+	                ;;
+
+        	it)
+			XMOTO_LANGUAGE="it_IT"
+	                ;;
+
+	        *)
+			XMOTO_LANGUAGE="en_US"
+                	;;
+	esac
+	sqlite3 ${XMOTO_CONFIG_FILE} "update profiles_configs set value=\"${XMOTO_LANGUAGE=}\" where key=\"Language\";"
+fi
+
+# kiki the nanobot
+KIKI_CONFIG_FILE="/home/user/.kiki.cfg"
+if [ -e ${KIKI_CONFIG_FILE} ]
+then
+	case "${LANGUAGE}" in
+        	de)
+			KIKI_LANGUAGE="german"
+	                ;;
+
+        	es)
+			KIKI_LANGUAGE="spanish"
+	                ;;
+
+        	fr)
+			KIKI_LANGUAGE="francaise"
+	                ;;
+
+	        *)
+			KIKI_LANGUAGE="english"
+                	;;
+	esac
+	sed -i -e 's|language =.*|language = '"${KIKI_LANGUAGE}"'|g' \
+		${KIKI_CONFIG_FILE}
+fi
+
