@@ -4,55 +4,49 @@
 #              isolinux/syslinux and grub config
 #
 
-IMAGE_DIR="/lib/live/mount/medium/"
-
-# the image directory must be remounted writeable
-# so that we can edit the config files
-if ! mount -o remount,rw ${IMAGE_DIR} >/dev/null 2>&1
-then
-	# it's ok, system was probably booted from iso...
-	exit 0
-fi
+# this tends to change from release to release...
+BOOT_LABEL="boot"
+LIVE_MOUNTPOINT="/lib/live/mount/medium"
+LOGFILE=/var/log/live-update-bootmenu
 
 echo " lernstick-update-bootmenu"
 
-# determine correct configuration directory
-if [ -d ${IMAGE_DIR}/isolinux/ ]
-then
-	CONFIG_DIR="${IMAGE_DIR}/isolinux"
-elif [ -d ${IMAGE_DIR}/syslinux/ ]
-then
-	CONFIG_DIR="${IMAGE_DIR}/syslinux"
-else
-	echo "no supported configuration found"
-	exit 1
-fi
+> ${LOGFILE}
 
-# check writability of configuration directory
-#
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# ! This test only works reliably with bash on      !
-# ! read-only filesystems! Therefore, do not change !
-# ! the first line with /bin/bash in this script!   !
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-if [ ! -w ${CONFIG_DIR} ]
-then
-	# it's ok, system was probably booted from iso...
-	exit 0
-fi
+get_partition() {
+	NUMBER=$1
+	echo ${SYSTEM_PARTITION} | sed "s|\(/dev/[a-z]*\).*|\1${NUMBER}|"
+}
 
-XMLBOOT_CONFIG="${CONFIG_DIR}/xmlboot.config"
-GRUB_CONFIG="${IMAGE_DIR}/boot/grub/grub.cfg"
+get_partition_label() {
+	PARTITION=$1
+	echo "$(/sbin/blkid ${PARTITION} -o udev | grep "ID_FS_LABEL=" | awk -F= '{ print $2 }')"
+}
 
-# get current append line
-APPEND="$(cat /proc/cmdline | sed -e 's| BOOT_IMAGE=.*||')"
+get_partition_fstype() {
+	PARTITION=$1
+	echo "$(/sbin/blkid ${PARTITION} -o udev | grep "ID_FS_TYPE=" | awk -F= '{ print $2 }')"
+}
 
-# update configs in xmlboot config file
+get_mountpoint() {
+	PARTITION=$1
+	echo "$(cat /proc/mounts | grep ${PARTITION} | awk '{ print $2 }')"
+}
+
+mount_boot_partition() {
+	BOOT_PARTITION=$1
+	echo "Temporary mount of boot partition ..." >> ${LOGFILE}
+	udisks --mount ${BOOT_PARTITION}  >> ${LOGFILE} 2>&1
+	IMAGE_DIR="$(get_mountpoint ${BOOT_PARTITION})"
+	BOOT_TMP_MOUNT="true"
+}
+
 select_config()
 {
 	CONFIG_ID="${1}"
 	ATTRIBUTE_ID="${2}"
 	ATTRIBUTE_VALUE="${3}"
+	echo "select_config ${1} ${2} ${3}" >> ${LOGFILE}
 	cat ${XMLBOOT_CONFIG} | \
 	xmlstarlet ed -d "/xmlboot/configs/config[@id='${CONFIG_ID}']/option/@selected" | \
 	xmlstarlet ed -i "/xmlboot/configs/config[@id='${CONFIG_ID}']/option[@${ATTRIBUTE_ID}='${ATTRIBUTE_VALUE}']" \
@@ -64,53 +58,13 @@ set_grub_config()
 {
 	ATTRIBUTE_ID="${1}"
 	ATTRIBUTE_VALUE="${2}"
+	echo "set_grub_config ${1} ${2}" >> ${LOGFILE}
 	sed -i "0,/${ATTRIBUTE_ID}/{s/${ATTRIBUTE_ID}=.*/${ATTRIBUTE_ID}=\"${ATTRIBUTE_VALUE}\"/}" "${GRUB_CONFIG}"
 }
 
-for _PARAMETER in ${APPEND}
-do
-	case "${_PARAMETER}" in
-		locales=*)
-			select_config "language" "append" "${_PARAMETER}"
-			LIVE_LOCALES="${_PARAMETER#*locales=}"
-			set_grub_config "LOCALES" "${LIVE_LOCALES}"
-			;;
-
-		keyboard-layouts=*)
-			select_config "keyboard" "append" "${_PARAMETER}"
-			LIVE_KEYBOARD="${_PARAMETER#*keyboard-layouts=}"
-			set_grub_config "KEYBOARD" "${LIVE_KEYBOARD}"
-			;;
-
-		desktop*)
-			LIVE_DESKTOP="${_PARAMETER#*desktop=}"
-			select_config "desktop" "id" "${LIVE_DESKTOP}"
-			if [ "${LIVE_DESKTOP}" = "no" ]
-			then
-				set_grub_config "DESKTOP" "${LIVE_DESKTOP}"
-			else
-				set_grub_config "DESKTOP" "${LIVE_DESKTOP} nottyautologin"
-			fi
-	esac
-done
-
-# special handling for live-media config
-if grep -q "live-media=removable-usb" /proc/cmdline
-then
-	select_config "live-media" "id" "removable-usb"
-	set_grub_config "LIVE_MEDIA" "live-media=removable-usb live-media-timeout=10"
-elif grep -q "live-media=removable" /proc/cmdline
-then
-	select_config "live-media" "id" "removable"
-	set_grub_config "LIVE_MEDIA" "live-media=removable live-media-timeout=10"
-else
-	select_config "live-media" "id" "any"
-	set_grub_config "LIVE_MEDIA" ""
-fi
-
-# update options in xmlboot config file
 deselect_option()
 {
+	echo "deselect_option ${1}" >> ${LOGFILE}
 	cat ${XMLBOOT_CONFIG} | \
 	xmlstarlet ed -d "/xmlboot/options/option[@id='${1}']/@selected" \
 		> ${XMLBOOT_CONFIG}.tmp
@@ -119,6 +73,7 @@ deselect_option()
 
 select_option()
 {
+	echo "select_option ${1}" >> ${LOGFILE}
 	cat ${XMLBOOT_CONFIG} | \
 	xmlstarlet ed -d "/xmlboot/options/option[@id='${1}']/@selected" | \
 	xmlstarlet ed -i "/xmlboot/options/option[@id='${1}']" \
@@ -135,9 +90,6 @@ update_selected_option()
 		deselect_option "${2}"
 	fi
 }
-update_selected_option "swapon" "swap_partition"
-update_selected_option "swapfile=auto" "swap_file"
-update_selected_option "debug=1" "debug"
 
 update_nonselected_option()
 {
@@ -148,24 +100,7 @@ update_nonselected_option()
 		deselect_option "${2}"
 	fi
 }
-update_nonselected_option "quiet splash" "messages"
-update_nonselected_option "nolapic_timer" "lapic_timer"
-update_nonselected_option "nohz=off" "dynamic_ticks"
 
-CUSTOM_OPTIONS="$(cat /proc/cmdline | grep "custom_options" | sed 's|.*custom_options \(.*\)|\1|1')"
-cat ${XMLBOOT_CONFIG} | \
-xmlstarlet ed -u "/xmlboot/custom_options/@text" -v "${CUSTOM_OPTIONS}" > ${XMLBOOT_CONFIG}.tmp
-mv ${XMLBOOT_CONFIG}.tmp ${XMLBOOT_CONFIG}
-
-# special handling for PAE
-if grep -q initrd2 /proc/cmdline
-then
-	select_option "pae"
-else
-	deselect_option "pae"
-fi
-
-# some more grub specific handling
 update_selected_grub_option()
 {
 	PARAMETER="${1}"
@@ -178,26 +113,215 @@ update_selected_grub_option()
 		set_grub_config "${ATTRIBUTE_ID}" ""
 	fi
 }
-update_selected_grub_option "swapon" "SWAP" "swapon"
-update_selected_grub_option "swapfile=auto" "SWAP_FILE" "swapfile=auto"
-update_selected_grub_option "quiet" "QUIET" "quiet splash"
 
-# special handling for persistence
-if grep -q "persistence" /proc/cmdline
-then
-	if grep -q "persistence-read-only" /proc/cmdline
+update_bootloaders() {
+
+	# determine correct configuration directory
+	echo "IMAGE_DIR: \"${IMAGE_DIR}\"" >> ${LOGFILE}
+	if [ -d ${IMAGE_DIR}/isolinux/ ]
 	then
-		select_config "persistence" "id" "ro"
-		set_grub_config "PERSISTENCE" "persistence persistence-read-only"
+		CONFIG_DIR="${IMAGE_DIR}/isolinux"
+	elif [ -d ${IMAGE_DIR}/syslinux/ ]
+	then
+		CONFIG_DIR="${IMAGE_DIR}/syslinux"
 	else
-		select_config "persistence" "id" "rw"
-		set_grub_config "PERSISTENCE" "persistence"
+		echo "There was neither an isolinux nor a syslinux configuration in \"${IMAGE_DIR}\"." >> ${LOGFILE}
+		return 1
 	fi
 
+	# check writability of configuration directory
+	#
+	# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	# ! This test only works reliably with bash on      !
+	# ! read-only filesystems! Therefore, do not change !
+	# ! the first line with /bin/bash in this script!   !
+	# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	if [ ! -w ${CONFIG_DIR} ]
+	then
+		# it's ok, system was probably booted from iso...
+		echo "The configuration directory \"${CONFIG_DIR}\" is not writable." >> ${LOGFILE}
+		echo "The system was probably booted from DVD." >> ${LOGFILE}
+		return 0
+	fi
+
+	XMLBOOT_CONFIG="${CONFIG_DIR}/xmlboot.config"
+	GRUB_CONFIG="${IMAGE_DIR}/boot/grub/grub.cfg"
+	echo "XMLBOOT_CONFIG: \"${XMLBOOT_CONFIG}\"" >> ${LOGFILE}
+	echo "GRUB_CONFIG: \"${GRUB_CONFIG}\"" >> ${LOGFILE}
+
+	# get current append line
+	APPEND="$(cat /proc/cmdline | sed 's|BOOT_IMAGE=\S* ||')"
+	echo "APPEND: \"${APPEND}\"" >> ${LOGFILE}
+
+	for _PARAMETER in ${APPEND}
+	do
+		case "${_PARAMETER}" in
+			locales=*)
+				select_config "language" "append" "${_PARAMETER}"
+				LIVE_LOCALES="${_PARAMETER#*locales=}"
+				set_grub_config "LOCALES" "${LIVE_LOCALES}"
+				;;
+
+			keyboard-layouts=*)
+				select_config "keyboard" "append" "${_PARAMETER}"
+				LIVE_KEYBOARD="${_PARAMETER#*keyboard-layouts=}"
+				set_grub_config "KEYBOARD" "${LIVE_KEYBOARD}"
+				;;
+
+			desktop*)
+				LIVE_DESKTOP="${_PARAMETER#*desktop=}"
+				select_config "desktop" "id" "${LIVE_DESKTOP}"
+				if [ "${LIVE_DESKTOP}" = "no" ]
+				then
+					set_grub_config "DESKTOP" "${LIVE_DESKTOP}"
+				else
+					set_grub_config "DESKTOP" "${LIVE_DESKTOP} nottyautologin"
+				fi
+		esac
+	done
+
+	# special handling for live-media config
+	# (removable-usb is deprecated!)
+	if grep -q "live-media=removable-usb" /proc/cmdline
+	then
+		select_config "live-media" "id" "removable-usb"
+		set_grub_config "LIVE_MEDIA" "live-media=removable-usb live-media-timeout=10"
+	elif grep -q "live-media=usb" /proc/cmdline
+	then
+		select_config "live-media" "id" "usb"
+		set_grub_config "LIVE_MEDIA" "live-media=usb live-media-timeout=10"
+	elif grep -q "live-media=removable" /proc/cmdline
+	then
+		select_config "live-media" "id" "removable"
+		set_grub_config "LIVE_MEDIA" "live-media=removable live-media-timeout=10"
+	else
+		select_config "live-media" "id" "any"
+		set_grub_config "LIVE_MEDIA" ""
+	fi
+
+	# special handling for persistence-media config
+	if grep -q "persistence-media=removable-usb" /proc/cmdline
+	then
+		select_config "persistence-media" "id" "usb"
+		set_grub_config "PERSISTENCE_MEDIA" "persistence-media=removable-usb"
+	elif grep -q "persistence-media=removable" /proc/cmdline
+	then
+		select_config "persistence-media" "id" "removable"
+		set_grub_config "PERSISTENCE_MEDIA" "persistence-media=removable"
+	else
+		select_config "persistence-media" "id" "any"
+		set_grub_config "PERSISTENCE_MEDIA" ""
+	fi
+
+	update_selected_option "swapon" "swap_partition"
+	update_selected_option "swapfile=auto" "swap_file"
+	update_selected_option "debug=1" "debug"
+	update_nonselected_option "quiet splash" "messages"
+	update_nonselected_option "nolapic_timer" "lapic_timer"
+	update_nonselected_option "nohz=off" "dynamic_ticks"
+
+	CUSTOM_OPTIONS="$(cat /proc/cmdline | grep "custom_options" | sed 's|.*custom_options\s*\(.*\)|\1|1')"
+	echo "CUSTOM_OPTIONS: \"${CUSTOM_OPTIONS}\"" >> ${LOGFILE}
+	cat ${XMLBOOT_CONFIG} | \
+	xmlstarlet ed -u "/xmlboot/custom_options/@text" -v "${CUSTOM_OPTIONS}" > ${XMLBOOT_CONFIG}.tmp
+	mv ${XMLBOOT_CONFIG}.tmp ${XMLBOOT_CONFIG}
+	set_grub_config "CUSTOM_OPTIONS" "${CUSTOM_OPTIONS}"
+
+	update_selected_grub_option "swapon" "SWAP" "swapon"
+	update_selected_grub_option "swapfile=auto" "SWAP_FILE" "swapfile=auto"
+	update_selected_grub_option "quiet" "QUIET" "quiet splash"
+
+	# special handling for persistence
+	if grep -q "persistence " /proc/cmdline
+	then
+		if grep -q "persistence-read-only" /proc/cmdline
+		then
+			select_config "persistence" "id" "ro"
+			set_grub_config "PERSISTENCE" "persistence persistence-read-only"
+		else
+			select_config "persistence" "id" "rw"
+			set_grub_config "PERSISTENCE" "persistence"
+		fi
+
+	else
+		select_config "persistence" "id" "no"
+		set_grub_config "PERSISTENCE" ""
+	fi
+}
+
+# the only reliable info about our boot medium is the system partition
+SYSTEM_PARTITION=$(grep ${LIVE_MOUNTPOINT} /proc/mounts | awk '{ print $1 }')
+echo "system partition: \"${SYSTEM_PARTITION}\"" >> ${LOGFILE}
+
+# get infos about first partition
+FIRST_PARTITION="$(get_partition 1)"
+echo "first partition: \"${FIRST_PARTITION}\"" >> ${LOGFILE}
+FIRST_LABEL="$(get_partition_label ${FIRST_PARTITION})"
+echo "first label: \"${FIRST_LABEL}\"" >> ${LOGFILE}
+
+if [ "${FIRST_LABEL}" = "${BOOT_LABEL}" ]
+then
+	echo "system uses the current partitioning schema with a separate boot partition" >> ${LOGFILE}
+	mount_boot_partition ${FIRST_PARTITION}
+	update_bootloaders
 else
-	select_config "persistence" "id" "no"
-	set_grub_config "PERSISTENCE" ""
+	SECOND_PARTITION="$(get_partition 2)"
+	echo "second partition: \"${SECOND_PARTITION}\"" >> ${LOGFILE}
+	SECOND_LABEL="$(get_partition_label ${SECOND_PARTITION})"
+	echo "second label: \"${SECOND_LABEL}\"" >> ${LOGFILE}
+	if [ "${SECOND_LABEL}" = "${BOOT_LABEL}" ]
+	then
+		echo "system uses the current partitioning schema with a separate boot partition" >> ${LOGFILE}
+		echo "but for legacy (removable) USB flash drives" >> ${LOGFILE}
+
+		echo "updating boot loader config on boot partition" >> ${LOGFILE}
+		mount_boot_partition ${SECOND_PARTITION}
+		update_bootloaders
+
+		FS_TYPE="$(get_partition_fstype ${FIRST_PARTITION})"
+		echo "file system of exchange partiton: ${FS_TYPE}" >> ${LOGFILE}
+		if [ "${FS_TYPE}" = "vfat" ]
+		then
+			echo "must update bootloader on exchange partition" >> ${LOGFILE}
+			IMAGE_DIR="$(get_mountpoint ${FIRST_PARTITION})"
+			if [ -n "${IMAGE_DIR}" ]
+			then
+				echo "exchange partition was already mounted" >> ${LOGFILE}
+				update_bootloaders
+			else
+				echo "exchange partition was NOT already mounted" >> ${LOGFILE}
+				udisks --mount ${FIRST_PARTITION}
+				IMAGE_DIR="$(get_mountpoint ${FIRST_PARTITION})"
+				update_bootloaders
+				udisks --unmount ${FIRST_PARTITION}
+			fi
+		else
+			echo "no bootloader needed on exchange partition" >> ${LOGFILE}
+		fi
+
+	else
+		echo "system uses the legacy partitioning schema without a separate boot partition" >> ${LOGFILE}
+		if mount -o remount,rw "${LIVE_MOUNTPOINT}"
+		then
+			IMAGE_DIR="${LIVE_MOUNTPOINT}"
+			update_bootloaders
+		else
+			# it's ok, system was probably booted from iso...
+			echo "The image directory \"${LIVE_MOUNTPOINT}\" could not be remounted in read-write mode." >> ${LOGFILE}
+			echo "The system was probably booted from DVD." >> ${LOGFILE}
+			echo "Exiting..." >> ${LOGFILE}
+			exit 0
+		fi
+	fi
 fi
 
-# remount /live/image read-only
-mount -o remount,ro ${IMAGE_DIR}
+if [ -n "${BOOT_TMP_MOUNT}" ]
+then
+	echo "unmounting ${BOOT_PARTITION}" >> ${LOGFILE}
+	umount ${BOOT_PARTITION} >> ${LOGFILE} 2>&1
+else
+	echo "remounting ${IMAGE_DIR} read-only" >> ${LOGFILE}
+	mount -o remount,ro ${IMAGE_DIR} >> ${LOGFILE} 2>&1
+fi
+
+echo "Done." >> ${LOGFILE}
