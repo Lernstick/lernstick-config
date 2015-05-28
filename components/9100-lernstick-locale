@@ -5,7 +5,7 @@
 
 # script version, increment if script should rerun even if not changing the
 # language
-VERSION=1
+VERSION=2
 
 echo -n " lernstick-locale"
 
@@ -87,6 +87,50 @@ then
         	        sed -i -e '/bluej.language=.*/d' ${BLUEJ_CONFIG_FILE}
                 	;;
 	esac
+fi
+
+# greenfoot
+GREENFOOT_CONFIG_FILE="/home/user/.greenfoot/greenfoot.properties"
+set_greenfoot_language()
+{
+       if grep -q bluej.language ${GREENFOOT_CONFIG_FILE}
+       then
+                       sed -i -e "s|bluej.language=.*|bluej.language=${1}|1" ${GREENFOOT_CONFIG_FILE}
+       else
+                       echo "bluej.language=${1}" >> ${GREENFOOT_CONFIG_FILE}
+       fi
+}
+if [ -e ${GREENFOOT_CONFIG_FILE} ]
+then
+       case "${LANGUAGE}" in
+               de)
+                       set_greenfoot_language "german"
+                       ;;
+
+               es)
+                       set_greenfoot_language "spanish"
+                       ;;
+
+               fr)
+                       set_greenfoot_language "french"
+                       ;;
+
+               it)
+                       set_greenfoot_language "italian"
+                       ;;
+
+               pt)
+                       set_greenfoot_language "portuguese"
+                       ;;
+
+              ru)
+                       set_greenfoot_language "russian"
+                       ;;
+
+               *)
+                       sed -i -e '/bluej.language=.*/d' ${GREENFOOT_CONFIG_FILE}
+                       ;;
+       esac
 fi
 
 # tuxtype
