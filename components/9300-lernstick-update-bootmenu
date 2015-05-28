@@ -7,6 +7,7 @@
 # this tends to change from release to release...
 BOOT_LABEL="boot"
 LIVE_MOUNTPOINT="/lib/live/mount/medium"
+BOOTLOGO_DIR="bootlogo.dir"
 LOGFILE=/var/log/lernstick-update-bootmenu
 
 echo " lernstick-update-bootmenu"
@@ -162,7 +163,7 @@ update_bootloaders() {
 		return 0
 	fi
 
-	XMLBOOT_CONFIG="${CONFIG_DIR}/xmlboot.config"
+	XMLBOOT_CONFIG="${CONFIG_DIR}/${BOOTLOGO_DIR}/xmlboot.config"
 	GRUB_CONFIG="${IMAGE_DIR}/boot/grub/grub.cfg"
 	echo "XMLBOOT_CONFIG: \"${XMLBOOT_CONFIG}\"" >> ${LOGFILE}
 	echo "GRUB_CONFIG: \"${GRUB_CONFIG}\"" >> ${LOGFILE}
@@ -265,6 +266,9 @@ update_bootloaders() {
 		select_config "persistence" "id" "no"
 		set_grub_config "PERSISTENCE" ""
 	fi
+
+	# rebuild bootlogo
+	gfxboot --archive "${CONFIG_DIR}/${BOOTLOGO_DIR}" --pack-archive "${CONFIG_DIR}/bootlogo"
 }
 
 # create directory for temporary mounts
