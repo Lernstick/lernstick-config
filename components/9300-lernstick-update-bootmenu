@@ -7,7 +7,7 @@
 # this tends to change from release to release...
 BOOT_LABEL="boot"
 LIVE_MOUNTPOINT="/lib/live/mount/medium"
-LOGFILE=/var/log/live-update-bootmenu
+LOGFILE=/var/log/lernstick-update-bootmenu
 
 echo " lernstick-update-bootmenu"
 
