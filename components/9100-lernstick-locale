@@ -151,31 +151,38 @@ then
 fi
 
 # extremetuxracer
-ETRACER_CONFIG_FILE="/home/user/.etracer/options"
+ETRACER_CONFIG_FILE="/home/user/.etr/options"
 if [ -e ${ETRACER_CONFIG_FILE} ]
 then
 	case "${LANGUAGE}" in
         	de)
-			ETRACER_LANGUAGE="de_DE"
+			ETRACER_LANGUAGE="2"
 	                ;;
 
         	es)
-			ETRACER_LANGUAGE="es_ES"
+			ETRACER_LANGUAGE="3"
 	                ;;
 
         	fr)
-			ETRACER_LANGUAGE="fr_FR"
+			ETRACER_LANGUAGE="4"
 	                ;;
 
         	it)
-			ETRACER_LANGUAGE="it_IT"
+			ETRACER_LANGUAGE="5"
 	                ;;
 
+        	pt)
+			ETRACER_LANGUAGE="10"
+	                ;;
+
+        	ru)
+			ETRACER_LANGUAGE="11"
+	                ;;
 	        *)
-			ETRACER_LANGUAGE="en_GB"
+			ETRACER_LANGUAGE="0"
                 	;;
 	esac
-	sed -i -e 's|set ui_language .*|set ui_language "'"${ETRACER_LANGUAGE}"'"|1' \
+	sed -i -e "s|  \[language\] .*|  \[language\] ${ETRACER_LANGUAGE}|1" \
 		${ETRACER_CONFIG_FILE}
 fi
 
