@@ -13,6 +13,23 @@ echo " lernstick-update-bootmenu"
 
 > ${LOGFILE}
 
+cleanup() {
+	if [ -n "${BOOT_TMP_MOUNT}" ]
+	then
+		echo "unmounting ${BOOT_PARTITION}" >> ${LOGFILE}
+		umount "${BOOT_TMP_MOUNT}" >> ${LOGFILE} 2>&1
+	else
+		echo "remounting ${IMAGE_DIR} read-only" >> ${LOGFILE}
+		mount -o remount,ro ${IMAGE_DIR} >> ${LOGFILE} 2>&1
+	fi
+
+	if [ -n "${EXCHANGE_TMP_MOUNT}" ]
+	then
+		echo "unmounting " >> ${LOGFILE}
+		unmount "${EXCHANGE_TMP_MOUNT}" >> ${LOGFILE} 2>&1
+	fi
+}
+
 get_partition() {
 	NUMBER=$1
 	echo ${SYSTEM_PARTITION} | sed "s|\(/dev/[a-z]*\).*|\1${NUMBER}|"
@@ -36,9 +53,8 @@ get_mountpoint() {
 mount_boot_partition() {
 	BOOT_PARTITION=$1
 	echo "Temporary mount of boot partition ..." >> ${LOGFILE}
-	udisks --mount ${BOOT_PARTITION}  >> ${LOGFILE} 2>&1
+	udisks --mount ${BOOT_PARTITION}  >> ${LOGFILE} 2>&1 && BOOT_TMP_MOUNT="${BOOT_PARTITION}"
 	IMAGE_DIR="$(get_mountpoint ${BOOT_PARTITION})"
-	BOOT_TMP_MOUNT="true"
 }
 
 select_config()
@@ -249,6 +265,9 @@ update_bootloaders() {
 	fi
 }
 
+# set cleanup trap on exit
+trap cleanup EXIT
+
 # the only reliable info about our boot medium is the system partition
 SYSTEM_PARTITION=$(grep ${LIVE_MOUNTPOINT} /proc/mounts | awk '{ print $1 }')
 echo "system partition: \"${SYSTEM_PARTITION}\"" >> ${LOGFILE}
@@ -290,10 +309,9 @@ else
 				update_bootloaders
 			else
 				echo "exchange partition was NOT already mounted" >> ${LOGFILE}
-				udisks --mount ${FIRST_PARTITION}
+				udisks --mount ${FIRST_PARTITION} >> ${LOGFILE} 2>&1 && EXCHANGE_TMP_MOUNT="${FIRST_PARTITION}"
 				IMAGE_DIR="$(get_mountpoint ${FIRST_PARTITION})"
 				update_bootloaders
-				udisks --unmount ${FIRST_PARTITION}
 			fi
 		else
 			echo "no bootloader needed on exchange partition" >> ${LOGFILE}
@@ -313,15 +331,6 @@ else
 			exit 0
 		fi
 	fi
-fi
-
-if [ -n "${BOOT_TMP_MOUNT}" ]
-then
-	echo "unmounting ${BOOT_PARTITION}" >> ${LOGFILE}
-	umount ${BOOT_PARTITION} >> ${LOGFILE} 2>&1
-else
-	echo "remounting ${IMAGE_DIR} read-only" >> ${LOGFILE}
-	mount -o remount,ro ${IMAGE_DIR} >> ${LOGFILE} 2>&1
 fi
 
 echo "Done." >> ${LOGFILE}
