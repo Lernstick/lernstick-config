@@ -1,3 +1,19 @@
+lernstick-config (4) lernstick-8; urgency=medium
+
+  * [1d2893] Update 9300-lernstick-update-bootmenu
+  * [1e43ad] Change maintainer to lernstick role address
+  * [e76361] Fix locale setting for extremetuxracer
+  * [48a543] Locale switching for greenfoot
+  * [347fcb] Depend on live-config (>=5~)
+  * [9917f7] Depend on xmlstarlet
+  * [87cac0] Exit trap to clean up mounts on failure
+  * [7edcc6] Migrate to udisks2
+  * [11896c] Rename update-bootmenu logfile to match script name
+  * [f55dc4] Drop usage of udisks
+  * [21d655] Rebuild bootlogo on update
+
+ -- Gaudenz Steinlin <gaudenz@debian.org>  Fri, 29 May 2015 15:52:33 +0200
+
 lernstick-config (3) lernstick-8; urgency=medium
 
   * [3f2c] added cinnamon and mate and removed sugar from desktop script
