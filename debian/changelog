@@ -1,3 +1,9 @@
+lernstick-config (5) lernstick-8; urgency=medium
+
+  * [d2f0] added enlightenment support to desktop script
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 29 May 2015 17:24:57 +0200
+
 lernstick-config (4) lernstick-8; urgency=medium
 
   * [1d2893] Update 9300-lernstick-update-bootmenu
