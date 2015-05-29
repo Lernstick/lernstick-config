@@ -25,51 +25,46 @@ echo "LERNSTICK_DESKTOP: \"${LERNSTICK_DESKTOP}\"" > ${LOGFILE}
 rm -f /home/user/.dmrc
 
 case "${LERNSTICK_DESKTOP}" in
-        kde)
-                echo "setting up kde as default desktop" >> ${LOGFILE}
-                update-alternatives --set x-session-manager /usr/bin/startkde >> ${LOGFILE} 2>&1
-                echo "/usr/bin/kdm" > /etc/X11/default-display-manager
+          kde)
+                _SESSION_MANAGER="/usr/bin/startkde"
+                _DISPLAY_MANAGER="/usr/bin/kdm"
                 ;;
 
         gnome)
-                echo "setting up gnome as default desktop" >> ${LOGFILE}
-                update-alternatives --set x-session-manager /usr/bin/gnome-session >> ${LOGFILE} 2>&1
-                echo "/usr/sbin/gdm3" > /etc/X11/default-display-manager
+                _SESSION_MANAGER="/usr/bin/gnome-session"
+                _DISPLAY_MANAGER="/usr/sbin/gdm3"
+                ;;
+
+    cinnamon)
+                _SESSION_MANAGER="/usr/bin/cinnamon-session"
+                _DISPLAY_MANAGER="/usr/sbin/gdm3"
+                ;;
+
+        mate)
+                _SESSION_MANAGER="/usr/bin/mate-session"
+                _DISPLAY_MANAGER="/usr/sbin/gdm3"
                 ;;
 
         xfce)
-                echo "setting up xfce as default desktop" >> ${LOGFILE}
-		cat > /home/user/.dmrc << EOF
-[Desktop]
-Session=xfce
-EOF
-                echo "/usr/bin/kdm" > /etc/X11/default-display-manager
+                _SESSION_MANAGER="/usr/bin/xfce4-session"
+                _DISPLAY_MANAGER="/usr/sbin/gdm3"
                 ;;
-
 
         lxde)
-                echo "setting up lxde as default desktop" >> ${LOGFILE}
-		cat > /home/user/.dmrc << EOF
-[Desktop]
-Session=LXDE
-EOF
-                echo "/usr/bin/kdm" > /etc/X11/default-display-manager
+                _SESSION_MANAGER="/usr/bin/lxsession"
+                _DISPLAY_MANAGER="/usr/bin/kdm"
                 ;;
 
-        sugar)
-                echo "setting up sugar as default desktop" >> ${LOGFILE}
-		cat > /home/user/.dmrc << EOF
-[Desktop]
-Session=sugar
-EOF
-                echo "/usr/bin/kdm" > /etc/X11/default-display-manager
-                ;;
-
-        no)
-                echo "setting up terminal as default desktop" >> ${LOGFILE}
-                echo "" > /etc/X11/default-display-manager
+          no)
+                _DISPLAY_MANAGER=""
                 ;;
 esac
+
+if [ -n "${_SESSION_MANAGER}" ]
+then
+        update-alternatives --set x-session-manager "${_SESSION_MANAGER}" >> ${LOGFILE} 2>&1
+fi
+echo "${_DISPLAY_MANAGER}" > /etc/X11/default-display-manager
 
 echo "done." >> ${LOGFILE}
 
