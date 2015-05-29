@@ -1,3 +1,9 @@
+lernstick-config (3) lernstick-8; urgency=medium
+
+  * [3f2c] added cinnamon and mate and removed sugar from desktop script
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 29 May 2015 09:48:28 +0200
+
 lernstick-config (2) lernstick-8; urgency=medium
 
   * [0174] Relax live-config dependency
