@@ -25,7 +25,7 @@ echo "LERNSTICK_DESKTOP: \"${LERNSTICK_DESKTOP}\"" > ${LOGFILE}
 rm -f /home/user/.dmrc
 
 case "${LERNSTICK_DESKTOP}" in
-          kde)
+        kde)
                 _SESSION_MANAGER="/usr/bin/startkde"
                 _DISPLAY_MANAGER="/usr/bin/kdm"
                 ;;
@@ -35,7 +35,7 @@ case "${LERNSTICK_DESKTOP}" in
                 _DISPLAY_MANAGER="/usr/sbin/gdm3"
                 ;;
 
-    cinnamon)
+        cinnamon)
                 _SESSION_MANAGER="/usr/bin/cinnamon-session"
                 _DISPLAY_MANAGER="/usr/sbin/gdm3"
                 ;;
@@ -55,7 +55,15 @@ case "${LERNSTICK_DESKTOP}" in
                 _DISPLAY_MANAGER="/usr/bin/kdm"
                 ;;
 
-          no)
+        enlightenment)
+                cat > /home/user/.dmrc << EOF
+[Desktop]
+Session=enlightenment
+EOF
+                _DISPLAY_MANAGER="/usr/bin/kdm"
+                ;;
+
+        no)
                 _DISPLAY_MANAGER=""
                 ;;
 esac
