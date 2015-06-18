@@ -5,7 +5,7 @@
 
 # script version, increment if script should rerun even if not changing the
 # language
-VERSION=2
+VERSION=3
 
 echo -n " lernstick-locale"
 
@@ -195,38 +195,38 @@ then
 fi
 
 # extremetuxracer
-ETRACER_CONFIG_FILE="/home/user/.etr/options"
+ETRACER_CONFIG_FILE="/home/user/.etracer/options"
 if [ -e ${ETRACER_CONFIG_FILE} ]
 then
 	case "${LANGUAGE}" in
         	de)
-			ETRACER_LANGUAGE="2"
+			ETRACER_LANGUAGE="de_DE"
 	                ;;
 
         	es)
-			ETRACER_LANGUAGE="3"
+			ETRACER_LANGUAGE="es_ES"
 	                ;;
 
         	fr)
-			ETRACER_LANGUAGE="4"
+			ETRACER_LANGUAGE="fr_FR"
 	                ;;
 
         	it)
-			ETRACER_LANGUAGE="5"
+			ETRACER_LANGUAGE="it_IT"
 	                ;;
 
         	pt)
-			ETRACER_LANGUAGE="10"
+			ETRACER_LANGUAGE="pt_PT"
 	                ;;
 
         	ru)
-			ETRACER_LANGUAGE="11"
+			ETRACER_LANGUAGE="ru_RU"
 	                ;;
 	        *)
-			ETRACER_LANGUAGE="0"
+			ETRACER_LANGUAGE="en_GB"
                 	;;
 	esac
-	sed -i -e "s|  \[language\] .*|  \[language\] ${ETRACER_LANGUAGE}|1" \
+	sed -i -e "s|set ui_language .*|set ui_language \"${ETRACER_LANGUAGE}\"|1" \
 		${ETRACER_CONFIG_FILE}
 fi
 
