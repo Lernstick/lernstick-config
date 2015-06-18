@@ -1,3 +1,9 @@
+lernstick-config (6) lernstick-8; urgency=medium
+
+  * [eb84] updated extremetuxracer locale handling
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Thu, 18 Jun 2015 14:23:59 +0200
+
 lernstick-config (5) lernstick-8; urgency=medium
 
   * [d2f0] added enlightenment support to desktop script
