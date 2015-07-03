@@ -1,0 +1,57 @@
+#!/bin/sh
+
+## live-config(7) - System Configuration Components
+## Copyright (C) 2006-2015 Daniel Baumann <mail@daniel-baumann.ch>
+##
+## This program comes with ABSOLUTELY NO WARRANTY; for details see COPYING.
+## This is free software, and you are welcome to redistribute it
+## under certain conditions; see COPYING for details.
+
+
+#set -e
+
+Cmdline ()
+{
+	# Reading kernel command line
+	for _PARAMETER in ${LIVE_CONFIG_CMDLINE}
+	do
+		case "${_PARAMETER}" in
+			live-config.keyboard-layouts=*|keyboard-layouts=*)
+				LIVE_KEYBOARD_LAYOUTS="${_PARAMETER#*keyboard-layouts=}"
+				;;
+
+			live-config.username=*|username=*)
+				LIVE_USERNAME="${_PARAMETER#*username=}"
+				;;
+		esac
+	done
+}
+
+Init ()
+{
+	echo -n " kde-services"
+}
+
+Config ()
+{
+	# Enabling keyboard selector
+	cat > "/home/${LIVE_USERNAME}/.kde/share/config/kxkbrc" << EOF
+[Layout]
+DisplayNames=${LIVE_KEYBOARD_LAYOUTS}
+IndicatorOnly=false
+LayoutList=${LIVE_KEYBOARD_LAYOUTS}
+ShowFlag=false
+SwitchMode=Global
+Use=true
+EOF
+	chown ${LIVE_USERNAME}:${LIVE_USERNAME} "/home/${LIVE_USERNAME}/.kde/share/config/kxkbrc"
+
+	# set first layout in list as currently selected layout
+	FIRST_LAYOUT="$(echo "${LIVE_KEYBOARD_LAYOUTS}" | awk -F , '{ print $1 }')"
+	sed -i "s/currentLayout=\".*\"/currentLayout=\"${FIRST_LAYOUT}\"/1" \
+		"/home/${LIVE_USERNAME}/.kde/share/apps/kded/session/keyboard/layout_memory.xml"
+}
+
+Cmdline
+Init
+Config
