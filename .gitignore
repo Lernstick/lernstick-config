@@ -1,0 +1,4 @@
+debian/files
+debian/lernstick-config.debhelper.log
+debian/lernstick-config.substvars
+debian/lernstick-config/
