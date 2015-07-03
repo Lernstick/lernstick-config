@@ -1,3 +1,10 @@
+lernstick-config (7) lernstick-8; urgency=medium
+
+  * [4c13] added .gitignore file
+  * [6c75] added keyboard configuration scripts
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sat, 04 Jul 2015 00:58:52 +0200
+
 lernstick-config (6) lernstick-8; urgency=medium
 
   * [eb84] updated extremetuxracer locale handling
