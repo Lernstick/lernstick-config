@@ -1,1 +1,2 @@
 components/*	/lib/live/config
+configs/*	/etc/live/config/
