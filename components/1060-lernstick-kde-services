@@ -46,10 +46,13 @@ Use=true
 EOF
 	chown ${LIVE_USERNAME}:${LIVE_USERNAME} "/home/${LIVE_USERNAME}/.kde/share/config/kxkbrc"
 
-	# set first layout in list as currently selected layout
-	FIRST_LAYOUT="$(echo "${LIVE_KEYBOARD_LAYOUTS}" | awk -F , '{ print $1 }')"
-	sed -i "s/currentLayout=\".*\"/currentLayout=\"${FIRST_LAYOUT}\"/1" \
-		"/home/${LIVE_USERNAME}/.kde/share/apps/kded/session/keyboard/layout_memory.xml"
+	if [ -w  "/home/${LIVE_USERNAME}/.kde/share/apps/kded/session/keyboard/layout_memory.xml" ]
+	then
+		# set first layout in list as currently selected layout
+		FIRST_LAYOUT="$(echo "${LIVE_KEYBOARD_LAYOUTS}" | awk -F , '{ print $1 }')"
+		sed -i "s/currentLayout=\".*\"/currentLayout=\"${FIRST_LAYOUT}\"/1" \
+			"/home/${LIVE_USERNAME}/.kde/share/apps/kded/session/keyboard/layout_memory.xml"
+	fi
 }
 
 Cmdline
