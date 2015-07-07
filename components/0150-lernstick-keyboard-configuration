@@ -37,7 +37,7 @@ Cmdline ()
 
 Init ()
 {
-	echo -n " keyboard-configuration"
+	echo -n " lernstick-keyboard-configuration"
 }
 
 Config ()

@@ -29,7 +29,7 @@ Cmdline ()
 
 Init ()
 {
-	echo -n " kde-services"
+	echo -n " lernstick-kde-services"
 }
 
 Config ()
