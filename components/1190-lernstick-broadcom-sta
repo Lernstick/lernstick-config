@@ -1,0 +1,32 @@
+#!/bin/bash
+
+set -e
+
+BLACKLIST=/etc/modprobe.d/broadcom-sta-dkms.conf
+ID_LIST=/usr/share/broadcom-sta/broadcom-sta.ids
+
+# Checking if package is installed
+[ -e /var/lib/dpkg/info/broadcom-sta-dkms.list ] || exit 0
+
+# without lspci this won't work
+[ -x /usr/bin/lspci ] || exit 0
+
+echo -n " lernstick-broadcom-sta"
+
+# search for devices of pci class "network controller" subclass "network controller"
+_DEVICE="$(lspci -mn | awk '$2 == "\"0280\"" { gsub ("\"",""); print $3$4 }' | uniq)"
+
+if grep -qis "^[[:space:]]*${_DEVICE}[[:space:]]*$" ${ID_LIST}
+then
+	# uncomment all blacklist entries, remove wl blacklist
+	sed -i -e 's/^ *# *blacklist/blacklist/' -e 's/^ *blacklist wl *$//' ${BLACKLIST}
+else
+	# comment out all blacklist entries, blacklist wl
+	sed -i -e 's/^ *blacklist/# blacklist/' -e 's/^ *# *blacklist wl *$/blacklist wl/' ${BLACKLIST}
+
+	# add blacklist for wl if not present
+	if ! grep -q '^ *blacklist wl *' ${BLACKLIST}
+	then
+		echo "blacklist wl" >> ${BLACKLIST}
+	fi
+fi
