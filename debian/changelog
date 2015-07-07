@@ -1,3 +1,13 @@
+lernstick-config (8) lernstick-8; urgency=medium
+
+  * [aff884] Disable live-config keyboard-configuration
+  * [2dd7c6] Add lernstick prefix to component title
+  * [05c8ef] Only set default keyboard layout if config file exists
+  * [ebb47d] Disable live-config kde-services
+  * [e22355] Component to configure Broadcom STA drivers
+
+ -- Gaudenz Steinlin <gaudenz@debian.org>  Tue, 07 Jul 2015 15:02:44 +0200
+
 lernstick-config (7) lernstick-8; urgency=medium
 
   * [4c13] added .gitignore file
