@@ -1,0 +1,47 @@
+#!/bin/sh
+
+## live-config(7) - System Configuration Components
+## Copyright (C) 2006-2015 Daniel Baumann <mail@daniel-baumann.ch>
+##
+## This program comes with ABSOLUTELY NO WARRANTY; for details see COPYING.
+## This is free software, and you are welcome to redistribute it
+## under certain conditions; see COPYING for details.
+
+
+#set -e
+
+Cmdline ()
+{
+	# Reading kernel command line
+	for _PARAMETER in ${LIVE_CONFIG_CMDLINE}
+	do
+		case "${_PARAMETER}" in
+			live-config.locales=*|locales=*)
+				LIVE_LOCALES="${_PARAMETER#*locales=}"
+				;;
+		esac
+	done
+}
+
+Init ()
+{
+	echo -n " locales"
+}
+
+Config ()
+{
+	if echo "${LIVE_LOCALES}" | grep -qs ","
+	then
+		# multiple locales specified
+		_LOCALE="$(echo ${LIVE_LOCALES} | sed -e 's|,.*||')"
+	else
+		# one or no locale specified
+		_LOCALE="${LIVE_LOCALES:-en_US.UTF-8}"
+	fi
+
+	echo "LANG=${_LOCALE}" > /etc/default/locale
+}
+
+Cmdline
+Init
+Config
