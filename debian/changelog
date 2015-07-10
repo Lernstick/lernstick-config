@@ -1,3 +1,10 @@
+lernstick-config (10) lernstick-8; urgency=medium
+
+  * [42ca05] Only reconfigure display and session manager if needed
+  * [0314f4] Reload systemd configuration after changing the desktop environment
+
+ -- Gaudenz Steinlin <gaudenz@debian.org>  Fri, 10 Jul 2015 17:52:27 +0200
+
 lernstick-config (9) lernstick-8; urgency=medium
 
   * [08300b] added and updated xserver-xorg script
