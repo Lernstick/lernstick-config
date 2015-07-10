@@ -1,3 +1,12 @@
+lernstick-config (9) lernstick-8; urgency=medium
+
+  * [08300b] added and updated xserver-xorg script
+  * [af42bb] added customized user-setup script (we want an empty password)
+  * [a4c0fa] added customized locales script (execute always, do not generate locales)
+  * [c366db] updated list of disabled live-config components
+
+ -- Ronny Standtke <ronny.standtke@fhnw.ch>  Fri, 10 Jul 2015 17:24:57 +0200
+
 lernstick-config (8) lernstick-8; urgency=medium
 
   * [aff884] Disable live-config keyboard-configuration
