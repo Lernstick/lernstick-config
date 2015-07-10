@@ -1,3 +1,9 @@
+lernstick-config (11) lernstick-8; urgency=medium
+
+  * [88690f] fixed 1140-lernstick-xserver-xorg
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 10 Jul 2015 19:13:55 +0200
+
 lernstick-config (10) lernstick-8; urgency=medium
 
   * [42ca05] Only reconfigure display and session manager if needed
