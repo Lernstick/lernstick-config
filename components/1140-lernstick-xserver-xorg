@@ -43,7 +43,7 @@ Detect_xorg_driver ()
 	then
 		if grep -q ${_DEVICE} /usr/share/lernstick-config/efi_blacklist
 		then
-			echo "xorg-autoconfig"
+			LIVE_XORG_DRIVER="xorg-autoconfig"
 			return
 		fi
 	fi
@@ -222,7 +222,7 @@ Config ()
 	then
 		# xorg-driver manual override
 		cp "/usr/share/live/config/xserver-xorg/${LIVE_XORG_DRIVER}.conf" /etc/X11/xorg.conf.d/zz-live-config_xserver-xorg.conf
-	elif [ ${LIVE_XORG_DRIVER} = "xorg-autoconfig" ]
+	elif [ "${LIVE_XORG_DRIVER}" = "xorg-autoconfig" ]
 	then
 		# Remove leftovers from previous runs of this script, ensure that xorg autoconfig works
 		[ -e /etc/X11/xorg.conf.d/zz-live-config_xserver-xorg.conf ] && rm /etc/X11/xorg.conf.d/zz-live-config_xserver-xorg.conf
