@@ -68,11 +68,15 @@ EOF
                 ;;
 esac
 
-if [ -n "${_SESSION_MANAGER}" ]
+if [ -n "${_SESSION_MANAGER}" -a "$(update-alternatives --query x-session-manager | grep ^Value: | cut -f 2 -d '')" != "${_SESSION_MANAGER}" ]
 then
         update-alternatives --set x-session-manager "${_SESSION_MANAGER}" >> ${LOGFILE} 2>&1
 fi
-echo "${_DISPLAY_MANAGER}" > /etc/X11/default-display-manager
+
+if ! grep -q "^${_DISPLAY_MANAGER}$" /etc/X11/default-display-manager
+then
+        echo "${_DISPLAY_MANAGER}" > /etc/X11/default-display-manager
+fi
 
 echo "done." >> ${LOGFILE}
 
