@@ -1,0 +1,296 @@
+#!/bin/sh
+
+## live-config(7) - System Configuration Components
+## Copyright (C) 2006-2015 Daniel Baumann <mail@daniel-baumann.ch>
+##
+## This program comes with ABSOLUTELY NO WARRANTY; for details see COPYING.
+## This is free software, and you are welcome to redistribute it
+## under certain conditions; see COPYING for details.
+
+# Regex matching PCI IDs which support two graphic cards with proprietary
+# drivers
+DUALCARD="^10DE"
+
+Detect_xorg_driver ()
+{
+	# Side-effect: Sets _NVIDIA_VERSION and _NVIDIA_MODULE if an NVIDIA card is detected
+
+	# without lspci this won't work
+	if ! [ -x /usr/bin/lspci ]
+	then
+		LIVE_XORG_DRIVER="xorg-autoconfig"
+		return
+	fi
+
+	_DEVICES="$(lspci -mn | awk '$2 == "\"0300\"" { gsub ("\"",""); print toupper($3$4) }' | uniq)"
+
+	# Using anything other than native xorg drivers  has (so far) failed on most systems
+        # with several different display controllers. DUALCARD is a regex of PCI IDs which support
+        # more than one card with proprietary drivers.
+	# Therefore use xorg-autoconfig in this case
+	if [ $(echo "${_DEVICES}" | wc -l) -ne 1 -a $(echo "$_DEVICES" | grep -c ${DUALCARD} ) -ne 2 ]
+	then
+		LIVE_XORG_DRIVER="xorg-autoconfig"
+		return
+	fi
+
+	# pci-id of the first graphic card, from now on driver selection is based on the
+        # first card only.
+	_DEVICE="$(echo "${_DEVICES}" | head -n1)"
+
+	# There are some drivers that do not work with EFI boot
+	if grep -q lernstick_efi_boot /proc/cmdline
+	then
+		if grep -q ${_DEVICE} /usr/share/lernstick-config/efi_blacklist
+		then
+			echo "xorg-autoconfig"
+			return
+		fi
+	fi
+
+	# no PCI device found, hope the xorg autoconfiguration will figure it out
+	if [ -z "${_DEVICE}" ]
+	then
+		LIVE_XORG_DRIVER="xorg-autoconfig"
+		return
+	fi
+
+	# live-config specific xorg-driver overrides
+	if ls /usr/share/live/config/xserver-xorg/*.ids > /dev/null 2>&1
+	then
+		for _OVERRIDE_IDS in /usr/share/live/config/xserver-xorg/*.ids
+		do
+			if [ -e "${_OVERRIDE_IDS}" ]
+			then
+				if grep -qs "${_DEVICE}" "${_OVERRIDE_IDS}"
+				then
+					LIVE_XORG_DRIVER="$(basename ${_OVERRIDE_IDS} .ids)"
+					return
+				fi
+			fi
+		done
+	fi
+
+	# xorg-driver automatic override for virtualbox
+	if [ -e /var/lib/dpkg/info/virtualbox-guest-x11.list ] && echo "${_DEVICE}" | grep -qs '^80EEBEEF'
+	then
+		LIVE_XORG_DRIVER="vboxvideo"
+		return
+	fi
+
+	# xorg-driver automatic override for fglrx
+	if echo "${_DEVICE}" | grep -qs '^1002'
+	then
+		if grep -qs "${_DEVICE}" /usr/share/fglrx/fglrx.ids
+		then
+			LIVE_XORG_DRIVER="fglrx"
+			return
+		fi
+	fi
+
+	# xorg-driver automatic override for nvidia
+	if echo "${_DEVICE}" | grep -qs -E '^(10DE|12D2)'
+	then
+		for _NVIDIA_IDS in /usr/lib/nvidia/current/nvidia.ids $(ls /usr/lib/nvidia/legacy-*/nvidia.ids | sort -V -r)
+		do
+			if [ -e "${_NVIDIA_IDS}" ]
+			then
+				if grep -qs "${_DEVICE}" ${_NVIDIA_IDS}
+				then
+					_NVIDIA_VERSION="$(basename $(dirname ${_NVIDIA_IDS}))"
+					_NVIDIA_MODULE="$(echo nvidia-${_NVIDIA_VERSION} | sed -e 's|-current$||')"
+					LIVE_XORG_DRIVER="nvidia"
+					return
+				fi
+			fi
+		done
+
+	fi
+
+	# fall back to xorg autoconfiguration
+	LIVE_XORG_DRIVER="xorg-autoconfig"
+}
+
+Enable_update_initramfs ()
+{
+	chmod +x /usr/sbin/update-initramfs
+}
+
+Reconfigure_glx_alternative_nvidia ()
+{
+	# avoid updating the the initramfs as it takes way too long and is
+	# useless on live systems (we might be on completely different hardware
+	# on next boot)
+	trap Enable_update_initramfs 0
+	chmod -x /usr/sbin/update-initramfs
+	dpkg-reconfigure glx-alternative-nvidia
+	Enable_update_initramfs
+	trap - 0
+}
+
+Cmdline ()
+{
+	for _PARAMETER in ${LIVE_CONFIG_CMDLINE}
+	do
+		case "${_PARAMETER}" in
+			live-config.keyboard-layouts=*|keyboard-layouts=*)
+				LIVE_KEYBOARD_LAYOUTS="${_PARAMETER#*keyboard-layouts=}"
+				;;
+
+			live-config.keyboard-model=*|keyboard-model=*)
+				LIVE_KEYBOARD_MODEL="${_PARAMETER#*keyboard-model=}"
+				;;
+
+			live-config.keyboard-options=*|keyboard-options=*)
+				LIVE_KEYBOARD_OPTIONS="${_PARAMETER#*keyboard-options=}"
+				;;
+
+			live-config.keyboard-variants=*|keyboard-variants=*)
+				LIVE_KEYBOARD_VARIANTS="${_PARAMETER#*keyboard-variants=}"
+				;;
+
+			live-config.xorg-xsession-manager=*|x-session-manager=*)
+				LIVE_X_SESSION_MANAGER="${_PARAMETER#*x-session-manager=}"
+				;;
+
+			live-config.xorg-driver=*|xorg-driver=*)
+				LIVE_XORG_DRIVER="${_PARAMETER#*xorg-driver=}"
+				;;
+
+			live-config.xorg-resolution=*|xorg-resolution=*)
+				LIVE_XORG_RESOLUTION="${_PARAMETER#*xorg-resolution=}"
+				;;
+		esac
+	done
+}
+
+Init ()
+{
+	# Checking if package is installed
+	if [ ! -e /var/lib/dpkg/info/xserver-xorg.list ]
+	then
+		exit 0
+	fi
+
+	echo -n " xserver-xorg"
+}
+
+Config ()
+{
+	if [ -n "${LIVE_KEYBOARD_MODEL}" ]
+	then
+		echo "xserver-xorg xserver-xorg/config/inputdevice/keyboard/model select ${LIVE_KEYBOARD_MODEL}" >> /tmp/live-config.cfg
+	fi
+
+	if [ -n "${LIVE_KEYBOARD_LAYOUTS}" ]
+	then
+		echo "xserver-xorg xserver-xorg/config/inputdevice/keyboard/layout select ${LIVE_KEYBOARD_LAYOUTS}" >> /tmp/live-config.cfg
+	fi
+
+	if [ -n "${LIVE_KEYBOARD_VARIANTS}" ]
+	then
+		echo "xserver-xorg xserver-xorg/config/inputdevice/keyboard/variant select ${LIVE_KEYBOARD_VARIANTS}" >> /tmp/live-config.cfg
+	fi
+
+	if [ -n "${LIVE_KEYBOARD_OPTIONS}" ]
+	then
+		echo "xserver-xorg xserver-xorg/config/inputdevice/keyboard/options string ${LIVE_KEYBOARD_OPTIONS}" >> /tmp/live-config.cfg
+	fi
+
+	if [ -n "${LIVE_X_SESSION_MANAGER}" ]
+	then
+		case "${LIVE_X_SESSION_MANAGER}" in
+			none)
+				rm -f /etc/X11/default-display-manager
+				;;
+
+			*)
+				update-alternatives --quiet --set x-session-manager "${LIVE_X_SESSION_MANAGER}"
+				;;
+		esac
+	fi
+
+	if [ -z "${LIVE_XORG_DRIVER}" ]
+	then
+		Detect_xorg_driver
+	fi
+
+	mkdir -p /etc/X11/xorg.conf.d
+
+	# Create xorg config file snippet
+	if [ -e "/usr/share/live/config/xserver-xorg/${LIVE_XORG_DRIVER}.conf" ]
+	then
+		# xorg-driver manual override
+		cp "/usr/share/live/config/xserver-xorg/${LIVE_XORG_DRIVER}.conf" /etc/X11/xorg.conf.d/zz-live-config_xserver-xorg.conf
+	elif [ ${LIVE_XORG_DRIVER} = "xorg-autoconfig" ]
+	then
+		# Remove leftovers from previous runs of this script, ensure that xorg autoconfig works
+		[ -e /etc/X11/xorg.conf.d/zz-live-config_xserver-xorg.conf ] && rm /etc/X11/xorg.conf.d/zz-live-config_xserver-xorg.conf
+	else
+		# xorg-driver automatic override
+cat > /etc/X11/xorg.conf.d/zz-live-config_xserver-xorg.conf << EOF
+Section "Device"
+	Identifier	"Default screen"
+	Driver		"${LIVE_XORG_DRIVER}"
+EndSection
+EOF
+
+	fi
+
+	# set correct glx alternative
+	if [ -e /etc/alternatives/glx ]
+	then
+		case "${LIVE_XORG_DRIVER}" in
+			fglrx)
+				update-alternatives --quiet --set glx /usr/lib/fglrx
+
+				modprobe --ignore-install fglrx || true
+				;;
+
+			nvidia)
+				update-alternatives --quiet --set glx /usr/lib/nvidia
+
+				_NVIDIA_ALTERNATIVE="/usr/lib/nvidia/${_NVIDIA_VERSION:-current}"
+				# Check if the alternative is present and if it needs to be updated.
+				# Updating takes a bit of time because the glx-alternative-nvidia package
+				# needs to be reconfigured and calls ldconfig in it's postinst.
+				if [ -e /etc/alternatives/nvidia -a "$(update-alternatives --query nvidia | grep -E '^Value: ' | cut -f 2 -d ' ')" != "${_NVIDIA_ALTERNATIVE}" ]
+				then
+					update-alternatives --quiet --set nvidia ${_NVIDIA_ALTERNATIVE}
+					# reconfigure the GLX alternative package
+					# see /usr/share/doc/nvidia-driver/README.alternatives
+					Reconfigure_glx_alternative_nvidia
+				fi
+
+				modprobe --ignore-install ${_NVIDIA_MODULE:-nvidia} || true
+				;;
+
+			*)
+				update-alternatives --quiet --set glx /usr/lib/mesa-diverted
+				;;
+		esac
+	fi
+
+	if [ -n "${LIVE_XORG_RESOLUTION}" ]
+	then
+		echo "xrandr -s ${LIVE_XORG_RESOLUTION} || /bin/true" >> /etc/X11/Xsession.d/21xvidemode
+	else
+		rm -f /etc/X11/Xsession.d/21xvidemode
+	fi
+
+	if [ -e /tmp/live-config.cfg ]
+	then
+		debconf-set-selections < /tmp/live-config.cfg
+		rm -f /tmp/live-config.cfg
+
+		dpkg-reconfigure -f noninteractive -p critical \
+			xserver-xorg 2>&1 \
+			| grep -v "overwriting possibly-customised configuration" \
+			| grep -v "file; backup in /etc/X11/xorg.conf" || true
+
+	fi
+}
+
+Cmdline
+Init
+Config
