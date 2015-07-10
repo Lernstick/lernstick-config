@@ -76,6 +76,12 @@ fi
 if ! grep -q "^${_DISPLAY_MANAGER}$" /etc/X11/default-display-manager
 then
         echo "${_DISPLAY_MANAGER}" > /etc/X11/default-display-manager
+        # Reload the systemd configuration to make it re-execute the default-display-manager generator
+        # which is responsible for configuring the correct display manager. As this does not start
+        # services which should be running but aren't, we have to start the display manager as well.
+        # But don't wait for it to start as this would create a deadlock with live-config.
+        systemctl daemon-reload
+        systemctl --no-block start display-manager.service
 fi
 
 echo "done." >> ${LOGFILE}
