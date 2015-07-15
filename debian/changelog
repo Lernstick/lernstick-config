@@ -1,3 +1,9 @@
+lernstick-config (12) lernstick-8; urgency=medium
+
+  * [ff4dc3] added config for surface pro 3 cover
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Wed, 15 Jul 2015 19:15:15 +0200
+
 lernstick-config (11) lernstick-8; urgency=medium
 
   * [88690f] fixed 1140-lernstick-xserver-xorg
