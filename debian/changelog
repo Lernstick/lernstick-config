@@ -1,3 +1,9 @@
+lernstick-config (13) lernstick-8; urgency=medium
+
+  * [ffcf2e] added sqlite3 to dependencies (needed by 9100-lernstick-locale)
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Wed, 29 Jul 2015 19:15:29 +0200
+
 lernstick-config (12) lernstick-8; urgency=medium
 
   * [ff4dc3] added config for surface pro 3 cover
