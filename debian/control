@@ -11,7 +11,7 @@ Vcs-Git: https://github.com/imedias/lernstick-config.git
 
 Package: lernstick-config
 Architecture: all
-Depends: ${misc:Depends}, live-config (>= 5~), xmlstarlet, gfxboot
+Depends: ${misc:Depends}, live-config (>= 5~), xmlstarlet, gfxboot, sqlite3
 Description: Lernstick Live System Configuration Components
  live-config contains the components that configure a live system during the
  boot process (late userspace).
