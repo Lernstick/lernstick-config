@@ -219,10 +219,10 @@ update_bootloaders() {
 	fi
 
 	# special handling for persistence-media config
-	if grep -q "persistence-media=removable-usb" /proc/cmdline
+	if grep -q "persistence-media=usb" /proc/cmdline
 	then
 		select_config "persistence-media" "id" "usb"
-		set_grub_config "PERSISTENCE_MEDIA" "persistence-media=removable-usb"
+		set_grub_config "PERSISTENCE_MEDIA" "persistence-media=usb"
 	elif grep -q "persistence-media=removable" /proc/cmdline
 	then
 		select_config "persistence-media" "id" "removable"
