@@ -234,7 +234,29 @@ Section "Device"
 	Driver		"${LIVE_XORG_DRIVER}"
 EndSection
 EOF
+	fi
 
+	# Workaround for a problem with Shuttle XS35 (GPU advertises a second screen which is not connected to the outside world):
+	# KDE can cope with this situation and uses the correct main screen. This way the user can just disable
+	# the non-functional second screen and everything is fine.
+	# GNOME, unfortunately, uses the non-functional screen as main screen and the user is left with an empty
+	# desktop with no way of interaction.
+	BASEBOARD_MANUFACTURER="$(/usr/sbin/dmidecode -s baseboard-manufacturer | sed 's/ //g')"
+	SYSTEM_PRODUCT_NAME="$(/usr/sbin/dmidecode -s system-product-name | sed 's/ //g')"
+	XS35_CONFIG_FILE="/etc/X11/xorg.conf.d/zz-xs35-workaround.conf"
+	if [ "${BASEBOARD_MANUFACTURER}" = "Shuttle" ] && [ "${SYSTEM_PRODUCT_NAME}" = "XS35" ]
+	then
+cat > ${XS35_CONFIG_FILE} << EOF
+Section "Monitor"
+    Identifier  "LVDS1"
+    Option      "Ignore" "true"
+EndSection
+EOF
+	else
+		if [ -e ${XS35_CONFIG_FILE} ]
+		then
+			rm ${XS35_CONFIG_FILE}
+		fi
 	fi
 
 	# set correct glx alternative
