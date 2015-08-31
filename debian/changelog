@@ -1,3 +1,9 @@
+lernstick-config (15) lernstick-8; urgency=medium
+
+  * [b4557c] added support for Apple keyboards and lazy configuration change
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Mon, 31 Aug 2015 12:52:28 +0200
+
 lernstick-config (14) lernstick-8; urgency=medium
 
   * [7e325e] use "usb" instead of (deprecated) "removable-usb" in bootmenu update script
