@@ -38,6 +38,24 @@ Cmdline ()
 Init ()
 {
 	echo -n " lernstick-keyboard-configuration"
+
+	if [ -z "${LIVE_KEYBOARD_MODEL}" -a -x /usr/sbin/dmidecode ]
+	then
+		if /usr/sbin/dmidecode -s chassis-manufacturer | grep -q "Apple"
+		then
+			LIVE_KEYBOARD_MODEL="macintosh"
+		else
+			LIVE_KEYBOARD_MODEL="pc105"
+		fi
+	fi
+
+	# enforce "lazy change" (only run the remaining script if the keyboard setting was really changed)
+	KEYBOARD_STATE_FILE="/var/lib/live/config/keyboard-fixup"
+	if [ ! -r ${KEYBOARD_STATE_FILE} ] || [ "${LIVE_KEYBOARD_LAYOUTS} ${LIVE_KEYBOARD_MODEL}" != "$(cat ${KEYBOARD_STATE_FILE})" ]
+	then
+		echo "${LIVE_KEYBOARD_LAYOUTS} ${LIVE_KEYBOARD_MODEL}" > $KEYBOARD_STATE_FILE
+		Config
+	fi
 }
 
 Config ()
@@ -79,4 +97,3 @@ Config ()
 
 Cmdline
 Init
-Config
