@@ -1,3 +1,9 @@
+lernstick-config (17) lernstick-8; urgency=medium
+
+  * [cbb448] Enable anacron previously disabled by live-config
+
+ -- Gaudenz Steinlin <gaudenz@debian.org>  Fri, 25 Sep 2015 12:21:33 +0200
+
 lernstick-config (16) lernstick-8; urgency=medium
 
   * [582e8f] added workaround for a problem with Shuttle XS35
