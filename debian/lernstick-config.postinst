@@ -1,0 +1,22 @@
+#!/bin/sh
+
+set -e
+
+case  "${1}" in
+    configure)
+        # remove divertion of anacron created by live-config
+        ANACRON="/usr/sbin/anacron"
+        STATEFILE="/var/lib/live/config/anacron"
+        if [ -e ${STATEFILE} -a "$(readlink ${ANACRON})" = "/bin/true" ] ; then
+            rm ${ANACRON}
+            dpkg-divert --package live-config --remove --rename ${ANACRON}
+            rm ${STATEFILE}
+        fi
+
+        ;;
+
+esac
+
+#DEBHELPER#
+
+exit 0
