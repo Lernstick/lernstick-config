@@ -1,3 +1,9 @@
+lernstick-config (18) lernstick-8; urgency=medium
+
+  * [ee973f] fixed unneccessary unmount in 9300-lernstick-update-bootmenu
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sun, 27 Sep 2015 17:41:19 +0200
+
 lernstick-config (17) lernstick-8; urgency=medium
 
   * [cbb448] Enable anacron previously disabled by live-config
