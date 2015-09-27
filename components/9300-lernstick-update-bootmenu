@@ -20,8 +20,11 @@ cleanup() {
 		echo "unmounting ${BOOT_PARTITION}" >> ${LOGFILE}
 		umount "${BOOT_TMP_MOUNT}" >> ${LOGFILE} 2>&1
 	else
-		echo "remounting ${IMAGE_DIR} read-only" >> ${LOGFILE}
-		mount -o remount,ro ${IMAGE_DIR} >> ${LOGFILE} 2>&1
+		if [ -n "${IMAGE_DIR}" ]
+		then
+			echo "remounting ${IMAGE_DIR} read-only" >> ${LOGFILE}
+			mount -o remount,ro ${IMAGE_DIR} >> ${LOGFILE} 2>&1
+		fi
 	fi
 
 	if [ -n "${EXCHANGE_TMP_MOUNT}" ]
