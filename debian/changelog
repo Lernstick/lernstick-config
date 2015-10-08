@@ -1,3 +1,9 @@
+lernstick-config (19) lernstick-8; urgency=medium
+
+  * [6ceea6] made Shuttle detection more generic (manufacturer changed from "Shuttle" to "Shuttle Inc.")
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Thu, 08 Oct 2015 17:31:45 +0200
+
 lernstick-config (18) lernstick-8; urgency=medium
 
   * [ee973f] fixed unneccessary unmount in 9300-lernstick-update-bootmenu
