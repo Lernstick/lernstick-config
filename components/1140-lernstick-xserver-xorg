@@ -241,23 +241,33 @@ EOF
 	# the non-functional second screen and everything is fine.
 	# GNOME, unfortunately, uses the non-functional screen as main screen and the user is left with an empty
 	# desktop with no way of interaction.
-	BASEBOARD_MANUFACTURER="$(/usr/sbin/dmidecode -s baseboard-manufacturer | sed 's/ //g')"
+	BASEBOARD_MANUFACTURER="$(/usr/sbin/dmidecode -s baseboard-manufacturer)"
 	SYSTEM_PRODUCT_NAME="$(/usr/sbin/dmidecode -s system-product-name | sed 's/ //g')"
 	XS35_CONFIG_FILE="/etc/X11/xorg.conf.d/zz-xs35-workaround.conf"
-	if [ "${BASEBOARD_MANUFACTURER}" = "Shuttle" ] && [ "${SYSTEM_PRODUCT_NAME}" = "XS35" ]
-	then
+	case "${BASEBOARD_MANUFACTURER}" in 
+		Shuttle*) 
+			if [ "${SYSTEM_PRODUCT_NAME}" = "XS35" ]
+			then
 cat > ${XS35_CONFIG_FILE} << EOF
 Section "Monitor"
     Identifier  "LVDS1"
     Option      "Ignore" "true"
 EndSection
 EOF
-	else
-		if [ -e ${XS35_CONFIG_FILE} ]
-		then
-			rm ${XS35_CONFIG_FILE}
-		fi
-	fi
+			else
+				if [ -e ${XS35_CONFIG_FILE} ]
+				then
+					rm ${XS35_CONFIG_FILE}
+				fi
+			fi
+			;;
+		*)
+			if [ -e ${XS35_CONFIG_FILE} ]
+			then
+				rm ${XS35_CONFIG_FILE}
+			fi
+			;;
+	esac
 
 	# set correct glx alternative
 	if [ -e /etc/alternatives/glx ]
