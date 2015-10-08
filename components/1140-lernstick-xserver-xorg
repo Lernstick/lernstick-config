@@ -242,10 +242,10 @@ EOF
 	# GNOME, unfortunately, uses the non-functional screen as main screen and the user is left with an empty
 	# desktop with no way of interaction.
 	BASEBOARD_MANUFACTURER="$(/usr/sbin/dmidecode -s baseboard-manufacturer)"
-	SYSTEM_PRODUCT_NAME="$(/usr/sbin/dmidecode -s system-product-name | sed 's/ //g')"
 	XS35_CONFIG_FILE="/etc/X11/xorg.conf.d/zz-xs35-workaround.conf"
 	case "${BASEBOARD_MANUFACTURER}" in 
 		Shuttle*) 
+			SYSTEM_PRODUCT_NAME="$(/usr/sbin/dmidecode -s system-product-name | sed 's/ //g')"
 			if [ "${SYSTEM_PRODUCT_NAME}" = "XS35" ]
 			then
 cat > ${XS35_CONFIG_FILE} << EOF
