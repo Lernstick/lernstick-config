@@ -1,3 +1,9 @@
+lernstick-config (20) lernstick-8; urgency=medium
+
+  * [e9f6ce] small code optimization
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Thu, 08 Oct 2015 18:42:08 +0200
+
 lernstick-config (19) lernstick-8; urgency=medium
 
   * [6ceea6] made Shuttle detection more generic (manufacturer changed from "Shuttle" to "Shuttle Inc.")
