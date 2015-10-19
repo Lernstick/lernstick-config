@@ -63,12 +63,18 @@ mount_boot_partition() {
 	mount "${BOOT_PARTITION}" "${IMAGE_DIR}" >> ${LOGFILE} 2>&1 && BOOT_TMP_MOUNT="${IMAGE_DIR}"
 }
 
-select_config()
+set_xmlboot_config()
 {
+	if [ -z "${XMLBOOT_CONFIG}" ]
+	then
+		# the XMLboot config was not found, but this is probably o.k.
+		# (e.g. on a FAT32 exchange paritition there is only a grub bootloader)
+		return 0
+	fi
 	CONFIG_ID="${1}"
 	ATTRIBUTE_ID="${2}"
 	ATTRIBUTE_VALUE="${3}"
-	echo "select_config ${1} ${2} ${3}" >> ${LOGFILE}
+	echo "set_xmlboot_config ${1} ${2} ${3}" >> ${LOGFILE}
 	cat ${XMLBOOT_CONFIG} | \
 	xmlstarlet ed -d "/xmlboot/configs/config[@id='${CONFIG_ID}']/option/@selected" | \
 	xmlstarlet ed -i "/xmlboot/configs/config[@id='${CONFIG_ID}']/option[@${ATTRIBUTE_ID}='${ATTRIBUTE_VALUE}']" \
@@ -86,6 +92,12 @@ set_grub_config()
 
 deselect_option()
 {
+	if [ -z "${XMLBOOT_CONFIG}" ]
+	then
+		# the XMLboot config was not found, but this is probably o.k.
+		# (e.g. on a FAT32 exchange paritition there is only a grub bootloader)
+		return 0
+	fi
 	echo "deselect_option ${1}" >> ${LOGFILE}
 	cat ${XMLBOOT_CONFIG} | \
 	xmlstarlet ed -d "/xmlboot/options/option[@id='${1}']/@selected" \
@@ -95,6 +107,12 @@ deselect_option()
 
 select_option()
 {
+	if [ -z "${XMLBOOT_CONFIG}" ]
+	then
+		# the XMLboot config was not found, but this is probably o.k.
+		# (e.g. on a FAT32 exchange paritition there is only a grub bootloader)
+		return 0
+	fi
 	echo "select_option ${1}" >> ${LOGFILE}
 	cat ${XMLBOOT_CONFIG} | \
 	xmlstarlet ed -d "/xmlboot/options/option[@id='${1}']/@selected" | \
@@ -142,33 +160,38 @@ update_bootloaders() {
 	echo "IMAGE_DIR: \"${IMAGE_DIR}\"" >> ${LOGFILE}
 	if [ -d ${IMAGE_DIR}/isolinux/ ]
 	then
-		CONFIG_DIR="${IMAGE_DIR}/isolinux"
+		SYSLINUX_CONFIG_DIR="${IMAGE_DIR}/isolinux"
 	elif [ -d ${IMAGE_DIR}/syslinux/ ]
 	then
-		CONFIG_DIR="${IMAGE_DIR}/syslinux"
+		SYSLINUX_CONFIG_DIR="${IMAGE_DIR}/syslinux"
 	else
 		echo "There was neither an isolinux nor a syslinux configuration in \"${IMAGE_DIR}\"." >> ${LOGFILE}
-		return 1
 	fi
-
-	# check writability of configuration directory
-	#
-	# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	# ! This test only works reliably with bash on      !
-	# ! read-only filesystems! Therefore, do not change !
-	# ! the first line with /bin/bash in this script!   !
-	# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	if [ ! -w ${CONFIG_DIR} ]
+	
+	if [ -n "${SYSLINUX_CONFIG_DIR}" ]
 	then
-		# it's ok, system was probably booted from iso...
-		echo "The configuration directory \"${CONFIG_DIR}\" is not writable." >> ${LOGFILE}
-		echo "The system was probably booted from DVD." >> ${LOGFILE}
-		return 0
+		# check writability of configuration directory
+		#
+		# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		# ! This test only works reliably with bash on      !
+		# ! read-only filesystems! Therefore, do not change !
+		# ! the first line with /bin/bash in this script!   !
+		# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		if [ ! -w ${SYSLINUX_CONFIG_DIR} ]
+		then
+			# it's ok, system was probably booted from iso...
+			echo "The configuration directory \"${SYSLINUX_CONFIG_DIR}\" is not writable." >> ${LOGFILE}
+			echo "The system was probably booted from DVD." >> ${LOGFILE}
+			return 0
+		fi
+
+		XMLBOOT_CONFIG="${SYSLINUX_CONFIG_DIR}/${BOOTLOGO_DIR}/xmlboot.config"
+		echo "XMLBOOT_CONFIG: \"${XMLBOOT_CONFIG}\"" >> ${LOGFILE}
+	else
+		XMLBOOT_CONFIG=""
 	fi
 
-	XMLBOOT_CONFIG="${CONFIG_DIR}/${BOOTLOGO_DIR}/xmlboot.config"
 	GRUB_CONFIG="${IMAGE_DIR}/boot/grub/grub.cfg"
-	echo "XMLBOOT_CONFIG: \"${XMLBOOT_CONFIG}\"" >> ${LOGFILE}
 	echo "GRUB_CONFIG: \"${GRUB_CONFIG}\"" >> ${LOGFILE}
 
 	# get current append line
@@ -179,20 +202,20 @@ update_bootloaders() {
 	do
 		case "${_PARAMETER}" in
 			locales=*)
-				select_config "language" "append" "${_PARAMETER}"
+				set_xmlboot_config "language" "append" "${_PARAMETER}"
 				LIVE_LOCALES="${_PARAMETER#*locales=}"
 				set_grub_config "LOCALES" "${LIVE_LOCALES}"
 				;;
 
 			keyboard-layouts=*)
-				select_config "keyboard" "append" "${_PARAMETER}"
+				set_xmlboot_config "keyboard" "append" "${_PARAMETER}"
 				LIVE_KEYBOARD="${_PARAMETER#*keyboard-layouts=}"
 				set_grub_config "KEYBOARD" "${LIVE_KEYBOARD}"
 				;;
 
 			desktop*)
 				LIVE_DESKTOP="${_PARAMETER#*desktop=}"
-				select_config "desktop" "id" "${LIVE_DESKTOP}"
+				set_xmlboot_config "desktop" "id" "${LIVE_DESKTOP}"
 				if [ "${LIVE_DESKTOP}" = "no" ]
 				then
 					set_grub_config "DESKTOP" "${LIVE_DESKTOP}"
@@ -206,32 +229,32 @@ update_bootloaders() {
 	# (removable-usb is deprecated!)
 	if grep -q "live-media=removable-usb" /proc/cmdline
 	then
-		select_config "live-media" "id" "removable-usb"
+		set_xmlboot_config "live-media" "id" "removable-usb"
 		set_grub_config "LIVE_MEDIA" "live-media=removable-usb live-media-timeout=10"
 	elif grep -q "live-media=usb" /proc/cmdline
 	then
-		select_config "live-media" "id" "usb"
+		set_xmlboot_config "live-media" "id" "usb"
 		set_grub_config "LIVE_MEDIA" "live-media=usb live-media-timeout=10"
 	elif grep -q "live-media=removable" /proc/cmdline
 	then
-		select_config "live-media" "id" "removable"
+		set_xmlboot_config "live-media" "id" "removable"
 		set_grub_config "LIVE_MEDIA" "live-media=removable live-media-timeout=10"
 	else
-		select_config "live-media" "id" "any"
+		set_xmlboot_config "live-media" "id" "any"
 		set_grub_config "LIVE_MEDIA" ""
 	fi
 
 	# special handling for persistence-media config
 	if grep -q "persistence-media=usb" /proc/cmdline
 	then
-		select_config "persistence-media" "id" "usb"
+		set_xmlboot_config "persistence-media" "id" "usb"
 		set_grub_config "PERSISTENCE_MEDIA" "persistence-media=usb"
 	elif grep -q "persistence-media=removable" /proc/cmdline
 	then
-		select_config "persistence-media" "id" "removable"
+		set_xmlboot_config "persistence-media" "id" "removable"
 		set_grub_config "PERSISTENCE_MEDIA" "persistence-media=removable"
 	else
-		select_config "persistence-media" "id" "any"
+		set_xmlboot_config "persistence-media" "id" "any"
 		set_grub_config "PERSISTENCE_MEDIA" ""
 	fi
 
@@ -242,11 +265,15 @@ update_bootloaders() {
 	update_nonselected_option "nolapic_timer" "lapic_timer"
 	update_nonselected_option "nohz=off" "dynamic_ticks"
 
+	# special handling for custom options
 	CUSTOM_OPTIONS="$(cat /proc/cmdline | grep "custom_options" | sed 's|.*custom_options\s*\(.*\)|\1|1')"
 	echo "CUSTOM_OPTIONS: \"${CUSTOM_OPTIONS}\"" >> ${LOGFILE}
-	cat ${XMLBOOT_CONFIG} | \
-	xmlstarlet ed -u "/xmlboot/custom_options/@text" -v "${CUSTOM_OPTIONS}" > ${XMLBOOT_CONFIG}.tmp
-	mv ${XMLBOOT_CONFIG}.tmp ${XMLBOOT_CONFIG}
+	if [ -n "${XMLBOOT_CONFIG}" ]
+	then
+		cat ${XMLBOOT_CONFIG} | \
+		xmlstarlet ed -u "/xmlboot/custom_options/@text" -v "${CUSTOM_OPTIONS}" > ${XMLBOOT_CONFIG}.tmp
+		mv ${XMLBOOT_CONFIG}.tmp ${XMLBOOT_CONFIG}
+	fi
 	set_grub_config "CUSTOM_OPTIONS" "${CUSTOM_OPTIONS}"
 
 	update_selected_grub_option "swapon" "SWAP" "swapon"
@@ -258,20 +285,23 @@ update_bootloaders() {
 	then
 		if grep -q "persistence-read-only" /proc/cmdline
 		then
-			select_config "persistence" "id" "ro"
+			set_xmlboot_config "persistence" "id" "ro"
 			set_grub_config "PERSISTENCE" "persistence persistence-read-only"
 		else
-			select_config "persistence" "id" "rw"
+			set_xmlboot_config "persistence" "id" "rw"
 			set_grub_config "PERSISTENCE" "persistence"
 		fi
 
 	else
-		select_config "persistence" "id" "no"
+		set_xmlboot_config "persistence" "id" "no"
 		set_grub_config "PERSISTENCE" ""
 	fi
 
-	# rebuild bootlogo
-	gfxboot --archive "${CONFIG_DIR}/${BOOTLOGO_DIR}" --pack-archive "${CONFIG_DIR}/bootlogo"
+	# rebuild bootlogo (only if syslinux/isolinux is really present)
+	if [ -n "${SYSLINUX_CONFIG_DIR}" ]
+	then
+		gfxboot --archive "${SYSLINUX_CONFIG_DIR}/${BOOTLOGO_DIR}" --pack-archive "${SYSLINUX_CONFIG_DIR}/bootlogo"
+	fi
 }
 
 # create directory for temporary mounts
