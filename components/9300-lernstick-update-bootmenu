@@ -166,6 +166,7 @@ update_bootloaders() {
 		SYSLINUX_CONFIG_DIR="${IMAGE_DIR}/syslinux"
 	else
 		echo "There was neither an isolinux nor a syslinux configuration in \"${IMAGE_DIR}\"." >> ${LOGFILE}
+		XMLBOOT_CONFIG=""
 	fi
 	
 	if [ -n "${SYSLINUX_CONFIG_DIR}" ]
