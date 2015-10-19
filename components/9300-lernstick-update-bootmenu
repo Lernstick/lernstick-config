@@ -166,6 +166,7 @@ update_bootloaders() {
 		SYSLINUX_CONFIG_DIR="${IMAGE_DIR}/syslinux"
 	else
 		echo "There was neither an isolinux nor a syslinux configuration in \"${IMAGE_DIR}\"." >> ${LOGFILE}
+		SYSLINUX_CONFIG_DIR=""
 		XMLBOOT_CONFIG=""
 	fi
 	
@@ -188,8 +189,6 @@ update_bootloaders() {
 
 		XMLBOOT_CONFIG="${SYSLINUX_CONFIG_DIR}/${BOOTLOGO_DIR}/xmlboot.config"
 		echo "XMLBOOT_CONFIG: \"${XMLBOOT_CONFIG}\"" >> ${LOGFILE}
-	else
-		XMLBOOT_CONFIG=""
 	fi
 
 	GRUB_CONFIG="${IMAGE_DIR}/boot/grub/grub.cfg"
