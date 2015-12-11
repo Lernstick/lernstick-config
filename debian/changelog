@@ -1,3 +1,9 @@
+lernstick-config (24) lernstick-8; urgency=medium
+
+  * [f638eb] remove nvidia module when reconfiguring nvidia alternative
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 11 Dec 2015 15:36:29 +0100
+
 lernstick-config (23) lernstick-8; urgency=medium
 
   * [8a53ba] another small fix
