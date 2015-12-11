@@ -292,6 +292,14 @@ EOF
 					# reconfigure the GLX alternative package
 					# see /usr/share/doc/nvidia-driver/README.alternatives
 					Reconfigure_glx_alternative_nvidia
+
+					# We are quite late here in the system startup process. The systemd service
+					# systemd-modules-load.service already tried to load kernel modules. There,
+					# a nvidia module with the wrong version could already be loaded because of
+					# an outdated glx alternatives configuration from previous boots.
+					# Therefore we must first try to unload the nvidia module before trying to
+					# load the currently detected version below.
+					modprobe -r nvidia || true
 				fi
 
 				modprobe --ignore-install ${_NVIDIA_MODULE:-nvidia} || true
