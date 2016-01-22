@@ -1,3 +1,9 @@
+lernstick-config (25) lernstick-8; urgency=medium
+
+  * [0a1e1e] added script to remove the mac addresses from network connections
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 22 Jan 2016 14:22:05 +0100
+
 lernstick-config (24) lernstick-8; urgency=medium
 
   * [f638eb] remove nvidia module when reconfiguring nvidia alternative
