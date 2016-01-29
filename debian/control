@@ -14,8 +14,7 @@ Architecture: all
 Depends: ${misc:Depends}, live-config (>= 5~), xmlstarlet, gfxboot, sqlite3, lernstick-archive-keyring
 Provides: ${diverted-files}
 Conflicts: ${diverted-files}
-Description: Lernstick Live System Configuration Components
- live-config contains the components that configure a live system during the
- boot process (late userspace).
- .
- This package contains the additional Lernstick components.
+Description: Lernstick System Configuration
+ This package contains the additional Lernstick live-config components and
+ configuration files for the Lernstick system. It uses config-package-dev to
+ divert config files where necessary.
