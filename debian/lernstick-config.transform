@@ -1,1 +1,1 @@
-/etc/login.defs.lernstick sed -e 's/^CHFN_RESTRICT[[:space:]]+.*[[:space:]]*$/CHFN_RESTRICT\t\tfrwh/'
+/etc/login.defs.lernstick sed -re 's/^CHFN_RESTRICT[[:space:]]+.*[[:space:]]*$/CHFN_RESTRICT\t\tfrwh/'
