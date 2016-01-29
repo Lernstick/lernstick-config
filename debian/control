@@ -3,7 +3,7 @@ Section: misc
 Priority: extra
 Maintainer: Lernstick Team <lernstick.ph@fhnw.ch>
 Uploaders: Ronny Standtke <ronny.standtke@fhnw.ch>, Gaudenz Steinlin <gaudenz@debian.org>
-Build-Depends: debhelper (>= 9), config-package-dev, login
+Build-Depends: debhelper (>= 9), config-package-dev
 Standards-Version: 3.9.6
 Homepage: http://www.imedias.ch/lernstick/
 Vcs-Browser: https://github.com/imedias/lernstick-config
