@@ -1,0 +1,6 @@
+# This package is not intended for Debian and should contain our apt preferences and sources
+lernstick-config: package-installs-apt-preferences
+lernstick-config: package-installs-apt-sources
+
+# This is to enable a service from another package
+lernstick-config: service-file-is-not-a-file lib/systemd/system/sysinit.target.wants/systemd-timesyncd.service
