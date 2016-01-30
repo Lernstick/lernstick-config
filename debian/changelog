@@ -1,3 +1,9 @@
+lernstick-config (28) lernstick-8-winterthur; urgency=medium
+
+  * [abd736] Packages to enable staging/experimental repositories
+
+ -- Gaudenz Steinlin <gaudenz@debian.org>  Sat, 30 Jan 2016 11:01:35 +0100
+
 lernstick-config (27) lernstick-8-winterthur; urgency=medium
 
   * [719f4a] Move configuration files to etc
