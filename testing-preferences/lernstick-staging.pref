@@ -1,0 +1,3 @@
+Package: *
+Pin: release l=lernstick-staging
+Pin-Priority: 500
