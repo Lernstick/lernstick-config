@@ -1,3 +1,20 @@
+lernstick-config (27) lernstick-8-winterthur; urgency=medium
+
+  * [719f4a] Move configuration files to etc
+  * [fefeba] Use config-package-dev to divert conffiles
+  * [b6f2d1] Displace /etc/dkms/framework.conf
+  * [9a6d17] APT configuration
+  * [97f626] Flash upgrade script
+  * [c28f28] Enable systemd-timesyncd
+  * [7693f6] Enable wifi and bluetooth on boot in rc.local
+  * [0dd242] Allow users to change Fullname
+  * [06719b] Add user-setup.conf to set default groups
+  * [18ede0] Add APT sources and keys
+  * [fa608d] Debian backports preferences
+  * [ad86cd] Update package description
+
+ -- Gaudenz Steinlin <gaudenz@debian.org>  Fri, 29 Jan 2016 16:47:16 +0100
+
 lernstick-config (26) lernstick-8; urgency=medium
 
   * [f28797] Update log messages for new bootloader location
