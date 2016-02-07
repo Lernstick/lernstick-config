@@ -1,3 +1,13 @@
+lernstick-config (29) lernstick-8-winterthur; urgency=medium
+
+  [ Gaudenz Steinlin ]
+  * [909828] Convert rfkill enable logic to systemd unit
+
+  [ Ronny Standtke ]
+  * [822689] fixed symlink for enabling time sync
+
+ -- Gaudenz Steinlin <gaudenz@debian.org>  Sun, 07 Feb 2016 16:59:51 +0100
+
 lernstick-config (28) lernstick-8-winterthur; urgency=medium
 
   * [abd736] Packages to enable staging/experimental repositories
