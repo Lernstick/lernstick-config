@@ -2,3 +2,4 @@ components/*			/lib/live/config/
 configs/*			/etc/live/config/
 efi_blacklist			/usr/share/lernstick-config/
 surface_pro_3_cover.conf	/etc/X11/xorg.conf.d/
+systemd-shutdown/*		/lib/systemd/

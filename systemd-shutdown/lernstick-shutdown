@@ -1,0 +1,69 @@
+#!/bin/sh
+
+BASEPATH="/lib/live/mount"
+ACTION="$1"
+
+unmount_loop() {
+    mount_path="$1"
+    unmounted="y"
+
+    # try until nothing can be unmounted anymore
+    while [ "$unmounted" = "y" ] ; do
+        unmounted="n"
+        for m in $(mount | cut -d ' ' -f 3 | grep "^${mount_path}") ; do
+            umount $m 2>/dev/null&& unmounted="y"
+        done
+    done
+}
+
+# move squashfs and persistence filesystems out of /oldroot
+for t in rootfs persistence ; do
+  for m in $(ls /oldroot${BASEPATH}/$t) ; do
+    mount_path="${BASEPATH}/$t/${m}"
+    mkdir -p "$mount_path"
+    mount -o move "/oldroot${mount_path}" "$mount_path"
+  done
+done
+
+# move medium out of /oldroot
+mkdir -p ${BASEPATH}/medium
+mount -o move /oldroot${BASEPATH}/medium ${BASEPATH}/medium
+
+# unmount what's still mounted under /oldroot
+unmount_loop /oldroot
+
+# unmount underlying filesystems
+unmount_loop $BASEPATH
+
+# uncomment to enable SSH into shutdown ramfs
+# needs to be enabled in /lib/systemd/system-shutdown/lernstick
+# as well
+#mount -t devpts none /dev/pts
+#/sbin/dropbear
+
+message='System shutdown complete. Press any key to $ACTION or wait $i seconds.'
+countdown="$(seq 10 -1 1)"
+if [ ${ACTION} != "reboot" ] ; then
+    if plymouth --ping ; then
+        # show message and wait some time
+        plymouth pause-progress
+        # watch for keystroke in background and execute $ACTION on keystroke
+        plymouth watch-keystroke --command="systemctl --force --force $ACTION" &
+        for i in $countdown ; do
+            plymouth display-message --text="$(eval echo "${message}")"
+            sleep 1
+        done
+    else
+        for i in $countdown ; do
+            eval echo "${message}"
+            if read -n 1 -t 1 ; then
+                systemctl --force --force $ACTION
+            fi
+        done
+    fi
+fi
+
+#sleep 1000
+
+# execute system action
+systemctl --force --force "$ACTION"
