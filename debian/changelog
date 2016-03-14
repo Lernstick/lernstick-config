@@ -1,3 +1,9 @@
+lernstick-config (26) lernstick-8; urgency=medium
+
+  * [f28797] Update log messages for new bootloader location
+
+ -- Gaudenz Steinlin <gaudenz@debian.org>  Fri, 29 Jan 2016 10:55:37 +0100
+
 lernstick-config (25) lernstick-8; urgency=medium
 
   * [0a1e1e] added script to remove the mac addresses from network connections

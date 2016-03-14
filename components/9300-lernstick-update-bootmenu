@@ -322,7 +322,7 @@ echo "first label: \"${FIRST_LABEL}\"" >> ${LOGFILE}
 
 if [ "${FIRST_LABEL}" = "${BOOT_LABEL}" ]
 then
-	echo "system uses the current partitioning schema with a separate boot partition" >> ${LOGFILE}
+	echo "system uses the legacy partitioning schema with bootloaders on the EFI partition" >> ${LOGFILE}
 	mount_boot_partition ${FIRST_PARTITION}
 	update_bootloaders
 else
@@ -332,7 +332,7 @@ else
 	echo "second label: \"${SECOND_LABEL}\"" >> ${LOGFILE}
 	if [ "${SECOND_LABEL}" = "${BOOT_LABEL}" ]
 	then
-		echo "system uses the current partitioning schema with a separate boot partition" >> ${LOGFILE}
+		echo "system uses the legacy partitioning schema with bootloaders on the EFI partition" >> ${LOGFILE}
 		echo "but for legacy (removable) USB flash drives" >> ${LOGFILE}
 
 		echo "updating boot loader config on boot partition" >> ${LOGFILE}
@@ -361,7 +361,7 @@ else
 		fi
 
 	else
-		echo "system uses the legacy partitioning schema without a separate boot partition" >> ${LOGFILE}
+		echo "system uses the current partitioning schema with bootloaders on the system partition" >> ${LOGFILE}
 		if mount -o remount,rw "${LIVE_MOUNTPOINT}"
 		then
 			IMAGE_DIR="${LIVE_MOUNTPOINT}"
