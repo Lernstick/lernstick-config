@@ -1,0 +1,40 @@
+#!/bin/sh
+
+DESTDIR="/run/initramfs"
+verbose="y"
+
+# create directories
+for d in etc bin sbin proc ; do
+  mkdir $DESTDIR/$d || true 2>/dev/null
+done
+
+# copy busybox and dependencies to /run/initramfs
+. /usr/share/initramfs-tools/hooks/zz-busybox
+
+# copy plymouth
+. /usr/share/initramfs-tools/hooks/plymouth
+
+# copy systemctl needed for final shutdown
+copy_exec /bin/systemctl
+
+# copy shutdown script, this script will be executed later by systemd-shutdown
+cp /lib/systemd/lernstick-shutdown $DESTDIR/shutdown
+
+# mount proc
+mount -o bind /proc $DESTDIR/proc
+
+# Uncomment to enable SSH in shutdown ramfs
+# needs dropbear to be installed and SSH keys
+# in /home/user/.ssh/authorized_keys
+
+#copy_exec /usr/sbin/dropbear /sbin
+#LIBC_DIR=$(ldd /usr/sbin/dropbear | sed -n -e 's,.* => \(/lib.*\)/libc\.so\..*,\1,p')
+#for so in $(find "${LIBC_DIR}" -name 'libnss_compat*'); do
+#    copy_exec "${so}"
+#done
+#echo 'passwd: compat' > "${DESTDIR}/etc/nsswitch.conf"
+#echo "root:x:0:0:root:/root:/bin/sh" > "${DESTDIR}/etc/passwd"
+#cp -R /etc/initramfs-tools/etc/dropbear "${DESTDIR}/etc/"
+#mkdir -p "${DESTDIR}/root/.ssh"
+#cp /home/user/.ssh/authorized_keys "${DESTDIR}/root/.ssh"
+

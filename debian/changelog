@@ -31,6 +31,23 @@ lernstick-config (27) lernstick-8-winterthur; urgency=medium
 
  -- Gaudenz Steinlin <gaudenz@debian.org>  Fri, 29 Jan 2016 16:47:16 +0100
 
+lernstick-config (26.2) lernstick-8; urgency=medium
+
+  [ Gaudenz Steinlin ]
+  * Run anacron on battery power
+
+ -- Gaudenz Steinlin <gaudenz@debian.org>  Fri, 18 Mar 2016 15:27:24 +0100
+
+lernstick-config (26.1) lernstick-8; urgency=medium
+
+  [ Ronny Standtke ]
+  * [117697] create link to enable time sychronization
+
+  [ Gaudenz Steinlin ]
+  * [b4d063] Clean shutdown
+
+ -- Gaudenz Steinlin <gaudenz@debian.org>  Mon, 14 Mar 2016 20:46:08 +0100
+
 lernstick-config (26) lernstick-8; urgency=medium
 
   * [f28797] Update log messages for new bootloader location
