@@ -1,3 +1,13 @@
+lernstick-config (30) lernstick-8-winterthur; urgency=medium
+
+  [ Ronny Standtke ]
+  * add user to group vboxsf (VirtualBox shared folders)
+
+  [ Gaudenz Steinlin ]
+  * Merge changes from version 26.1 and 26.2
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 18 Mar 2016 15:44:19 +0100
+
 lernstick-config (29) lernstick-8-winterthur; urgency=medium
 
   [ Gaudenz Steinlin ]
