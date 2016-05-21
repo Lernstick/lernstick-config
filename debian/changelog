@@ -1,3 +1,10 @@
+lernstick-config (31) lernstick-8-winterthur; urgency=medium
+
+  * [4ececb] removed override for virtualbox as it is buggy and no longer needed
+  * [03cea0] updated debian changelog
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sat, 21 May 2016 18:26:41 +0200
+
 lernstick-config (30) lernstick-8-winterthur; urgency=medium
 
   [ Ronny Standtke ]
