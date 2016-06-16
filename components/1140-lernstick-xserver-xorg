@@ -38,7 +38,9 @@ Detect_xorg_driver ()
         # first card only.
 	_DEVICE="$(echo "${_DEVICES}" | head -n1)"
 
-	# There are some drivers that do not work with EFI boot
+	# There are some GPUs that don't work with the proprietary drivers when booting via EFI
+	# but they do work when booting via BIOS. Therefore we add them to an "EFI blacklist"
+	# that enforces the usage of the open source drivers.
 	if grep -q lernstick_efi_boot /proc/cmdline
 	then
 		if grep -q ${_DEVICE} /usr/share/lernstick-config/efi_blacklist
@@ -97,7 +99,6 @@ Detect_xorg_driver ()
 				fi
 			fi
 		done
-
 	fi
 
 	# fall back to xorg autoconfiguration
