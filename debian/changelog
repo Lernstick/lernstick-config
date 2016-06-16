@@ -1,3 +1,11 @@
+lernstick-config (26.4) lernstick-8; urgency=medium
+
+  [ Ronny Standtke ]
+  * [afd68c] added MacBook Air A1369 to EFI blacklist
+  * [b53c30] simplified X11 config file for the microsoft surface typecover
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Thu, 16 Jun 2016 15:02:47 +0200
+
 lernstick-config (26.3) lernstick-8; urgency=medium
 
   * [4ececb] removed override for virtualbox as it is buggy and no longer needed
