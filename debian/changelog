@@ -1,3 +1,9 @@
+lernstick-config (26.5) lernstick-8; urgency=medium
+
+  * [68aee3] remove harmful /etc/modules-load.d/nvidia.conf directly after creation in 1140-lernstick-xserver-xorg
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sat, 18 Jun 2016 21:46:05 +0200
+
 lernstick-config (26.4) lernstick-8; urgency=medium
 
   [ Ronny Standtke ]
