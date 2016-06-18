@@ -24,10 +24,10 @@ Detect_xorg_driver ()
 
 	_DEVICES="$(lspci -mn | awk '$2 == "\"0300\"" { gsub ("\"",""); print toupper($3$4) }' | uniq)"
 
-	# Using anything other than native xorg drivers  has (so far) failed on most systems
+	# Using anything other than native xorg drivers has (so far) failed on most systems
         # with several different display controllers. DUALCARD is a regex of PCI IDs which support
         # more than one card with proprietary drivers.
-	# Therefore use xorg-autoconfig in this case
+	# In all other cases we just fall back to xorg-autoconfig.
 	if [ $(echo "${_DEVICES}" | wc -l) -ne 1 -a $(echo "$_DEVICES" | grep -c ${DUALCARD} ) -ne 2 ]
 	then
 		LIVE_XORG_DRIVER="xorg-autoconfig"
@@ -269,12 +269,44 @@ EOF
 		case "${LIVE_XORG_DRIVER}" in
 			fglrx)
 				update-alternatives --quiet --set glx /usr/lib/fglrx
-
 				modprobe --ignore-install fglrx || true
 				;;
 
 			nvidia)
 				update-alternatives --quiet --set glx /usr/lib/nvidia
+
+				# The update-alternatives call above creates a file /etc/modules-load.d/nvidia.conf
+				#
+				# This file is problematic on a live system because of the following situations:
+				#
+				# Interference with different NVIDIA driver generations:
+				# ======================================================
+				# 1) The system was booted on a computer with a NVIDIA GPU that was supported by a
+				#    legacy driver. Our script enabled this driver,
+				#    /etc/modules-load.d/nvidia.conf was setup and everything was running great.
+				# 2) Next time the system was booted on a computer with a NVIDIA GPU that was supported
+				#    by the legacy AND the current driver. The systemd service systemd-modules-load.service
+				#    already successfully loaded the legacy kernel module specified in
+				#    /etc/modules-load.d/nvidia.conf. Our (this) script (correctly) configured the current driver
+				#    and the X server failed to start because of the already loaded but different, outdated
+				#    and just wrong nvidia kernel module.
+				#
+				# Interference with the same NVIDIA driver generation (EFI blacklist):
+				# ====================================================================
+				# 1) The system was booted on a Dell Latitude D630 with an NVIDIA GPU supported by the
+				#    proprietary legacy-340xx driver. Our script enabled this driver,
+				#    /etc/modules-load.d/nvidia.conf was setup and everything was running great.
+				# 2) Next time the system was booted on a MacBook Air A1369 where the GPU is also
+				#    "officially" supported by the same legacy-340xx driver. Unfortunately, this driver
+				#    just crashes on this MacBook when booting via USB/EFI. Therefore we put it on our EFI
+				#    blacklist. Unfortunately, the systemd-modules-load.service already successfully loaded
+				#    the nvidia kernel module because /etc/modules-load.d/nvidia.conf was created when
+				#    booting before on the Dell Latitude D630 in step (1). Our script correctly enabled the
+				#    mesa driver (nouveau) but the already loaded nvidia kernel module made the running
+				#    X session very unstable and the 3D acceleration was completely broken.
+				#
+				# Therefore, we just delete this file right after it has been created here...
+				rm /etc/modules-load.d/nvidia.conf
 
 				_NVIDIA_ALTERNATIVE="/usr/lib/nvidia/${_NVIDIA_VERSION:-current}"
 				# Check if the alternative is present and if it needs to be updated.
@@ -286,14 +318,6 @@ EOF
 					# reconfigure the GLX alternative package
 					# see /usr/share/doc/nvidia-driver/README.alternatives
 					Reconfigure_glx_alternative_nvidia
-
-					# We are quite late here in the system startup process. The systemd service
-					# systemd-modules-load.service already tried to load kernel modules. There,
-					# a nvidia module with the wrong version could already be loaded because of
-					# an outdated glx alternatives configuration from previous boots.
-					# Therefore we must first try to unload the nvidia module before trying to
-					# load the currently detected version below.
-					modprobe -r nvidia || true
 				fi
 
 				modprobe --ignore-install ${_NVIDIA_MODULE:-nvidia} || true
