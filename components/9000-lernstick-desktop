@@ -27,7 +27,7 @@ rm -f /home/user/.dmrc
 case "${LERNSTICK_DESKTOP}" in
         kde)
                 _SESSION_MANAGER="/usr/bin/startkde"
-                _DISPLAY_MANAGER="/usr/bin/kdm"
+                _DISPLAY_MANAGER="/usr/bin/sddm"
                 ;;
 
         gnome)
@@ -52,7 +52,7 @@ case "${LERNSTICK_DESKTOP}" in
 
         lxde)
                 _SESSION_MANAGER="/usr/bin/lxsession"
-                _DISPLAY_MANAGER="/usr/bin/kdm"
+                _DISPLAY_MANAGER="/usr/bin/gdm3"
                 ;;
 
         enlightenment)
@@ -60,7 +60,7 @@ case "${LERNSTICK_DESKTOP}" in
 [Desktop]
 Session=enlightenment
 EOF
-                _DISPLAY_MANAGER="/usr/bin/kdm"
+                _DISPLAY_MANAGER="/usr/bin/gdm3"
                 ;;
 
         no)
