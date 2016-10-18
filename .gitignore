@@ -1,4 +1,5 @@
+debian/debhelper-build-stamp
 debian/files
+debian/lernstick-config/
 debian/lernstick-config.debhelper.log
 debian/lernstick-config.substvars
-debian/lernstick-config/
