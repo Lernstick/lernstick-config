@@ -1,3 +1,9 @@
+lernstick-config (27) lernstick-9; urgency=medium
+
+  * [5829fd] adopted installation destination to Debian 9
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Tue, 18 Oct 2016 17:11:02 +0200
+
 lernstick-config (26.5) lernstick-8; urgency=medium
 
   * [68aee3] remove harmful /etc/modules-load.d/nvidia.conf directly after creation in 1140-lernstick-xserver-xorg
