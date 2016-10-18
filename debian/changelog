@@ -1,3 +1,9 @@
+lernstick-config (28) lernstick-9; urgency=medium
+
+  * [d73ba8] replaced kdm (no longer in Debian 9) with sddm or gdm3
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Tue, 18 Oct 2016 19:44:01 +0200
+
 lernstick-config (27) lernstick-9; urgency=medium
 
   * [5829fd] adopted installation destination to Debian 9
