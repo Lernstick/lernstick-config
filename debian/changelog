@@ -1,3 +1,9 @@
+lernstick-config (29) lernstick-9; urgency=medium
+
+  * [da11d6] update the systemd display manager service file
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Tue, 18 Oct 2016 23:45:32 +0200
+
 lernstick-config (28) lernstick-9; urgency=medium
 
   * [d73ba8] replaced kdm (no longer in Debian 9) with sddm or gdm3
