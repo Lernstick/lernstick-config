@@ -1,5 +1,5 @@
 components/*				/lib/live/config/
-configs/*				/etc/live/config/
+configs/*				/etc/live/config.conf.d/
 efi_blacklist				/usr/share/lernstick-config/
 microsoft_surface_typecover.conf	/etc/X11/xorg.conf.d/
 systemd-shutdown/*			/lib/systemd/
