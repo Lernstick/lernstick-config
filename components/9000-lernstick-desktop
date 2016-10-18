@@ -28,31 +28,37 @@ case "${LERNSTICK_DESKTOP}" in
         kde)
                 _SESSION_MANAGER="/usr/bin/startkde"
                 _DISPLAY_MANAGER="/usr/bin/sddm"
+                _SERVICE_NAME="sddm"
                 ;;
 
         gnome)
                 _SESSION_MANAGER="/usr/bin/gnome-session"
                 _DISPLAY_MANAGER="/usr/sbin/gdm3"
+                _SERVICE_NAME="gdm3"
                 ;;
 
         cinnamon)
                 _SESSION_MANAGER="/usr/bin/cinnamon-session"
                 _DISPLAY_MANAGER="/usr/sbin/gdm3"
+                _SERVICE_NAME="gdm3"
                 ;;
 
         mate)
                 _SESSION_MANAGER="/usr/bin/mate-session"
                 _DISPLAY_MANAGER="/usr/sbin/gdm3"
+                _SERVICE_NAME="gdm3"
                 ;;
 
         xfce)
                 _SESSION_MANAGER="/usr/bin/xfce4-session"
                 _DISPLAY_MANAGER="/usr/sbin/gdm3"
+                _SERVICE_NAME="gdm3"
                 ;;
 
         lxde)
                 _SESSION_MANAGER="/usr/bin/lxsession"
                 _DISPLAY_MANAGER="/usr/bin/gdm3"
+                _SERVICE_NAME="gdm3"
                 ;;
 
         enlightenment)
@@ -61,6 +67,7 @@ case "${LERNSTICK_DESKTOP}" in
 Session=enlightenment
 EOF
                 _DISPLAY_MANAGER="/usr/bin/gdm3"
+                _SERVICE_NAME="gdm3"
                 ;;
 
         no)
@@ -75,13 +82,19 @@ fi
 
 if ! grep -q "^${_DISPLAY_MANAGER}$" /etc/X11/default-display-manager
 then
+	# The user changed the default display manager, update its file and systemd symlink.
         echo "${_DISPLAY_MANAGER}" > /etc/X11/default-display-manager
-        # Reload the systemd configuration to make it re-execute the default-display-manager generator
-        # which is responsible for configuring the correct display manager. As this does not start
-        # services which should be running but aren't, we have to start the display manager as well.
-        # But don't wait for it to start as this would create a deadlock with live-config.
-        systemctl daemon-reload
-        systemctl --no-block start display-manager.service
+	if [ -z "${_SERVICE_NAME}" ]
+	then
+		rm -f /etc/systemd/system/display-manager.service
+	        systemctl daemon-reload
+	else
+		ln -sf /lib/systemd/system/${_SERVICE_NAME}.service /etc/systemd/system/display-manager.service
+		# As this does not start services which should be running but aren't, we have to start the display manager as well.
+	        # But don't wait for it to start as this would create a deadlock with live-config.
+	        systemctl daemon-reload
+	        systemctl --no-block start display-manager.service
+	fi
 fi
 
 echo "done." >> ${LOGFILE}
