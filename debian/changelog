@@ -1,3 +1,9 @@
+lernstick-config (31.deb9) lernstick-9; urgency=medium
+
+  * [1d486a] fixed support for enlightenment
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Wed, 19 Oct 2016 21:04:38 +0200
+
 lernstick-config (30) lernstick-9; urgency=medium
 
   * [197381] fixed paths to gdm3
