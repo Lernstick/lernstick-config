@@ -19,16 +19,12 @@ done
 
 echo "LERNSTICK_DESKTOP: \"${LERNSTICK_DESKTOP}\"" > ${LOGFILE}
 
-# sometimes users end up with an empty .dmrc file
-# this heavily confuses kdm (it starts just gnome-terminal) and makes users mad
-# therefore we always remove this file here
-rm -f /home/user/.dmrc
-
 case "${LERNSTICK_DESKTOP}" in
         kde)
                 _SESSION_MANAGER="/usr/bin/startkde"
                 _DISPLAY_MANAGER="/usr/bin/sddm"
                 _SERVICE_NAME="sddm"
+		sed -i 's/Session=.*/Session=plasma.desktop/' /etc/sddm.conf
                 ;;
 
         gnome)
@@ -62,12 +58,10 @@ case "${LERNSTICK_DESKTOP}" in
                 ;;
 
         enlightenment)
-                cat > /home/user/.dmrc << EOF
-[Desktop]
-Session=enlightenment
-EOF
-                _DISPLAY_MANAGER="/usr/sbin/gdm3"
-                _SERVICE_NAME="gdm3"
+		# there is no alternatives option for enlightenment...
+                _DISPLAY_MANAGER="/usr/bin/sddm"
+                _SERVICE_NAME="sddm"
+		sed -i 's/Session=.*/Session=enlightenment.desktop/' /etc/sddm.conf
                 ;;
 
         no)
