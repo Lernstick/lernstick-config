@@ -1,3 +1,9 @@
+lernstick-config (32.deb9) lernstick-9; urgency=medium
+
+  * [2b84d5] added custom config script for gdm3
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Wed, 19 Oct 2016 22:01:47 +0200
+
 lernstick-config (31.deb9) lernstick-9; urgency=medium
 
   * [1d486a] fixed support for enlightenment
