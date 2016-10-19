@@ -57,7 +57,7 @@ case "${LERNSTICK_DESKTOP}" in
 
         lxde)
                 _SESSION_MANAGER="/usr/bin/lxsession"
-                _DISPLAY_MANAGER="/usr/bin/gdm3"
+                _DISPLAY_MANAGER="/usr/sbin/gdm3"
                 _SERVICE_NAME="gdm3"
                 ;;
 
@@ -66,7 +66,7 @@ case "${LERNSTICK_DESKTOP}" in
 [Desktop]
 Session=enlightenment
 EOF
-                _DISPLAY_MANAGER="/usr/bin/gdm3"
+                _DISPLAY_MANAGER="/usr/sbin/gdm3"
                 _SERVICE_NAME="gdm3"
                 ;;
 
