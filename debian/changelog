@@ -1,3 +1,9 @@
+lernstick-config (26.6) lernstick-8; urgency=medium
+
+  * [abef19] added customized gdm script without timed login
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Mon, 19 Dec 2016 21:03:51 +0100
+
 lernstick-config (26.5) lernstick-8; urgency=medium
 
   * [68aee3] remove harmful /etc/modules-load.d/nvidia.conf directly after creation in 1140-lernstick-xserver-xorg
