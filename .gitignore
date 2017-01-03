@@ -1,4 +1,13 @@
 debian/files
-debian/lernstick-config.debhelper.log
-debian/lernstick-config.substvars
 debian/lernstick-config/
+debian/lernstick-config.debhelper.log
+debian/lernstick-config.postinst.debhelper
+debian/lernstick-config.postrm.debhelper
+debian/lernstick-config.prerm.debhelper
+debian/lernstick-config.substvars
+debian/lernstick-experimental/
+debian/lernstick-experimental.debhelper.log
+debian/lernstick-experimental.substvars
+debian/lernstick-staging/
+debian/lernstick-staging.debhelper.log
+debian/lernstick-staging.substvars
