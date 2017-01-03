@@ -7,3 +7,6 @@ Before=network-pre.target
 Type=oneshot
 ExecStart=/usr/sbin/rfkill unblock wifi
 ExecStart=/usr/sbin/rfkill unblock bluetooth
+
+[Install]
+WantedBy=default.target
