@@ -1,3 +1,9 @@
+lernstick-config (33) lernstick-8; urgency=medium
+
+  * bumped version number
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Tue, 03 Jan 2017 19:25:04 +0100
+
 lernstick-config (32) lernstick-8; urgency=medium
 
   * merged branch 'config-package' into debian8
