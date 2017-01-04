@@ -1,3 +1,9 @@
+lernstick-config (36) lernstick-8; urgency=medium
+
+  * [da35ff] fixed override for gdm3
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Wed, 04 Jan 2017 10:07:07 +0100
+
 lernstick-config (35) lernstick-8; urgency=medium
 
   * [6ae790] updated sources files of geogebra & jitsi
