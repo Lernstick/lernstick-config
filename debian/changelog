@@ -1,3 +1,9 @@
+lernstick-config (37) lernstick-8; urgency=medium
+
+  * [47be85] moved live-config user setup defaults to lernstick-usertemplate package
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Wed, 04 Jan 2017 12:16:29 +0100
+
 lernstick-config (36) lernstick-8; urgency=medium
 
   * [da35ff] fixed override for gdm3
