@@ -3,7 +3,7 @@ Section: misc
 Priority: extra
 Maintainer: Lernstick Team <lernstick.ph@fhnw.ch>
 Uploaders: Ronny Standtke <ronny.standtke@fhnw.ch>, Gaudenz Steinlin <gaudenz@debian.org>
-Build-Depends: debhelper (>= 9), dh-systemd
+Build-Depends: debhelper (>= 9), config-package-dev, dh-systemd
 Standards-Version: 3.9.6
 Homepage: http://www.imedias.ch/lernstick/
 Vcs-Browser: https://github.com/imedias/lernstick-config
@@ -11,9 +11,33 @@ Vcs-Git: https://github.com/imedias/lernstick-config.git
 
 Package: lernstick-config
 Architecture: all
-Depends: ${misc:Depends}, live-config (>= 5~), xmlstarlet, gfxboot, sqlite3
-Description: Lernstick Live System Configuration Components
- live-config contains the components that configure a live system during the
- boot process (late userspace).
+Depends: ${misc:Depends}, live-config (>= 5~), xmlstarlet, gfxboot, sqlite3, lernstick-archive-keyring
+Provides: ${diverted-files}
+Conflicts: ${diverted-files}
+Description: Lernstick System Configuration
+ This package contains the additional Lernstick live-config components and
+ configuration files for the Lernstick system. It uses config-package-dev to
+ divert config files where necessary.
+
+Package: lernstick-staging
+Architecture: all
+Depends: ${misc:Depends},
+Description: Install Packages from the Lernstick staging area
+ This package configures your system to install packages from the Lernstick
+ staging area. These are packages that are still being tested and not yet
+ released for all Lernstick users.
  .
- This package contains the additional Lernstick components.
+ Use at your own risk! Packages installed from the staging area my break your
+ system and make it unusable.
+
+Package: lernstick-experimental
+Architecture: all
+Depends: ${misc:Depends},
+Description: Install Packages from the Lernstick experimental area
+ This package configures your system to install packages from the Lernstick
+ experimental area. These are packages that are very new and not yet tested.
+ .
+ Use at your own risk! Packages installed from the experimental area my break
+ your system and make it unusable. The experimental area is even more unstable
+ than the staging area. Don't install this package if you don't know how to fix
+ your system after breakage.

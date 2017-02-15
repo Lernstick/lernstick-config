@@ -34,6 +34,48 @@ lernstick-config (27) lernstick-9; urgency=medium
 
  -- Ronny Standtke <ronny.standtke@gmx.net>  Tue, 18 Oct 2016 17:11:02 +0200
 
+lernstick-config (37) lernstick-8; urgency=medium
+
+  * [47be85] moved live-config user setup defaults to lernstick-usertemplate package
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Wed, 04 Jan 2017 12:16:29 +0100
+
+lernstick-config (36) lernstick-8; urgency=medium
+
+  * [da35ff] fixed override for gdm3
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Wed, 04 Jan 2017 10:07:07 +0100
+
+lernstick-config (35) lernstick-8; urgency=medium
+
+  * [6ae790] updated sources files of geogebra & jitsi
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Tue, 03 Jan 2017 23:33:22 +0100
+
+lernstick-config (34) lernstick-8; urgency=medium
+
+  * [549d58] added missing install section to rfkill-enable.service file
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Tue, 03 Jan 2017 22:04:01 +0100
+
+lernstick-config (33) lernstick-8; urgency=medium
+
+  * bumped version number
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Tue, 03 Jan 2017 19:25:04 +0100
+
+lernstick-config (32) lernstick-8; urgency=medium
+
+  * merged branch 'config-package' into debian8
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Tue, 03 Jan 2017 19:17:31 +0100
+
+lernstick-config (26.6) lernstick-8; urgency=medium
+
+  * [abef19] added customized gdm script without timed login
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Mon, 19 Dec 2016 21:03:51 +0100
+
 lernstick-config (26.5) lernstick-8; urgency=medium
 
   * [68aee3] remove harmful /etc/modules-load.d/nvidia.conf directly after creation in 1140-lernstick-xserver-xorg
@@ -42,17 +84,60 @@ lernstick-config (26.5) lernstick-8; urgency=medium
 
 lernstick-config (26.4) lernstick-8; urgency=medium
 
-  [ Ronny Standtke ]
   * [afd68c] added MacBook Air A1369 to EFI blacklist
   * [b53c30] simplified X11 config file for the microsoft surface typecover
 
  -- Ronny Standtke <ronny.standtke@gmx.net>  Thu, 16 Jun 2016 15:02:47 +0200
 
-lernstick-config (26.3) lernstick-8; urgency=medium
+lernstick-config (31) lernstick-8-winterthur; urgency=medium
 
   * [4ececb] removed override for virtualbox as it is buggy and no longer needed
+  * [03cea0] updated debian changelog
 
- -- Ronny Standtke <ronny.standtke@gmx.net>  Wed, 27 Apr 2016 19:22:26 +0200
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sat, 21 May 2016 18:26:41 +0200
+
+lernstick-config (30) lernstick-8-winterthur; urgency=medium
+
+  [ Ronny Standtke ]
+  * add user to group vboxsf (VirtualBox shared folders)
+
+  [ Gaudenz Steinlin ]
+  * Merge changes from version 26.1 and 26.2
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 18 Mar 2016 15:44:19 +0100
+
+lernstick-config (29) lernstick-8-winterthur; urgency=medium
+
+  [ Gaudenz Steinlin ]
+  * [909828] Convert rfkill enable logic to systemd unit
+
+  [ Ronny Standtke ]
+  * [822689] fixed symlink for enabling time sync
+
+ -- Gaudenz Steinlin <gaudenz@debian.org>  Sun, 07 Feb 2016 16:59:51 +0100
+
+lernstick-config (28) lernstick-8-winterthur; urgency=medium
+
+  * [abd736] Packages to enable staging/experimental repositories
+
+ -- Gaudenz Steinlin <gaudenz@debian.org>  Sat, 30 Jan 2016 11:01:35 +0100
+
+lernstick-config (27) lernstick-8-winterthur; urgency=medium
+
+  * [719f4a] Move configuration files to etc
+  * [fefeba] Use config-package-dev to divert conffiles
+  * [b6f2d1] Displace /etc/dkms/framework.conf
+  * [9a6d17] APT configuration
+  * [97f626] Flash upgrade script
+  * [c28f28] Enable systemd-timesyncd
+  * [7693f6] Enable wifi and bluetooth on boot in rc.local
+  * [0dd242] Allow users to change Fullname
+  * [06719b] Add user-setup.conf to set default groups
+  * [18ede0] Add APT sources and keys
+  * [fa608d] Debian backports preferences
+  * [ad86cd] Update package description
+
+ -- Gaudenz Steinlin <gaudenz@debian.org>  Fri, 29 Jan 2016 16:47:16 +0100
 
 lernstick-config (26.2) lernstick-8; urgency=medium
 
@@ -81,7 +166,7 @@ lernstick-config (25) lernstick-8; urgency=medium
 
   * [0a1e1e] added script to remove the mac addresses from network connections
 
- -- Ronny Standtke <ronny.standtke@gmx.net>  Sun, 17 Jan 2016 16:06:43 +0100
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 22 Jan 2016 14:22:05 +0100
 
 lernstick-config (24) lernstick-8; urgency=medium
 
