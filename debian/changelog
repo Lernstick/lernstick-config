@@ -2,7 +2,7 @@ lernstick-config (38) lernstick-9; urgency=medium
 
   * [19a69d] Merge branch 'debian8'
 
- -- lernstick <lernstick@debian>  Wed, 15 Feb 2017 12:52:28 +0100
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Wed, 15 Feb 2017 13:06:05 +0100
 
 lernstick-config (32.deb9) lernstick-9; urgency=medium
 
