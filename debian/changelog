@@ -1,3 +1,9 @@
+lernstick-config (38) lernstick-8; urgency=medium
+
+  * [489cbe] added X11 config to enforce clickpad configuration on Dell Vostro 15
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Thu, 02 Mar 2017 17:44:34 +0100
+
 lernstick-config (37) lernstick-8; urgency=medium
 
   * [47be85] moved live-config user setup defaults to lernstick-usertemplate package
