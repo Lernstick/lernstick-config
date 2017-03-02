@@ -1,4 +1,4 @@
-lernstick-config (38) lernstick-8; urgency=medium
+lernstick-config (38.deb8) lernstick-8; urgency=medium
 
   * [489cbe] added X11 config to enforce clickpad configuration on Dell Vostro 15
 
