@@ -1,3 +1,10 @@
+lernstick-config (39.deb8) lernstick-8; urgency=medium
+
+  * [4f3565] tab instead of spaces
+  * [d97140] moved some live-config scripts into systemd units
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Thu, 09 Mar 2017 19:16:15 +0100
+
 lernstick-config (38.deb8) lernstick-8; urgency=medium
 
   * [489cbe] added X11 config to enforce clickpad configuration on Dell Vostro 15
