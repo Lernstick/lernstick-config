@@ -33,6 +33,7 @@ hideApplication()
 
 activate_nvidia()
 {
+	echo "enabling NVIDIA settings"
 	# show NVIDIA settings in menu
 	showApplication /usr/share/applications/nvidia-settings.desktop
 
@@ -42,6 +43,7 @@ activate_nvidia()
 
 activate_fglrx()
 {
+	echo "enabling FGLRX settings"
 	# show ATI settings in menu
 	showApplication /usr/share/applications/amdcccle.desktop
 
@@ -52,6 +54,7 @@ activate_fglrx()
 # mesa-diverted is the active alternative when xorg drivers are used
 activate_mesa_diverted()
 {
+	echo "enabling Mesa settings"
 	# remove ATI and NVIDIA settings
 	remove_fglrx_settings
 	remove_nvidia_settings
@@ -70,11 +73,8 @@ remove_nvidia_settings()
 }
 
 find_driver() {
-    # live-configs X11 driver detection is run first, detect driver from
-    # glx alternative, this prints the choosen alternative
-    update-alternatives --display glx | sed -e '2 s|.* /usr/lib/|| ; 2 ! d ; 2 s|-|_|'
+    update-alternatives --query glx | grep Value: | sed "s|Value: /usr/lib/||" | sed "s/-/_/"
 }
 
-echo -n " lernstick-proprietary-x11-settings-tools"
 DRIVER=$(find_driver)
 activate_$DRIVER

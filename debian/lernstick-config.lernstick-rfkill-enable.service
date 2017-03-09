@@ -1,7 +1,7 @@
 [Unit]
-Description=Enable wifi and bluetooth
+Description=Unblocking wifi and bluetooth
 ConditionPathExists=/usr/sbin/rfkill
-Before=network-pre.target
+Before=network.target
 
 [Service]
 Type=oneshot
@@ -9,4 +9,4 @@ ExecStart=/usr/sbin/rfkill unblock wifi
 ExecStart=/usr/sbin/rfkill unblock bluetooth
 
 [Install]
-WantedBy=default.target
+WantedBy=network.target

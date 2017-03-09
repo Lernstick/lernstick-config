@@ -37,8 +37,6 @@ Cmdline ()
 
 Init ()
 {
-	echo -n " lernstick-keyboard-configuration"
-
 	if [ -z "${LIVE_KEYBOARD_MODEL}" -a -x /usr/sbin/dmidecode ]
 	then
 		if /usr/sbin/dmidecode -s chassis-manufacturer | grep -q "Apple"

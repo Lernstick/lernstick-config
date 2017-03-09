@@ -4,4 +4,12 @@
 	dh ${@} --with=config-package,systemd
 
 override_dh_systemd_enable:
-	dh_systemd_enable --name=rfkill-enable
+	dh_systemd_enable --name=lernstick-desktop
+	dh_systemd_enable --name=lernstick-keyboard-configuration
+	dh_systemd_enable --name=lernstick-locale
+	dh_systemd_enable --name=lernstick-proprietary-x11-settings-tools
+	dh_systemd_enable --name=lernstick-remove-mac-in-network-connections
+	dh_systemd_enable --name=lernstick-rfkill-enable
+	dh_systemd_enable --name=lernstick-update-bootmenu
+	dh_systemd_enable --name=lernstick-user-setup
+	dh_systemd_enable --name=lernstick-xserver-xorg

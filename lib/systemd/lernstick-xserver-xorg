@@ -165,8 +165,6 @@ Init ()
 	then
 		exit 0
 	fi
-
-	echo -n " xserver-xorg"
 }
 
 Config ()

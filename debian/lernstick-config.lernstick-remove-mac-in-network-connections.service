@@ -1,0 +1,10 @@
+[Unit]
+Description=Removing MAC addresses from NetworkManager connections
+Before=NetworkManager.service
+
+[Service]
+Type=oneshot
+ExecStart=/lib/systemd/lernstick-remove-mac-from-network-connections
+
+[Install]
+WantedBy=NetworkManager.service

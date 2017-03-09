@@ -1,0 +1,11 @@
+[Unit]
+Description=Updating the Lernstick's user locale settings 
+DefaultDependencies=no
+Before=basic.target
+
+[Service]
+Type=oneshot
+ExecStart=/lib/systemd/lernstick-locale
+
+[Install]
+WantedBy=basic.target

@@ -1,0 +1,11 @@
+[Unit]
+Description=Configuration of the selected desktop and display manager
+DefaultDependencies=no
+Before=basic.target
+
+[Service]
+Type=oneshot
+ExecStart=/lib/systemd/lernstick-desktop
+
+[Install]
+WantedBy=basic.target

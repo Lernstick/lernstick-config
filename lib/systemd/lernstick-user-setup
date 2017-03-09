@@ -7,9 +7,6 @@
 ## This is free software, and you are welcome to redistribute it
 ## under certain conditions; see COPYING for details.
 
-
-#set -e
-
 Cmdline ()
 {
 	# Reading kernel command line
@@ -29,18 +26,6 @@ Cmdline ()
 				;;
 		esac
 	done
-}
-
-Init ()
-{
-	# Checking if package is installed or already configured
-	if [ ! -e /var/lib/dpkg/info/user-setup.list ] || \
-	   [ -e /var/lib/live/config/user-setup ]
-	then
-		exit 0
-	fi
-
-	echo -n " user-setup"
 }
 
 Config ()
@@ -94,5 +79,4 @@ EOF
 }
 
 Cmdline
-Init
 Config

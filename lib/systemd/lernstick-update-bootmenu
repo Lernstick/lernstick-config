@@ -10,8 +10,6 @@ LIVE_MOUNTPOINT="/lib/live/mount/medium"
 BOOTLOGO_DIR="bootlogo.dir"
 LOGFILE=/var/log/lernstick-update-bootmenu
 
-echo " lernstick-update-bootmenu"
-
 > ${LOGFILE}
 
 cleanup() {

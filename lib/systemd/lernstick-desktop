@@ -4,10 +4,6 @@
 #              Must run after 1140-xserver-xorg from live-config
 #
 
-echo -n " lernstick-desktop"
-
-LOGFILE=/var/log/lernstick-desktop
-
 for _PARAMETER in $(cat /proc/cmdline)
 do
 	case "${_PARAMETER}" in
@@ -17,7 +13,7 @@ do
 	esac
 done
 
-echo "LERNSTICK_DESKTOP: \"${LERNSTICK_DESKTOP}\"" > ${LOGFILE}
+echo "selected desktop: \"${LERNSTICK_DESKTOP}\""
 
 # sometimes users end up with an empty .dmrc file
 # this heavily confuses kdm (it starts just gnome-terminal) and makes users mad
@@ -70,7 +66,7 @@ esac
 
 if [ -n "${_SESSION_MANAGER}" -a "$(update-alternatives --query x-session-manager | grep ^Value: | cut -f 2 -d '')" != "${_SESSION_MANAGER}" ]
 then
-        update-alternatives --set x-session-manager "${_SESSION_MANAGER}" >> ${LOGFILE} 2>&1
+        update-alternatives --set x-session-manager "${_SESSION_MANAGER}"
 fi
 
 if ! grep -q "^${_DISPLAY_MANAGER}$" /etc/X11/default-display-manager
@@ -83,6 +79,3 @@ then
         systemctl daemon-reload
         systemctl --no-block start display-manager.service
 fi
-
-echo "done." >> ${LOGFILE}
-

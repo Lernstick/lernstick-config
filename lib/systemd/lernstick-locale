@@ -7,8 +7,6 @@
 # language
 VERSION=3
 
-echo -n " lernstick-locale"
-
 # Reading kernel arguments
 for ARGUMENT in $(cat /proc/cmdline)
 do

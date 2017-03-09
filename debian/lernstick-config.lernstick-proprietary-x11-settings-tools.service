@@ -1,0 +1,13 @@
+[Unit]
+Description=Configuration of the visibility of the correct GPU config tool
+DefaultDependencies=no
+Before=basic.target
+After=lernstick-xserver-xorg.service
+Requires=lernstick-xserver-xorg.service
+
+[Service]
+Type=oneshot
+ExecStart=/lib/systemd/lernstick-proprietary-x11-settings-tools
+
+[Install]
+WantedBy=basic.target

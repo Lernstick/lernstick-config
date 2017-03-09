@@ -1,0 +1,11 @@
+[Unit]
+Description=Updating the keyboard configuration
+DefaultDependencies=no
+Before=basic.target
+
+[Service]
+Type=oneshot
+ExecStart=/lib/systemd/lernstick-keyboard-configuration
+
+[Install]
+WantedBy=basic.target
