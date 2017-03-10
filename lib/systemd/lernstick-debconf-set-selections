@@ -10,7 +10,12 @@
 # single files. This script is the only place where we actually feed these
 # values sequentially into debconf-set-selections.
 
-for _FILE in /tmp/lernstick-config/*
-do
-	debconf-set-selections < "${_FILE}"
-done
+DEBCONF_DIR="/tmp/lernstick-config/"
+
+if [ -d ${DEBCONF_DIR} ]
+then
+	for _FILE in /tmp/lernstick-config/*
+	do
+		debconf-set-selections < "${_FILE}"
+	done
+fi
