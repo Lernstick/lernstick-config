@@ -7,13 +7,9 @@
 ## This is free software, and you are welcome to redistribute it
 ## under certain conditions; see COPYING for details.
 
-DEBCONF_DIR="/tmp/lernstick-config/"
-if [ -d ${DEBCONF_DIR} ]
-then
-	mkdir -p "${DEBCONF_DIR}"
-fi
+. lernstick-debconf-dir
 
-DEBCONF_FILE=/tmp/lernstick-config/lernstick-xserver-xorg
+DEBCONF_FILE=${DEBCONF_DIR}/lernstick-xserver-xorg
 
 # Regex matching PCI IDs which support two graphic cards with proprietary
 # drivers

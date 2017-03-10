@@ -9,11 +9,7 @@
 
 #set -e
 
-DEBCONF_DIR="/tmp/lernstick-config/"
-if [ -d ${DEBCONF_DIR} ]
-then
-	mkdir -p "${DEBCONF_DIR}"
-fi
+. lernstick-debconf-dir
 
 DEBCONF_FILE=${DEBCONF_DIR}/lernstick-keyboard-configuration
 
