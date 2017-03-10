@@ -1,5 +1,5 @@
 [Unit]
-Description=Updating the xorg configuration
+Description=Updating the xorg configuration (post)
 DefaultDependencies=no
 After=lernstick-debconf-set-selections.service
 Before=lernstick-debconf-cleanup.service

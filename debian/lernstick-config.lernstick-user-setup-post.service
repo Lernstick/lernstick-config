@@ -1,5 +1,5 @@
 [Unit]
-Description=Creates the default system user
+Description=Creates the default system user (post)
 ConditionPathExists=!/var/lib/live/config/user-setup
 DefaultDependencies=no
 After=lernstick-debconf-set-selections.service

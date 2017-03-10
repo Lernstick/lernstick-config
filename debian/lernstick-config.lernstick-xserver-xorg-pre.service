@@ -1,5 +1,5 @@
 [Unit]
-Description=Updating the xorg configuration
+Description=Updating the xorg configuration (pre)
 DefaultDependencies=no
 Before=basic.target
 

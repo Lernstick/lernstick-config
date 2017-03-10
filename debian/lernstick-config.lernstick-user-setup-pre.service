@@ -1,5 +1,5 @@
 [Unit]
-Description=Creates the default system user
+Description=Creates the default system user (pre)
 ConditionPathExists=!/var/lib/live/config/user-setup
 DefaultDependencies=no
 Before=basic.target
