@@ -9,7 +9,7 @@ Before=NetworkManager.service
 
 [Service]
 Type=oneshot
-ExecStart=find /etc/NetworkManager/system-connections/ -type f -exec sed -i '/mac-address=.*/d' {} \;
+ExecStart=/usr/bin/find /etc/NetworkManager/system-connections/ -type f -exec sed -i '/mac-address=.*/d' {} \;
 
 [Install]
 WantedBy=NetworkManager.service

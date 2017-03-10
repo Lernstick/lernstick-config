@@ -4,7 +4,7 @@ DefaultDependencies=no
 Before=basic.target
 
 [Service]
-ExecStart=rm -rf /tmp/lernstick-config/
+ExecStart=/bin/rm -rf /tmp/lernstick-config/
 
 [Install]
 WantedBy=basic.target
