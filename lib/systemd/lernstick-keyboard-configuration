@@ -9,7 +9,7 @@
 
 #set -e
 
-. lernstick-debconf-dir
+. /lib/systemd/lernstick-debconf-dir
 
 DEBCONF_FILE=${DEBCONF_DIR}/lernstick-keyboard-configuration
 
