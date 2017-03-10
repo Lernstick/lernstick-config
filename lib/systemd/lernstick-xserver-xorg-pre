@@ -7,6 +7,8 @@
 ## This is free software, and you are welcome to redistribute it
 ## under certain conditions; see COPYING for details.
 
+DEBCONF_FILE=/tmp/lernstick-config/lernstick-xserver-xorg
+
 # Regex matching PCI IDs which support two graphic cards with proprietary
 # drivers
 DUALCARD="^10DE"
@@ -124,7 +126,7 @@ Reconfigure_glx_alternative_nvidia ()
 
 Cmdline ()
 {
-	for _PARAMETER in ${LIVE_CONFIG_CMDLINE}
+	for _PARAMETER in $(cat /proc/cmdline)
 	do
 		case "${_PARAMETER}" in
 			live-config.keyboard-layouts=*|keyboard-layouts=*)
@@ -171,22 +173,22 @@ Config ()
 {
 	if [ -n "${LIVE_KEYBOARD_MODEL}" ]
 	then
-		echo "xserver-xorg xserver-xorg/config/inputdevice/keyboard/model select ${LIVE_KEYBOARD_MODEL}" >> /tmp/live-config.cfg
+		echo "xserver-xorg xserver-xorg/config/inputdevice/keyboard/model select ${LIVE_KEYBOARD_MODEL}" >> ${DEBCONF_FILE}
 	fi
 
 	if [ -n "${LIVE_KEYBOARD_LAYOUTS}" ]
 	then
-		echo "xserver-xorg xserver-xorg/config/inputdevice/keyboard/layout select ${LIVE_KEYBOARD_LAYOUTS}" >> /tmp/live-config.cfg
+		echo "xserver-xorg xserver-xorg/config/inputdevice/keyboard/layout select ${LIVE_KEYBOARD_LAYOUTS}" >> ${DEBCONF_FILE}
 	fi
 
 	if [ -n "${LIVE_KEYBOARD_VARIANTS}" ]
 	then
-		echo "xserver-xorg xserver-xorg/config/inputdevice/keyboard/variant select ${LIVE_KEYBOARD_VARIANTS}" >> /tmp/live-config.cfg
+		echo "xserver-xorg xserver-xorg/config/inputdevice/keyboard/variant select ${LIVE_KEYBOARD_VARIANTS}" >> ${DEBCONF_FILE}
 	fi
 
 	if [ -n "${LIVE_KEYBOARD_OPTIONS}" ]
 	then
-		echo "xserver-xorg xserver-xorg/config/inputdevice/keyboard/options string ${LIVE_KEYBOARD_OPTIONS}" >> /tmp/live-config.cfg
+		echo "xserver-xorg xserver-xorg/config/inputdevice/keyboard/options string ${LIVE_KEYBOARD_OPTIONS}" >> ${DEBCONF_FILE}
 	fi
 
 	if [ -n "${LIVE_X_SESSION_MANAGER}" ]
@@ -235,8 +237,8 @@ EOF
 	# desktop with no way of interaction.
 	BASEBOARD_MANUFACTURER="$(/usr/sbin/dmidecode -s baseboard-manufacturer)"
 	XS35_CONFIG_FILE="/etc/X11/xorg.conf.d/zz-xs35-workaround.conf"
-	case "${BASEBOARD_MANUFACTURER}" in 
-		Shuttle*) 
+	case "${BASEBOARD_MANUFACTURER}" in
+		Shuttle*)
 			SYSTEM_PRODUCT_NAME="$(/usr/sbin/dmidecode -s system-product-name | sed 's/ //g')"
 			if [ "${SYSTEM_PRODUCT_NAME}" = "XS35" ]
 			then
@@ -332,18 +334,6 @@ EOF
 		echo "xrandr -s ${LIVE_XORG_RESOLUTION} || /bin/true" >> /etc/X11/Xsession.d/21xvidemode
 	else
 		rm -f /etc/X11/Xsession.d/21xvidemode
-	fi
-
-	if [ -e /tmp/live-config.cfg ]
-	then
-		debconf-set-selections < /tmp/live-config.cfg
-		rm -f /tmp/live-config.cfg
-
-		dpkg-reconfigure -f noninteractive -p critical \
-			xserver-xorg 2>&1 \
-			| grep -v "overwriting possibly-customised configuration" \
-			| grep -v "file; backup in /etc/X11/xorg.conf" || true
-
 	fi
 }
 

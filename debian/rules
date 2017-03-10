@@ -4,6 +4,8 @@
 	dh ${@} --with=config-package,systemd
 
 override_dh_systemd_enable:
+	dh_systemd_enable --name=lernstick-debconf-cleanup
+	dh_systemd_enable --name=lernstick-debconf-set-selections
 	dh_systemd_enable --name=lernstick-desktop
 	dh_systemd_enable --name=lernstick-keyboard-configuration
 	dh_systemd_enable --name=lernstick-locale
@@ -11,5 +13,7 @@ override_dh_systemd_enable:
 	dh_systemd_enable --name=lernstick-remove-mac-in-network-connections
 	dh_systemd_enable --name=lernstick-rfkill-enable
 	dh_systemd_enable --name=lernstick-update-bootmenu
-	dh_systemd_enable --name=lernstick-user-setup
-	dh_systemd_enable --name=lernstick-xserver-xorg
+	dh_systemd_enable --name=lernstick-user-setup-post
+	dh_systemd_enable --name=lernstick-user-setup-pre
+	dh_systemd_enable --name=lernstick-xserver-xorg-post
+	dh_systemd_enable --name=lernstick-xserver-xorg-pre

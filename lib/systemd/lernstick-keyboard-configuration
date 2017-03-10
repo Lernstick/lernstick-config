@@ -10,10 +10,12 @@
 
 #set -e
 
+DEBCONF_FILE=/tmp/lernstick-config/lernstick-keyboard-configuration
+
 Cmdline ()
 {
 	# Reading kernel command line
-	for _PARAMETER in ${LIVE_CONFIG_CMDLINE}
+	for _PARAMETER in $(cat /proc/cmdline)
 	do
 		case "${_PARAMETER}" in
 			live-config.keyboard-layouts=*|keyboard-layouts=*)
@@ -60,36 +62,26 @@ Config ()
 {
 	if [ -n "${LIVE_KEYBOARD_LAYOUTS}" ]
 	then
-		echo "keyboard-configuration keyboard-configuration/layoutcode select ${LIVE_KEYBOARD_LAYOUTS}" >> /tmp/live-config.cfg
-
+		echo "keyboard-configuration keyboard-configuration/layoutcode select ${LIVE_KEYBOARD_LAYOUTS}" >> ${DEBCONF_FILE}
 		sed -i -e "s|^XKBLAYOUT=.*$|XKBLAYOUT=\"${LIVE_KEYBOARD_LAYOUTS}\"|" /etc/default/keyboard
 	fi
 
 	if [ -n "${LIVE_KEYBOARD_MODEL}" ]
 	then
-		echo "keyboard-configuration keyboard-configuration/modelcode select ${LIVE_KEYBOARD_MODEL}" >> /tmp/live-config.cfg
-
+		echo "keyboard-configuration keyboard-configuration/modelcode select ${LIVE_KEYBOARD_MODEL}" >>  ${DEBCONF_FILE}
 		sed -i -e "s|^XKBMODEL=.*$|XKBMODEL=\"${LIVE_KEYBOARD_MODEL}\"|" /etc/default/keyboard
 	fi
 
 	if [ -n "${LIVE_KEYBOARD_OPTIONS}" ]
 	then
-		echo "keyboard-configuration keyboard-configuration/optionscode string ${LIVE_KEYBOARD_OPTIONS}" >> /tmp/live-config.cfg
-
+		echo "keyboard-configuration keyboard-configuration/optionscode string ${LIVE_KEYBOARD_OPTIONS}" >>  ${DEBCONF_FILE}
 		sed -i -e "s|^XKBOPTIONS=.*$|XKBOPTIONS=\"${LIVE_KEYBOARD_OPTIONS}\"|" /etc/default/keyboard
 	fi
 
 	if [ -n "${LIVE_KEYBOARD_VARIANTS}" ]
 	then
-		echo "keyboard-configuration keyboard-configuration/variantcode select ${LIVE_KEYBOARD_VARIANTS}" >> /tmp/live-config.cfg
-
+		echo "keyboard-configuration keyboard-configuration/variantcode select ${LIVE_KEYBOARD_VARIANTS}" >>  ${DEBCONF_FILE}
 		sed -i -e "s|^XKBVARIANT=.*$|XKBVARIANT=\"${LIVE_KEYBOARD_VARIANTS}\"|" /etc/default/keyboard
-	fi
-
-	if [ -e /tmp/live-config.cfg ]
-	then
-		debconf-set-selections < /tmp/live-config.cfg
-		rm -f /tmp/live-config.cfg
 	fi
 }
 

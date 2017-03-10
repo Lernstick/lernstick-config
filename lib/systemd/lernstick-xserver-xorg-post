@@ -1,0 +1,11 @@
+#!/bin/sh
+
+DEBCONF_FILE=/tmp/lernstick-config/lernstick-xserver-xorg
+
+if [ -e ${DEBCONF_FILE} ]
+then
+	dpkg-reconfigure -f noninteractive -p critical xserver-xorg 2>&1 \
+		| grep -v "overwriting possibly-customised configuration" \
+		| grep -v "file; backup in /etc/X11/xorg.conf" || true
+
+fi

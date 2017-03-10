@@ -8,27 +8,24 @@
 BOOT_LABEL="boot"
 LIVE_MOUNTPOINT="/lib/live/mount/medium"
 BOOTLOGO_DIR="bootlogo.dir"
-LOGFILE=/var/log/lernstick-update-bootmenu
-
-> ${LOGFILE}
 
 cleanup() {
 	if [ -n "${BOOT_TMP_MOUNT}" ]
 	then
-		echo "unmounting ${BOOT_PARTITION}" >> ${LOGFILE}
-		umount "${BOOT_TMP_MOUNT}" >> ${LOGFILE} 2>&1
+		echo "unmounting ${BOOT_PARTITION}"
+		umount "${BOOT_TMP_MOUNT}" 2>&1
 	else
 		if [ -n "${IMAGE_DIR}" ]
 		then
-			echo "remounting ${IMAGE_DIR} read-only" >> ${LOGFILE}
-			mount -o remount,ro ${IMAGE_DIR} >> ${LOGFILE} 2>&1
+			echo "remounting ${IMAGE_DIR} read-only"
+			mount -o remount,ro ${IMAGE_DIR} 2>&1
 		fi
 	fi
 
 	if [ -n "${EXCHANGE_TMP_MOUNT}" ]
 	then
-		echo "unmounting " >> ${LOGFILE}
-		umount "${EXCHANGE_TMP_MOUNT}" >> ${LOGFILE} 2>&1
+		echo "unmounting "
+		umount "${EXCHANGE_TMP_MOUNT}" 2>&1
 	fi
 	rm -r "${TMP_MOUNT_DIR}"
 }
@@ -55,10 +52,10 @@ get_mountpoint() {
 
 mount_boot_partition() {
 	BOOT_PARTITION=$1
-	echo "Temporary mount of boot partition ..." >> ${LOGFILE}
+	echo "Temporary mount of boot partition ..."
 	IMAGE_DIR="${TMP_MOUNT_DIR}/boot"
 	mkdir "${IMAGE_DIR}"
-	mount "${BOOT_PARTITION}" "${IMAGE_DIR}" >> ${LOGFILE} 2>&1 && BOOT_TMP_MOUNT="${IMAGE_DIR}"
+	mount "${BOOT_PARTITION}" "${IMAGE_DIR}" && BOOT_TMP_MOUNT="${IMAGE_DIR}"
 }
 
 set_xmlboot_config()
@@ -72,7 +69,7 @@ set_xmlboot_config()
 	CONFIG_ID="${1}"
 	ATTRIBUTE_ID="${2}"
 	ATTRIBUTE_VALUE="${3}"
-	echo "set_xmlboot_config ${1} ${2} ${3}" >> ${LOGFILE}
+	echo "set_xmlboot_config ${1} ${2} ${3}"
 	cat ${XMLBOOT_CONFIG} | \
 	xmlstarlet ed -d "/xmlboot/configs/config[@id='${CONFIG_ID}']/option/@selected" | \
 	xmlstarlet ed -i "/xmlboot/configs/config[@id='${CONFIG_ID}']/option[@${ATTRIBUTE_ID}='${ATTRIBUTE_VALUE}']" \
@@ -84,7 +81,7 @@ set_grub_config()
 {
 	ATTRIBUTE_ID="${1}"
 	ATTRIBUTE_VALUE="${2}"
-	echo "set_grub_config ${1} ${2}" >> ${LOGFILE}
+	echo "set_grub_config ${1} ${2}"
 	sed -i "0,/${ATTRIBUTE_ID}/{s/${ATTRIBUTE_ID}=.*/${ATTRIBUTE_ID}=\"${ATTRIBUTE_VALUE}\"/}" "${GRUB_CONFIG}"
 }
 
@@ -96,7 +93,7 @@ deselect_option()
 		# (e.g. on a FAT32 exchange paritition there is only a grub bootloader)
 		return 0
 	fi
-	echo "deselect_option ${1}" >> ${LOGFILE}
+	echo "deselect_option ${1}"
 	cat ${XMLBOOT_CONFIG} | \
 	xmlstarlet ed -d "/xmlboot/options/option[@id='${1}']/@selected" \
 		> ${XMLBOOT_CONFIG}.tmp
@@ -111,7 +108,7 @@ select_option()
 		# (e.g. on a FAT32 exchange paritition there is only a grub bootloader)
 		return 0
 	fi
-	echo "select_option ${1}" >> ${LOGFILE}
+	echo "select_option ${1}"
 	cat ${XMLBOOT_CONFIG} | \
 	xmlstarlet ed -d "/xmlboot/options/option[@id='${1}']/@selected" | \
 	xmlstarlet ed -i "/xmlboot/options/option[@id='${1}']" \
@@ -155,7 +152,7 @@ update_selected_grub_option()
 update_bootloaders() {
 
 	# determine correct configuration directory
-	echo "IMAGE_DIR: \"${IMAGE_DIR}\"" >> ${LOGFILE}
+	echo "IMAGE_DIR: \"${IMAGE_DIR}\""
 	if [ -d ${IMAGE_DIR}/isolinux/ ]
 	then
 		SYSLINUX_CONFIG_DIR="${IMAGE_DIR}/isolinux"
@@ -163,7 +160,7 @@ update_bootloaders() {
 	then
 		SYSLINUX_CONFIG_DIR="${IMAGE_DIR}/syslinux"
 	else
-		echo "There was neither an isolinux nor a syslinux configuration in \"${IMAGE_DIR}\"." >> ${LOGFILE}
+		echo "There was neither an isolinux nor a syslinux configuration in \"${IMAGE_DIR}\"."
 		SYSLINUX_CONFIG_DIR=""
 		XMLBOOT_CONFIG=""
 	fi
@@ -180,21 +177,21 @@ update_bootloaders() {
 		if [ ! -w ${SYSLINUX_CONFIG_DIR} ]
 		then
 			# it's ok, system was probably booted from iso...
-			echo "The configuration directory \"${SYSLINUX_CONFIG_DIR}\" is not writable." >> ${LOGFILE}
-			echo "The system was probably booted from DVD." >> ${LOGFILE}
+			echo "The configuration directory \"${SYSLINUX_CONFIG_DIR}\" is not writable."
+			echo "The system was probably booted from DVD."
 			return 0
 		fi
 
 		XMLBOOT_CONFIG="${SYSLINUX_CONFIG_DIR}/${BOOTLOGO_DIR}/xmlboot.config"
-		echo "XMLBOOT_CONFIG: \"${XMLBOOT_CONFIG}\"" >> ${LOGFILE}
+		echo "XMLBOOT_CONFIG: \"${XMLBOOT_CONFIG}\""
 	fi
 
 	GRUB_CONFIG="${IMAGE_DIR}/boot/grub/grub.cfg"
-	echo "GRUB_CONFIG: \"${GRUB_CONFIG}\"" >> ${LOGFILE}
+	echo "GRUB_CONFIG: \"${GRUB_CONFIG}\""
 
 	# get current append line
 	APPEND="$(cat /proc/cmdline | sed 's|BOOT_IMAGE=\S* ||')"
-	echo "APPEND: \"${APPEND}\"" >> ${LOGFILE}
+	echo "APPEND: \"${APPEND}\""
 
 	for _PARAMETER in ${APPEND}
 	do
@@ -265,7 +262,7 @@ update_bootloaders() {
 
 	# special handling for custom options
 	CUSTOM_OPTIONS="$(cat /proc/cmdline | grep "custom_options" | sed 's|.*custom_options\s*\(.*\)|\1|1')"
-	echo "CUSTOM_OPTIONS: \"${CUSTOM_OPTIONS}\"" >> ${LOGFILE}
+	echo "CUSTOM_OPTIONS: \"${CUSTOM_OPTIONS}\""
 	if [ -n "${XMLBOOT_CONFIG}" ]
 	then
 		cat ${XMLBOOT_CONFIG} | \
@@ -310,68 +307,68 @@ trap cleanup EXIT
 
 # the only reliable info about our boot medium is the system partition
 SYSTEM_PARTITION=$(grep ${LIVE_MOUNTPOINT} /proc/mounts | awk '{ print $1 }')
-echo "system partition: \"${SYSTEM_PARTITION}\"" >> ${LOGFILE}
+echo "system partition: \"${SYSTEM_PARTITION}\""
 
 # get infos about first partition
 FIRST_PARTITION="$(get_partition 1)"
-echo "first partition: \"${FIRST_PARTITION}\"" >> ${LOGFILE}
+echo "first partition: \"${FIRST_PARTITION}\""
 FIRST_LABEL="$(get_partition_label ${FIRST_PARTITION})"
-echo "first label: \"${FIRST_LABEL}\"" >> ${LOGFILE}
+echo "first label: \"${FIRST_LABEL}\""
 
 if [ "${FIRST_LABEL}" = "${BOOT_LABEL}" ]
 then
-	echo "system uses the legacy partitioning schema with bootloaders on the EFI partition" >> ${LOGFILE}
+	echo "system uses the legacy partitioning schema with bootloaders on the EFI partition"
 	mount_boot_partition ${FIRST_PARTITION}
 	update_bootloaders
 else
 	SECOND_PARTITION="$(get_partition 2)"
-	echo "second partition: \"${SECOND_PARTITION}\"" >> ${LOGFILE}
+	echo "second partition: \"${SECOND_PARTITION}\""
 	SECOND_LABEL="$(get_partition_label ${SECOND_PARTITION})"
-	echo "second label: \"${SECOND_LABEL}\"" >> ${LOGFILE}
+	echo "second label: \"${SECOND_LABEL}\""
 	if [ "${SECOND_LABEL}" = "${BOOT_LABEL}" ]
 	then
-		echo "system uses the legacy partitioning schema with bootloaders on the EFI partition" >> ${LOGFILE}
-		echo "but for legacy (removable) USB flash drives" >> ${LOGFILE}
+		echo "system uses the legacy partitioning schema with bootloaders on the EFI partition"
+		echo "but for legacy (removable) USB flash drives"
 
-		echo "updating boot loader config on boot partition" >> ${LOGFILE}
+		echo "updating boot loader config on boot partition"
 		mount_boot_partition ${SECOND_PARTITION}
 		update_bootloaders
 
 		FS_TYPE="$(get_partition_fstype ${FIRST_PARTITION})"
-		echo "file system of exchange partiton: ${FS_TYPE}" >> ${LOGFILE}
+		echo "file system of exchange partiton: ${FS_TYPE}"
 		if [ "${FS_TYPE}" = "vfat" ]
 		then
-			echo "must update bootloader on exchange partition" >> ${LOGFILE}
+			echo "must update bootloader on exchange partition"
 			IMAGE_DIR="$(get_mountpoint ${FIRST_PARTITION})"
 			if [ -n "${IMAGE_DIR}" ]
 			then
-				echo "exchange partition was already mounted" >> ${LOGFILE}
+				echo "exchange partition was already mounted"
 				update_bootloaders
 			else
-				echo "exchange partition was NOT already mounted" >> ${LOGFILE}
+				echo "exchange partition was NOT already mounted"
 				IMAGE_DIR="${TMP_MOUNT_DIR}/exchange"
 				mkdir "${IMAGE_DIR}"
-				mount "${FIRST_PARTITION}" "${IMAGE_DIR}">> ${LOGFILE} 2>&1 && EXCHANGE_TMP_MOUNT="${IMAGE_DIR}"
+				mount "${FIRST_PARTITION}" "${IMAGE_DIR}" && EXCHANGE_TMP_MOUNT="${IMAGE_DIR}"
 				update_bootloaders
 			fi
 		else
-			echo "no bootloader needed on exchange partition" >> ${LOGFILE}
+			echo "no bootloader needed on exchange partition"
 		fi
 
 	else
-		echo "system uses the current partitioning schema with bootloaders on the system partition" >> ${LOGFILE}
+		echo "system uses the current partitioning schema with bootloaders on the system partition"
 		if mount -o remount,rw "${LIVE_MOUNTPOINT}"
 		then
 			IMAGE_DIR="${LIVE_MOUNTPOINT}"
 			update_bootloaders
 		else
 			# it's ok, system was probably booted from iso...
-			echo "The image directory \"${LIVE_MOUNTPOINT}\" could not be remounted in read-write mode." >> ${LOGFILE}
-			echo "The system was probably booted from DVD." >> ${LOGFILE}
-			echo "Exiting..." >> ${LOGFILE}
+			echo "The image directory \"${LIVE_MOUNTPOINT}\" could not be remounted in read-write mode."
+			echo "The system was probably booted from DVD."
+			echo "Exiting..."
 			exit 0
 		fi
 	fi
 fi
 
-echo "Done." >> ${LOGFILE}
+echo "Done."

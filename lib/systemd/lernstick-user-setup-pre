@@ -7,10 +7,22 @@
 ## This is free software, and you are welcome to redistribute it
 ## under certain conditions; see COPYING for details.
 
+DEBCONF_FILE=/tmp/lernstick-config/lernstick-user-setup
+
 Cmdline ()
 {
+        # Reading configuration files from filesystem and live-media
+        for _FILE in /etc/live/config.conf /etc/live/config/* \
+                     /lib/live/mount/medium/live/config.conf /lib/live/mount/medium/live/config/*
+        do
+                if [ -e "${_FILE}" ]
+                then
+                        . "${_FILE}"
+                fi
+        done
+
 	# Reading kernel command line
-	for _PARAMETER in ${LIVE_CONFIG_CMDLINE}
+	for _PARAMETER in $(cat /proc/cmdline)
 	do
 		case "${_PARAMETER}" in
 			live-config.user-default-groups=*|user-default-groups=*)
@@ -55,7 +67,7 @@ Config ()
 	#   - a blank password is 'U6aMy0wojraho'
 	_PASSWORD="U6aMy0wojraho"
 
-cat > /tmp/live-config.cfg << EOF
+cat > ${DEBCONF_FILE} << EOF
 user-setup passwd/make-user boolean true
 user-setup passwd/root-password-crypted string *
 user-setup passwd/user-password-crypted string ${_PASSWORD}
@@ -64,18 +76,6 @@ user-setup passwd/user-fullname string ${LIVE_USER_FULLNAME}
 user-setup passwd/username string ${LIVE_USERNAME}
 user-setup passwd/user-uid string 1000
 EOF
-
-	debconf-set-selections < /tmp/live-config.cfg
-	rm -f /tmp/live-config.cfg
-
-	# Workaround for bug in shadow
-	set +e
-	/usr/lib/user-setup/user-setup-apply 2>&1 \
-	| grep -v "Shadow passwords are now on"
-	set -e
-
-	# Creating state file
-	touch /var/lib/live/config/user-setup
 }
 
 Cmdline

@@ -1,0 +1,10 @@
+[Unit]
+Description=Cleanup of temporary lernstick-config directory
+DefaultDependencies=no
+Before=basic.target
+
+[Service]
+ExecStart=rm -rf /tmp/lernstick-config/
+
+[Install]
+WantedBy=basic.target

@@ -5,7 +5,7 @@ Before=basic.target
 
 [Service]
 Type=oneshot
-ExecStart=/lib/systemd/lernstick-xserver-xorg
+ExecStart=/lib/systemd/lernstick-xserver-xorg-pre
 
 [Install]
 WantedBy=basic.target

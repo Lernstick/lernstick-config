@@ -2,11 +2,12 @@
 Description=Creates the default system user
 ConditionPathExists=!/var/lib/live/config/user-setup
 DefaultDependencies=no
-Before=basic.target
+After=lernstick-debconf-set-selections.service
+Before=lernstick-debconf-cleanup.service lernstick-xserver-xorg-post.service
 
 [Service]
 Type=oneshot
-ExecStart=/lib/systemd/lernstick-user-setup
+ExecStart=/lib/systemd/lernstick-user-setup-post
 
 [Install]
 WantedBy=basic.target
