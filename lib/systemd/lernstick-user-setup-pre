@@ -13,6 +13,10 @@ DEBCONF_FILE=${DEBCONF_DIR}/lernstick-user-setup
 
 Cmdline ()
 {
+	LIVE_USERNAME="user"
+	LIVE_USER_FULLNAME="Debian Live user"
+	LIVE_USER_DEFAULT_GROUPS="audio cdrom dip floppy video plugdev netdev powerdev scanner bluetooth debian-tor"
+
         # Reading configuration files from filesystem and live-media
         for _FILE in /etc/live/config.conf /etc/live/config/* \
                      /lib/live/mount/medium/live/config.conf /lib/live/mount/medium/live/config/*
