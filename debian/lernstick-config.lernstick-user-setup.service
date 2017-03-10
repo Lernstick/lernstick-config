@@ -6,7 +6,7 @@ Before=basic.target
 
 [Service]
 Type=oneshot
-ExecStart=/lib/systemd/lernstick-desktop
+ExecStart=/lib/systemd/lernstick-user-setup
 
 [Install]
 WantedBy=basic.target
