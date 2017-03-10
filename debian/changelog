@@ -1,3 +1,9 @@
+lernstick-config (43.deb8) lernstick-8; urgency=medium
+
+  * [cdd095] added missing defaults in lernstick-user-setup-pre
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 10 Mar 2017 17:48:52 +0100
+
 lernstick-config (42.deb8) lernstick-8; urgency=medium
 
   * [0822be] fixed some service files
