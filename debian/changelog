@@ -1,3 +1,16 @@
+lernstick-config (42.deb8) lernstick-8; urgency=medium
+
+  * [0822be] fixed some service files
+  * [e85c38] fixed handling of debconf directory
+  * [02e6a5] simplified debconf dir handling
+  * [56f522] fixed file sourcing
+  * [235d02] made lernstick-debconf-set-selections.service more robust
+  * [c85882] made lernstick-debconf-set-selections more robust (once more...)
+  * [1ba25f] fixed mode of lib/systemd/lernstick-debconf-set-selections
+  * [99e544] use individual description for pre and post services
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 10 Mar 2017 16:38:52 +0100
+
 lernstick-config (41.deb8) lernstick-8; urgency=medium
 
   * [bc7362] trying to serialize debconf calls
