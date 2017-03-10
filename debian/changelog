@@ -1,3 +1,9 @@
+lernstick-config (41.deb8) lernstick-8; urgency=medium
+
+  * [bc7362] trying to serialize debconf calls
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 10 Mar 2017 15:09:52 +0100
+
 lernstick-config (40.deb8) lernstick-8; urgency=medium
 
   * [8927c8] fixed lernstick-user-setup.service
