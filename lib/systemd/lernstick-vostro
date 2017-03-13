@@ -1,0 +1,22 @@
+#!/bin/sh
+
+CONFIG_FILE="/etc/X11/xorg.conf.d/zz-live-config-vostro15.conf"
+
+case "$(dmidecode -s system-product-name)" in
+	"Vostro 15"*)
+		echo "Vostro 15 detected"
+		cat > ${CONFIG_FILE} << EOF
+# Disable generic Synaptics device, as we're using
+# "DELL0793:00 06CB:7F13 Touchpad"
+# Having multiple touchpad devices running confuses syndaemon
+Section "InputClass"
+        Identifier "SynPS/2 Synaptics TouchPad"
+        MatchProduct "SynPS/2 Synaptics TouchPad"
+        Option "Ignore" "on"
+EndSection
+EOF
+		;;
+	*       )
+		echo "no Vostro 15 detected"
+		rm ${CONFIG_FILE}
+esac
