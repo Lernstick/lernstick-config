@@ -1,3 +1,9 @@
+lernstick-config (47.deb8) lernstick-8; urgency=medium
+
+  * [4545fc] fixed debian rules file
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Thu, 16 Mar 2017 00:37:45 +0100
+
 lernstick-config (46.deb8) lernstick-8; urgency=medium
 
   * [64f97e] run lernstick-user-setup-post service before sudo service (the sudo service wants the configured user to be there)
