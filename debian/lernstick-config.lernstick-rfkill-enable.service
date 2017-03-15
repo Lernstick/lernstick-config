@@ -1,7 +1,12 @@
+# This is a workaround for a Linux kernel bug:
+# On a HP Compaq 6730b, wireless and bluetooth is disabled on boot by hp-wmi.
+# For more details, see:
+# https://www.spinics.net/lists/platform-driver-x86/msg05166.html
+
 [Unit]
 Description=Unblocking wifi and bluetooth
 ConditionPathExists=/usr/sbin/rfkill
-Before=network.target
+After=NetworkManager.service
 
 [Service]
 Type=oneshot
@@ -9,4 +14,4 @@ ExecStart=/usr/sbin/rfkill unblock wifi
 ExecStart=/usr/sbin/rfkill unblock bluetooth
 
 [Install]
-WantedBy=network.target
+WantedBy=default.target
