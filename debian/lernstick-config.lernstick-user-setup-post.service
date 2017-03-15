@@ -3,7 +3,7 @@ Description=Creates the default system user (post)
 ConditionPathExists=!/var/lib/live/config/user-setup
 DefaultDependencies=no
 After=lernstick-debconf-set-selections.service
-Before=lernstick-debconf-cleanup.service lernstick-xserver-xorg-post.service
+Before=lernstick-debconf-cleanup.service lernstick-xserver-xorg-post.service sudo.service
 
 [Service]
 Type=oneshot
