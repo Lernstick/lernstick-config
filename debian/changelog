@@ -1,3 +1,10 @@
+lernstick-config (45.deb8) lernstick-8; urgency=medium
+
+  * [bd49b5] no longer run sudo component from live-config (sudo specific things are now already set up in the lernstick-usertemplate package)
+  * [eb9bb1] added unit for user-configuration after every boot
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Wed, 15 Mar 2017 21:43:29 +0100
+
 lernstick-config (44.deb8) lernstick-8; urgency=medium
 
   * [19489a] added lernstick-vostro service
