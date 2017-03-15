@@ -1,3 +1,11 @@
+lernstick-config (44.deb8) lernstick-8; urgency=medium
+
+  * [19489a] added lernstick-vostro service
+  * [d29a51] updated linux advanced repo address
+  * [7dcaf3] fixed rfkill-enable service
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Wed, 15 Mar 2017 18:36:25 +0100
+
 lernstick-config (43.deb8) lernstick-8; urgency=medium
 
   * [cdd095] added missing defaults in lernstick-user-setup-pre
