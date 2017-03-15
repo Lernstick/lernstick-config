@@ -1,3 +1,10 @@
+lernstick-config (46.deb8) lernstick-8; urgency=medium
+
+  * [64f97e] run lernstick-user-setup-post service before sudo service (the sudo service wants the configured user to be there)
+  * [cffdf2] no longer run live-config's xfce4-panel (merged into our user-config service)
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Wed, 15 Mar 2017 23:16:39 +0100
+
 lernstick-config (45.deb8) lernstick-8; urgency=medium
 
   * [bd49b5] no longer run sudo component from live-config (sudo specific things are now already set up in the lernstick-usertemplate package)
