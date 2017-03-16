@@ -16,7 +16,8 @@ Section "InputClass"
 EndSection
 EOF
 		;;
+
 	*       )
 		echo "no Vostro 15 detected"
-		rm ${CONFIG_FILE}
+		rm -f ${CONFIG_FILE}
 esac
