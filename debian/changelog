@@ -1,3 +1,9 @@
+lernstick-config (49.deb8) lernstick-8; urgency=medium
+
+  * [20c6ac] added support for 2048-qt, fixed formatting
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 19 May 2017 10:27:14 +0200
+
 lernstick-config (48.deb8) lernstick-8; urgency=medium
 
   * [c0b2b0] made vostro script more robust
