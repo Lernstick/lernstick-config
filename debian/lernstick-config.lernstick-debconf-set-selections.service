@@ -1,0 +1,14 @@
+[Unit]
+Description=Sequential debconf part of lernstick-config
+DefaultDependencies=no
+Before=basic.target
+# Some live-config scripts also use debconf. To prevent locking issues we let
+# live-config finish before we start our script.
+After=live-config.service
+
+[Service]
+Type=oneshot
+ExecStart=/lib/systemd/lernstick-debconf-set-selections
+
+[Install]
+WantedBy=basic.target

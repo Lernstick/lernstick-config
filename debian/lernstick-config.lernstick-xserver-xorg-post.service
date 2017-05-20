@@ -1,0 +1,12 @@
+[Unit]
+Description=Updating the xorg configuration (post)
+DefaultDependencies=no
+After=lernstick-debconf-set-selections.service
+Before=lernstick-debconf-cleanup.service
+
+[Service]
+Type=oneshot
+ExecStart=/lib/systemd/lernstick-xserver-xorg-post
+
+[Install]
+WantedBy=basic.target

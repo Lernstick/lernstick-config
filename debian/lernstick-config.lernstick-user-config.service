@@ -1,0 +1,11 @@
+[Unit]
+Description=Updates the user configuration
+DefaultDependencies=no
+After=lernstick-user-setup-post.service
+
+[Service]
+Type=oneshot
+ExecStart=/lib/systemd/lernstick-user-config
+
+[Install]
+WantedBy=basic.target

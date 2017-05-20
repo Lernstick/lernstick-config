@@ -1,0 +1,10 @@
+[Unit]
+Description=special handling for Dell Vostro
+Before=gdm.service
+
+[Service]
+Type=oneshot
+ExecStart=/lib/systemd/lernstick-vostro
+
+[Install]
+WantedBy=gdm.service

@@ -5,9 +5,7 @@
 
 # script version, increment if script should rerun even if not changing the
 # language
-VERSION=3
-
-echo -n " lernstick-locale"
+VERSION=4
 
 # Reading kernel arguments
 for ARGUMENT in $(cat /proc/cmdline)
@@ -25,10 +23,10 @@ done
 LOCALE_STATE_FILE="/var/lib/live/config/lernstick-locale"
 if [ -r ${LOCALE_STATE_FILE} ] && [ "${LOCALE};${VERSION}" = "$(cat ${LOCALE_STATE_FILE})" ]
 then
-    # locale already set, nothing to do
-    exit 0
+	# locale already set, nothing to do
+	exit 0
 else
-    echo "${LOCALE};${VERSION}" > $LOCALE_STATE_FILE
+	echo "${LOCALE};${VERSION}" > $LOCALE_STATE_FILE
 fi
 
 # Audacity
@@ -51,41 +49,41 @@ set_bluej_language()
 {
 	if grep -q bluej.language ${BLUEJ_CONFIG_FILE}
 	then
-       	        sed -i -e "s|bluej.language=.*|bluej.language=${1}|1" ${BLUEJ_CONFIG_FILE}
+		sed -i -e "s|bluej.language=.*|bluej.language=${1}|1" ${BLUEJ_CONFIG_FILE}
 	else
-       	        echo "bluej.language=${1}" >> ${BLUEJ_CONFIG_FILE}
+		echo "bluej.language=${1}" >> ${BLUEJ_CONFIG_FILE}
 	fi
 }
 if [ -e ${BLUEJ_CONFIG_FILE} ]
 then
 	case "${LANGUAGE}" in
-        	de)
+		de)
 			set_bluej_language "german"
-	                ;;
+			;;
 
-        	es)
+		es)
 			set_bluej_language "spanish"
-	                ;;
+			;;
 
-        	fr)
+		fr)
 			set_bluej_language "french"
-	                ;;
+			;;
 
-        	it)
+		it)
 			set_bluej_language "italian"
-        	        ;;
+			;;
 
-        	pt)
+		pt)
 			set_bluej_language "portuguese"
-        	        ;;
+			;;
 
-        	ru)
+		ru)
 			set_bluej_language "russian"
-        	        ;;
+			;;
 
-	        *)
-        	        sed -i -e '/bluej.language=.*/d' ${BLUEJ_CONFIG_FILE}
-                	;;
+		*)
+			sed -i -e '/bluej.language=.*/d' ${BLUEJ_CONFIG_FILE}
+			;;
 	esac
 fi
 
@@ -93,44 +91,44 @@ fi
 GREENFOOT_CONFIG_FILE="/home/user/.greenfoot/greenfoot.properties"
 set_greenfoot_language()
 {
-       if grep -q bluej.language ${GREENFOOT_CONFIG_FILE}
-       then
-                       sed -i -e "s|bluej.language=.*|bluej.language=${1}|1" ${GREENFOOT_CONFIG_FILE}
-       else
-                       echo "bluej.language=${1}" >> ${GREENFOOT_CONFIG_FILE}
-       fi
+	if grep -q bluej.language ${GREENFOOT_CONFIG_FILE}
+	then
+		sed -i -e "s|bluej.language=.*|bluej.language=${1}|1" ${GREENFOOT_CONFIG_FILE}
+	else
+		echo "bluej.language=${1}" >> ${GREENFOOT_CONFIG_FILE}
+	fi
 }
 if [ -e ${GREENFOOT_CONFIG_FILE} ]
 then
-       case "${LANGUAGE}" in
-               de)
-                       set_greenfoot_language "german"
-                       ;;
+	case "${LANGUAGE}" in
+		de)
+			set_greenfoot_language "german"
+			;;
 
-               es)
-                       set_greenfoot_language "spanish"
-                       ;;
+		es)
+			set_greenfoot_language "spanish"
+			;;
 
-               fr)
-                       set_greenfoot_language "french"
-                       ;;
+		fr)
+			set_greenfoot_language "french"
+			;;
 
-               it)
-                       set_greenfoot_language "italian"
-                       ;;
+		it)
+			set_greenfoot_language "italian"
+			;;
 
-               pt)
-                       set_greenfoot_language "portuguese"
-                       ;;
+		pt)
+			set_greenfoot_language "portuguese"
+			;;
 
-              ru)
-                       set_greenfoot_language "russian"
-                       ;;
+		ru)
+			set_greenfoot_language "russian"
+			;;
 
-               *)
-                       sed -i -e '/bluej.language=.*/d' ${GREENFOOT_CONFIG_FILE}
-                       ;;
-       esac
+		*)
+			sed -i -e '/bluej.language=.*/d' ${GREENFOOT_CONFIG_FILE}
+			;;
+	esac
 fi
 
 # tuxtype
@@ -138,25 +136,25 @@ TUXTYPE_CONFIG_FILE="/home/user/.tuxtype/settings.txt"
 if [ -e ${TUXTYPE_CONFIG_FILE} ]
 then
 	case "${LANGUAGE}" in
-        	de)
-        	        sed -i -e 's|lang=.*|lang=deutsch|1' ${TUXTYPE_CONFIG_FILE}
-	                ;;
+		de)
+			sed -i -e 's|lang=.*|lang=deutsch|1' ${TUXTYPE_CONFIG_FILE}
+			;;
 
-        	es)
-        	        sed -i -e 's|lang=.*|lang=espanol|1' ${TUXTYPE_CONFIG_FILE}
-	                ;;
+		es)
+			sed -i -e 's|lang=.*|lang=espanol|1' ${TUXTYPE_CONFIG_FILE}
+			;;
 
-        	fr)
-        	        sed -i -e 's|lang=.*|lang=french|1' ${TUXTYPE_CONFIG_FILE}
-	                ;;
+		fr)
+			sed -i -e 's|lang=.*|lang=french|1' ${TUXTYPE_CONFIG_FILE}
+			;;
 
-        	it)
-        	        sed -i -e 's|lang=.*|lang=italian|1' ${TUXTYPE_CONFIG_FILE}
-        	        ;;
+		it)
+			sed -i -e 's|lang=.*|lang=italian|1' ${TUXTYPE_CONFIG_FILE}
+			;;
 
-	        *)
-        	        sed -i -e 's|lang=.*|lang=english|1' ${TUXTYPE_CONFIG_FILE}
-                	;;
+		*)
+			sed -i -e 's|lang=.*|lang=english|1' ${TUXTYPE_CONFIG_FILE}
+			;;
 	esac
 fi
 
@@ -165,25 +163,25 @@ ARMAGETRONAD_CONFIG_FILE="/home/user/.armagetronad/var/user.cfg"
 if [ -e ${ARMAGETRONAD_CONFIG_FILE} ]
 then
 	case "${LANGUAGE}" in
-        	de)
+		de)
 			ARMAGETRON_LANGUAGE="Deutsch"
 			PLAYER="Spieler"
-	                ;;
+			;;
 
-        	es)
+		es)
 			ARMAGETRON_LANGUAGE="Spanish"
 			PLAYER="Jugador"
-	                ;;
+			;;
 
-        	fr)
+		fr)
 			ARMAGETRON_LANGUAGE="Francais"
 			PLAYER="Joueur"
-	                ;;
+			;;
 
-	        *)
+		*)
 			ARMAGETRON_LANGUAGE="American English"
 			PLAYER="Player"
-                	;;
+			;;
 	esac
 	sed -i -e 's|LANGUAGE_FIRST .*|LANGUAGE_FIRST '"${ARMAGETRON_LANGUAGE}"'|1' \
 		-e 's|LANGUAGE_SECOND .*|LANGUAGE_SECOND '"${ARMAGETRON_LANGUAGE}"'|1' \
@@ -199,32 +197,32 @@ ETRACER_CONFIG_FILE="/home/user/.etracer/options"
 if [ -e ${ETRACER_CONFIG_FILE} ]
 then
 	case "${LANGUAGE}" in
-        	de)
+		de)
 			ETRACER_LANGUAGE="de_DE"
-	                ;;
+			;;
 
-        	es)
+		es)
 			ETRACER_LANGUAGE="es_ES"
-	                ;;
+			;;
 
-        	fr)
+		fr)
 			ETRACER_LANGUAGE="fr_FR"
-	                ;;
+			;;
 
-        	it)
+		it)
 			ETRACER_LANGUAGE="it_IT"
-	                ;;
+			;;
 
-        	pt)
+		pt)
 			ETRACER_LANGUAGE="pt_PT"
-	                ;;
+			;;
 
-        	ru)
+		ru)
 			ETRACER_LANGUAGE="ru_RU"
-	                ;;
-	        *)
+			;;
+		*)
 			ETRACER_LANGUAGE="en_GB"
-                	;;
+			;;
 	esac
 	sed -i -e "s|set ui_language .*|set ui_language \"${ETRACER_LANGUAGE}\"|1" \
 		${ETRACER_CONFIG_FILE}
@@ -235,25 +233,25 @@ XMOTO_CONFIG_FILE="/home/user/.xmoto/xm.db"
 if [ -e ${XMOTO_CONFIG_FILE} ]
 then
 	case "${LANGUAGE}" in
-        	de)
+		de)
 			XMOTO_LANGUAGE="de_DE"
-	                ;;
+			;;
 
-        	es)
+		es)
 			XMOTO_LANGUAGE="es_ES"
-	                ;;
+			;;
 
-        	fr)
+		fr)
 			XMOTO_LANGUAGE="fr_FR"
-	                ;;
+			;;
 
-        	it)
+		it)
 			XMOTO_LANGUAGE="it_IT"
-	                ;;
+			;;
 
-	        *)
+		*)
 			XMOTO_LANGUAGE="en_US"
-                	;;
+			;;
 	esac
 	sqlite3 ${XMOTO_CONFIG_FILE} "update profiles_configs set value=\"${XMOTO_LANGUAGE=}\" where key=\"Language\";"
 fi
@@ -263,23 +261,48 @@ KIKI_CONFIG_FILE="/home/user/.kiki.cfg"
 if [ -e ${KIKI_CONFIG_FILE} ]
 then
 	case "${LANGUAGE}" in
-        	de)
+		de)
 			KIKI_LANGUAGE="german"
-	                ;;
+			;;
 
-        	es)
+		es)
 			KIKI_LANGUAGE="spanish"
-	                ;;
+			;;
 
-        	fr)
+		fr)
 			KIKI_LANGUAGE="francaise"
-	                ;;
+			;;
 
-	        *)
+		*)
 			KIKI_LANGUAGE="english"
-                	;;
+			;;
 	esac
 	sed -i -e 's|language =.*|language = '"${KIKI_LANGUAGE}"'|g' \
 		${KIKI_CONFIG_FILE}
+fi
+
+# 2048-qt
+x2048_CONFIG_FILE="/home/user/.config/2048-qt/2048-Qt.conf"
+if [ -e ${x2048_CONFIG_FILE} ]
+then
+	case "${LANGUAGE}" in
+		de)
+			x2048_LANGUAGE="de_DE"
+			;;
+
+		fr)
+			x2048_LANGUAGE="fr_FR"
+			;;
+
+		ru)
+			x2048_LANGUAGE="ru_RU"
+			;;
+
+		*)
+			x2048_LANGUAGE="en_US"
+			;;
+	esac
+	sed -i -e 's|language=.*|language='"${x2048_LANGUAGE}"'|g' \
+		${x2048_CONFIG_FILE}
 fi
 

@@ -1,5 +1,3 @@
-components/*				/lib/live/config/
-efi_blacklist				/usr/share/lernstick-config/
-etc/*					/etc/
-systemd-shutdown/*			/lib/systemd/
-systemd-system/*			/lib/systemd/system/
+etc/*	/etc/
+lib/*	/lib/
+usr/*	/usr/

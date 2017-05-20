@@ -1,0 +1,5 @@
+DEBCONF_DIR="/tmp/lernstick-config/"
+if [ ! -d ${DEBCONF_DIR} ]
+then
+	mkdir -p "${DEBCONF_DIR}"
+fi

@@ -1,0 +1,62 @@
+#!/bin/sh
+
+# Here we configure all the stuff that has to be configured on every boot.
+
+LIVE_USERNAME="user"
+
+# Reading configuration files from filesystem and live-media
+for _FILE in /etc/live/config.conf \
+             /etc/live/config/* \
+             /lib/live/mount/medium/live/config.conf \
+             /lib/live/mount/medium/live/config/*
+do
+	if [ -e "${_FILE}" ]
+	then
+		. "${_FILE}"
+	fi
+done
+
+# Reading kernel command line
+for _PARAMETER in ${LIVE_CONFIG_CMDLINE}
+do
+	case "${_PARAMETER}" in
+		live-config.keyboard-layouts=*|keyboard-layouts=*)
+			LIVE_KEYBOARD_LAYOUTS="${_PARAMETER#*keyboard-layouts=}"
+			;;
+
+		live-config.username=*|username=*)
+			LIVE_USERNAME="${_PARAMETER#*username=}"
+			;;
+	esac
+done
+
+# Enabling keyboard selector
+cat > "/home/${LIVE_USERNAME}/.kde/share/config/kxkbrc" << EOF
+[Layout]
+DisplayNames=${LIVE_KEYBOARD_LAYOUTS}
+IndicatorOnly=false
+LayoutList=${LIVE_KEYBOARD_LAYOUTS}
+ShowFlag=false
+SwitchMode=Global
+Use=true
+EOF
+chown ${LIVE_USERNAME}:${LIVE_USERNAME} "/home/${LIVE_USERNAME}/.kde/share/config/kxkbrc"
+
+if [ -w  "/home/${LIVE_USERNAME}/.kde/share/apps/kded/session/keyboard/layout_memory.xml" ]
+then
+	# set first layout in list as currently selected layout
+	FIRST_LAYOUT="$(echo "${LIVE_KEYBOARD_LAYOUTS}" | awk -F , '{ print $1 }')"
+	sed -i "s/currentLayout=\".*\"/currentLayout=\"${FIRST_LAYOUT}\"/1" \
+		"/home/${LIVE_USERNAME}/.kde/share/apps/kded/session/keyboard/layout_memory.xml"
+fi
+
+# When the configuration is not there yet, XFCE asks the user if (s)he wants to start with the default or an empty panel.
+# But who on earth wants to start with an *empty* panel?!
+# Therefore we put the default panel there if not yet existing.
+PANEL_DIR="/home/${LIVE_USERNAME}/.config/xfce4/xfconf/xfce-perchannel-xml"
+PANEL_FILE="${PANEL_DIR}/xfce4-panel.xml"
+if [ ! -e "${PANEL_FILE}" ]
+then
+	sudo -u "${LIVE_USERNAME}" mkdir -p "${PANEL_DIR}"
+	sudo -u "${LIVE_USERNAME}" cp /etc/xdg/xfce4/panel/default.xml "${PANEL_FILE}"
+fi
