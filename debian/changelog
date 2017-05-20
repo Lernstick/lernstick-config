@@ -1,3 +1,32 @@
+lernstick-config (50) lernstick-9; urgency=medium
+
+  * added X11 config to enforce clickpad configuration on Dell Vostro 15
+  * tab instead of spaces
+  * moved some live-config scripts into systemd units
+  * fixed lernstick-user-setup.service
+  * trying to serialize debconf calls
+  * fixed some service files
+  * fixed handling of debconf directory
+  * simplified debconf dir handling
+  * fixed file sourcing
+  * made lernstick-debconf-set-selections.service more robust
+  * made lernstick-debconf-set-selections more robust (once more...)
+  * fixed mode of lib/systemd/lernstick-debconf-set-selections
+  * use individual description for pre and post services
+  * added missing defaults in lernstick-user-setup-pre
+  * added lernstick-vostro service
+  * updated linux advanced repo address
+  * fixed rfkill-enable service
+  * no longer run sudo component from live-config (sudo specific things are now already set up in the lernstick-usertemplate package)
+  * added unit for user-configuration after every boot
+  * run lernstick-user-setup-post service before sudo service (the sudo service wants the configured user to be there)
+  * no longer run live-config's xfce4-panel (merged into our user-config service)
+  * fixed debian rules file
+  * made vostro script more robust
+  * added support for 2048-qt, fixed formatting
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sat, 20 May 2017 21:55:22 +0200
+
 lernstick-config (38) lernstick-9; urgency=medium
 
   * [19a69d] Merge branch 'debian8'
