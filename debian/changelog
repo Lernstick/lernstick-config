@@ -1,3 +1,9 @@
+lernstick-config (51) lernstick-9; urgency=medium
+
+  * updated jitsi package source
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sun, 21 May 2017 20:51:05 +0200
+
 lernstick-config (50) lernstick-9; urgency=medium
 
   * added X11 config to enforce clickpad configuration on Dell Vostro 15
