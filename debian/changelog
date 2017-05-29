@@ -1,3 +1,9 @@
+lernstick-config (52) lernstick-9; urgency=medium
+
+  * use new live config directory
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Mon, 29 May 2017 19:29:30 +0200
+
 lernstick-config (51) lernstick-9; urgency=medium
 
   * updated jitsi package source
