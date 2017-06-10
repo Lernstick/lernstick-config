@@ -71,7 +71,7 @@ Config ()
 	# passwords can be generated with 'echo "live" | mkpasswd -s',
 	#   - "live" is           '8Ab05sVQ4LLps'
 	#   - a blank password is 'U6aMy0wojraho'
-	_PASSWORD="U6aMy0wojraho"
+	_PASSWORD="8Ab05sVQ4LLps"
 
 cat > ${DEBCONF_FILE} << EOF
 user-setup passwd/make-user boolean true
