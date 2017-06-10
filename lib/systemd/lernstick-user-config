@@ -6,7 +6,7 @@ LIVE_USERNAME="user"
 
 # Reading configuration files from filesystem and live-media
 for _FILE in /etc/live/config.conf \
-             /etc/live/config/* \
+             /etc/live/config.conf.d/* \
              /lib/live/mount/medium/live/config.conf \
              /lib/live/mount/medium/live/config/*
 do
