@@ -1,3 +1,11 @@
+lernstick-config (53) lernstick-9; urgency=medium
+
+  * execute "-pre" services after systemd-tmpfiles-setup.service
+  * adapted live config directory to Debian 9
+  * switched back to password "live", because gdm3 no longer allows blank passwords
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sat, 10 Jun 2017 22:27:47 +0200
+
 lernstick-config (52) lernstick-9; urgency=medium
 
   * use new live config directory
