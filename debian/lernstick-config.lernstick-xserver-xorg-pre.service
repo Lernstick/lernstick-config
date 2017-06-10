@@ -1,6 +1,7 @@
 [Unit]
 Description=Updating the xorg configuration (pre)
 DefaultDependencies=no
+After=systemd-tmpfiles-setup.service
 Before=basic.target
 
 [Service]

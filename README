@@ -12,6 +12,11 @@ to the debconf database have been split into -pre and -post parts. While the
 -pre variants can be executed in parallel, the -post parts need to be in a
 certain order.
 
+All -pre units have to be executed after systemd-tmpfiles-setup.service because
+they need to write temporary files. Otherwise these scripts write their config
+files and systemd-tmpfiles-setup.service just hides them by remounting /tmp.
+Yes, we have been there, done that... :-)
+
 All -post units have to be executed after lernstick-debconf-set-selections and
 before lernstick-debconf-cleanup.
 
