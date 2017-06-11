@@ -1,3 +1,11 @@
+lernstick-config (54) lernstick-9; urgency=medium
+
+  * for whatever reason the ownership of an apt cache directory is wrong
+    (see https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=808802)
+    we added a simple script to work around this bug
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sun, 11 Jun 2017 15:40:02 +0200
+
 lernstick-config (53) lernstick-9; urgency=medium
 
   * execute "-pre" services after systemd-tmpfiles-setup.service
