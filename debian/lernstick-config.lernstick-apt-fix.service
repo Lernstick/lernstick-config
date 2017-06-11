@@ -1,0 +1,10 @@
+[Unit]
+Description=Fixes apt permissions
+DefaultDependencies=no
+Before=basic.target
+
+[Service]
+ExecStart=/bin/chown _apt /var/cache/apt/archives/partial/
+
+[Install]
+WantedBy=basic.target
