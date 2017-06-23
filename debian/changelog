@@ -1,3 +1,9 @@
+lernstick-config (55) lernstick-9; urgency=medium
+
+  * [61bd47] made lernstick-user-config more robust
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 23 Jun 2017 20:02:05 +0200
+
 lernstick-config (54) lernstick-9; urgency=medium
 
   * for whatever reason the ownership of an apt cache directory is wrong
