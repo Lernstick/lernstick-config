@@ -1,3 +1,9 @@
+lernstick-config (50.deb8) lernstick-8; urgency=medium
+
+  * [d90029] made lernstick-user-config more robust
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 23 Jun 2017 19:57:46 +0200
+
 lernstick-config (49.deb8) lernstick-8; urgency=medium
 
   * [20c6ac] added support for 2048-qt, fixed formatting
