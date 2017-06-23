@@ -50,13 +50,17 @@ then
 		"/home/${LIVE_USERNAME}/.kde/share/apps/kded/session/keyboard/layout_memory.xml"
 fi
 
-# When the configuration is not there yet, XFCE asks the user if (s)he wants to start with the default or an empty panel.
-# But who on earth wants to start with an *empty* panel?!
-# Therefore we put the default panel there if not yet existing.
-PANEL_DIR="/home/${LIVE_USERNAME}/.config/xfce4/xfconf/xfce-perchannel-xml"
-PANEL_FILE="${PANEL_DIR}/xfce4-panel.xml"
-if [ ! -e "${PANEL_FILE}" ]
+XFCE4_PANEL_DEFAULTS="/etc/xdg/xfce4/panel/default.xml"
+if [ -e "${XFCE4_PANEL_DEFAULTS}" ]
 then
-	sudo -u "${LIVE_USERNAME}" mkdir -p "${PANEL_DIR}"
-	sudo -u "${LIVE_USERNAME}" cp /etc/xdg/xfce4/panel/default.xml "${PANEL_FILE}"
+	# When the configuration is not there yet, XFCE asks the user if (s)he wants to start with the default or an empty panel.
+	# But who on earth wants to start with an *empty* panel?!
+	# Therefore we put the default panel there if not yet existing.
+	PANEL_DIR="/home/${LIVE_USERNAME}/.config/xfce4/xfconf/xfce-perchannel-xml"
+	PANEL_FILE="${PANEL_DIR}/xfce4-panel.xml"
+	if [ ! -e "${PANEL_FILE}" ]
+	then
+		sudo -u "${LIVE_USERNAME}" mkdir -p "${PANEL_DIR}"
+		sudo -u "${LIVE_USERNAME}" cp "${XFCE4_PANEL_DEFAULTS}" "${PANEL_FILE}"
+	fi
 fi
