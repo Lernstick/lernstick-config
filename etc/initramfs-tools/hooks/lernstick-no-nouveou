@@ -1,0 +1,27 @@
+#!/bin/sh
+#
+# The Lernstick distribution uses the proprietary NVIDIA drivers. Because
+# loading the nouveau driver already in the initrd prevents the proprietary
+# NVIDIA drivers from loading in later stages, we remove the nouveau driver
+# from the initrd. It got added by the plymouth hook
+# (/usr/share/initramfs-tools/hooks/plymouth) via the following line:
+# copy_modules_dir kernel/drivers/gpu/drm mga r128 savage sis tdfx via
+
+set -e
+
+# initramfs-tools header
+
+PREREQ=""
+prereqs()
+{
+	echo "${PREREQ}"
+}
+
+case "${1}" in
+	prereqs)
+		prereqs
+		exit 0
+		;;
+esac
+
+find "${DESTDIR}" -name nouveau.ko | xargs rm
