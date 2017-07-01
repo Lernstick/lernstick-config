@@ -1,3 +1,9 @@
+lernstick-config (56) lernstick-9; urgency=medium
+
+  * don't run gdm3 via wayland, it still crashes on some GPUs
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sat, 01 Jul 2017 16:11:31 +0200
+
 lernstick-config (55) lernstick-9; urgency=medium
 
   * [61bd47] made lernstick-user-config more robust
