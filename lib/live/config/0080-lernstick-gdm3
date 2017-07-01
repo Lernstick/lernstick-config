@@ -68,7 +68,10 @@ Config ()
 	_GDM3_OPTIONS="AutomaticLoginEnable=true\n\
 AutomaticLogin=${LIVE_USERNAME}\n"
 
-	sed -i -e "s|\[daemon\]|\[daemon\]\n${_GDM3_OPTIONS}|" /etc/gdm3/daemon.conf
+	sed -i "s|\[daemon\]|\[daemon\]\n${_GDM3_OPTIONS}|" /etc/gdm3/daemon.conf
+
+	# don't run via wayland, it still crashes on some GPUs
+	sed -i "s/#WaylandEnable=false/WaylandEnable=false/" /etc/gdm3/daemon.conf
 
 	# Avoid xinit
 	touch /var/lib/live/config/xinit
