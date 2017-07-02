@@ -1,0 +1,10 @@
+[Unit]
+Description=Specify libinput for GNOME and synaptics for other desktop enviroments
+Before=gdm.service sddm.service
+
+[Service]
+Type=oneshot
+ExecStart=/lib/systemd/lernstick-touchpad
+
+[Install]
+WantedBy=multi-user.target
