@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# On older and slower computers the Lernstick system sometimes fails to create the
+# default user because debconf-set-selections exits with this error message:
+# debconf: DbDriver "config": /var/cache/debconf/config.dat is locked by another process: Resource temporarily unavailable
+#
+# To provide more robust system startup scripts it is a good idea to retry
+# setting the debconf selections instead of simply failing.
+
+COUNTER=30
+while
+	debconf-set-selections < "$1"
+	RETURN_VALUE=$?
+	echo "return value of debconf-set-selections: ${RETURN_VALUE}"
+	if [ ${RETURN_VALUE} -ne 0 ]
+	then
+		echo "debconf-set-selections failed, maybe a temporary lock?"
+		echo "sleeping for a second before retrying..."
+		sleep 1
+	fi
+	COUNTER="$((COUNTER-1))"
+	[ "${COUNTER}" -gt 0 ] && [ ${RETURN_VALUE} -ne 0 ]
+do :
+done

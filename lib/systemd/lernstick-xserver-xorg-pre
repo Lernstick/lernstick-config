@@ -277,27 +277,29 @@ EOF
 			nvidia)
 				update-alternatives --quiet --set glx /usr/lib/nvidia
 
-				# The update-alternatives call above creates a file /etc/modules-load.d/nvidia.conf
+				# The update-alternatives call above creates two files:
+				# /etc/modules-load.d/nvidia.conf
+				# /etc/modprobe.d/nvidia.conf
 				#
-				# This file is problematic on a live system because of the following situations:
+				# These files are problematic on a live system because of the following situations:
 				#
 				# Interference with different NVIDIA driver generations:
 				# ======================================================
 				# 1) The system was booted on a computer with a NVIDIA GPU that was supported by a
-				#    legacy driver. Our script enabled this driver,
-				#    /etc/modules-load.d/nvidia.conf was setup and everything was running great.
+				#    legacy driver. Our script enabled this driver, the files above were created
+				#    and everything was running great.
 				# 2) Next time the system was booted on a computer with a NVIDIA GPU that was supported
 				#    by the legacy AND the current driver. The systemd service systemd-modules-load.service
 				#    already successfully loaded the legacy kernel module specified in
-				#    /etc/modules-load.d/nvidia.conf. Our (this) script (correctly) configured the current driver
+				#    /etc/modprobe.d/nvidia.conf. Our (this) script (correctly) configured the current driver
 				#    and the X server failed to start because of the already loaded but different, outdated
 				#    and just wrong nvidia kernel module.
 				#
 				# Interference with the same NVIDIA driver generation (EFI blacklist):
 				# ====================================================================
 				# 1) The system was booted on a Dell Latitude D630 with an NVIDIA GPU supported by the
-				#    proprietary legacy-340xx driver. Our script enabled this driver,
-				#    /etc/modules-load.d/nvidia.conf was setup and everything was running great.
+				#    proprietary legacy-340xx driver. Our script enabled this driver, the files above were
+				#    created and everything was running great.
 				# 2) Next time the system was booted on a MacBook Air A1369 where the GPU is also
 				#    "officially" supported by the same legacy-340xx driver. Unfortunately, this driver
 				#    just crashes on this MacBook when booting via USB/EFI. Therefore we put it on our EFI
@@ -307,8 +309,9 @@ EOF
 				#    mesa driver (nouveau) but the already loaded nvidia kernel module made the running
 				#    X session very unstable and the 3D acceleration was completely broken.
 				#
-				# Therefore, we just delete this file right after it has been created here...
-				rm /etc/modules-load.d/nvidia.conf
+				# Therefore, we just delete these files right after they have been created here...
+				rm -f /etc/modules-load.d/nvidia.conf
+				rm -f /etc/modprobe.d/nvidia.conf
 
 				_NVIDIA_ALTERNATIVE="/usr/lib/nvidia/${_NVIDIA_VERSION:-current}"
 				# Check if the alternative is present and if it needs to be updated.
