@@ -1,3 +1,10 @@
+lernstick-config (52.deb8) lernstick-8; urgency=medium
+
+  * [78e75f] implemtented a wrapper script around debconf-set-selections to
+    make system startup scrips more robust
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 07 Jul 2017 17:28:07 +0200
+
 lernstick-config (51.deb8) lernstick-8; urgency=medium
 
   * [20e53b] updated lernstick-xserver-xorg-pre (remove another problematic nvidia file)
