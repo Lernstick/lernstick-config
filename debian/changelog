@@ -1,3 +1,9 @@
+lernstick-config (51.deb8) lernstick-8; urgency=medium
+
+  * [20e53b] updated lernstick-xserver-xorg-pre (remove another problematic nvidia file)
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 07 Jul 2017 14:54:00 +0200
+
 lernstick-config (50.deb8) lernstick-8; urgency=medium
 
   * [d90029] made lernstick-user-config more robust
