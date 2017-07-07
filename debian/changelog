@@ -1,3 +1,12 @@
+lernstick-config (58) lernstick-9; urgency=medium
+
+  * [20e53b] updated lernstick-xserver-xorg-pre (remove another problematic
+    nvidia file)
+  * [78e75f] implemtented a wrapper script around debconf-set-selections to
+    make system startup scrips more robust
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 07 Jul 2017 17:38:43 +0200
+
 lernstick-config (57) lernstick-9; urgency=medium
 
   * added hook to remove the nouveau driver from the initrd
