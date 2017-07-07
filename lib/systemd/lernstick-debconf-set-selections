@@ -14,5 +14,5 @@ DEBCONF_DIR="/tmp/lernstick-config/"
 
 if [ -d ${DEBCONF_DIR} ]
 then
-	find ${DEBCONF_DIR} -type f -exec sh -c 'debconf-set-selections < {}' \;
+	find ${DEBCONF_DIR} -type f -exec sh -c 'retrying-debconf-set-selections {}' \;
 fi
