@@ -9,12 +9,13 @@
 
 COUNTER=30
 while
+	echo "calling debconf-set-selections < \"$1\""
 	debconf-set-selections < "$1"
 	RETURN_VALUE=$?
-	echo "return value of debconf-set-selections: ${RETURN_VALUE}"
+	echo "return value of debconf-set-selections < \"$1\": ${RETURN_VALUE}"
 	if [ ${RETURN_VALUE} -ne 0 ]
 	then
-		echo "debconf-set-selections failed, maybe a temporary lock?"
+		echo "debconf-set-selections  < \"$1\" failed, maybe a temporary lock?"
 		echo "sleeping for a second before retrying..."
 		sleep 1
 	fi

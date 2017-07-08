@@ -7,9 +7,10 @@
 ## This is free software, and you are welcome to redistribute it
 ## under certain conditions; see COPYING for details.
 
-. /lib/systemd/lernstick-debconf-dir
-
-DEBCONF_FILE=${DEBCONF_DIR}/lernstick-xserver-xorg
+# We have to use /run/ instead of /tmp/ because /tmp/ gets overwritten during boot by
+# systemd's tmp.mount, which is also mounting over non-empty directories.
+DEBCONF_FILE=/run/lernstick-xserver-xorg
+rm -f ${DEBCONF_FILE}
 
 # Regex matching PCI IDs which support two graphic cards with proprietary
 # drivers
@@ -339,6 +340,15 @@ EOF
 		echo "xrandr -s ${LIVE_XORG_RESOLUTION} || /bin/true" >> /etc/X11/Xsession.d/21xvidemode
 	else
 		rm -f /etc/X11/Xsession.d/21xvidemode
+	fi
+
+	if [ -e ${DEBCONF_FILE} ]
+	then
+		retrying-debconf-set-selections ${DEBCONF_FILE}
+
+		dpkg-reconfigure -f noninteractive -p critical xserver-xorg 2>&1 \
+			| grep -v "overwriting possibly-customised configuration" \
+			| grep -v "file; backup in /etc/X11/xorg.conf" || true
 	fi
 }
 
