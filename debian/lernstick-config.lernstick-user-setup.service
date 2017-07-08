@@ -1,12 +1,12 @@
 [Unit]
-Description=Creates the default system user (pre)
+Description=Creates the default system user
 ConditionPathExists=!/var/lib/live/config/user-setup
 DefaultDependencies=no
-Before=basic.target
+Before=basic.target sudo.service
 
 [Service]
 Type=oneshot
-ExecStart=/lib/systemd/lernstick-user-setup-pre
+ExecStart=/lib/systemd/lernstick-user-setup
 
 [Install]
 WantedBy=basic.target

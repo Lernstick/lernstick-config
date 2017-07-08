@@ -3,7 +3,7 @@ Description=Configuration of the visibility of the correct GPU config tool
 DefaultDependencies=no
 Before=basic.target
 After=lernstick-xserver-xorg.service
-Requires=lernstick-xserver-xorg-pre.service
+Requires=lernstick-xserver-xorg.service
 
 [Service]
 Type=oneshot

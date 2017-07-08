@@ -1,11 +1,11 @@
 [Unit]
-Description=Updating the xorg configuration (pre)
+Description=Updating the xorg configuration
 DefaultDependencies=no
 Before=basic.target
 
 [Service]
 Type=oneshot
-ExecStart=/lib/systemd/lernstick-xserver-xorg-pre
+ExecStart=/lib/systemd/lernstick-xserver-xorg
 
 [Install]
 WantedBy=basic.target

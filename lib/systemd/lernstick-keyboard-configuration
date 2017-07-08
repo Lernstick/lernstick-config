@@ -9,9 +9,10 @@
 
 #set -e
 
-. /lib/systemd/lernstick-debconf-dir
-
-DEBCONF_FILE=${DEBCONF_DIR}/lernstick-keyboard-configuration
+# We have to use /run/ instead of /tmp/ because /tmp/ gets overwritten during boot by
+# systemd's tmp.mount, which is also mounting over non-empty directories.
+DEBCONF_FILE=/run/lernstick-keyboard-configuration
+rm -f ${DEBCONF_FILE}
 
 Cmdline ()
 {
@@ -83,6 +84,11 @@ Config ()
 	then
 		echo "keyboard-configuration keyboard-configuration/variantcode select ${LIVE_KEYBOARD_VARIANTS}" >>  ${DEBCONF_FILE}
 		sed -i -e "s|^XKBVARIANT=.*$|XKBVARIANT=\"${LIVE_KEYBOARD_VARIANTS}\"|" /etc/default/keyboard
+	fi
+
+	if [ -e ${DEBCONF_FILE} ]
+	then
+		retrying-debconf-set-selections ${DEBCONF_FILE}
 	fi
 }
 

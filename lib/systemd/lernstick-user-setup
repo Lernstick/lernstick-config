@@ -7,9 +7,9 @@
 ## This is free software, and you are welcome to redistribute it
 ## under certain conditions; see COPYING for details.
 
-. /lib/systemd/lernstick-debconf-dir
-
-DEBCONF_FILE=${DEBCONF_DIR}/lernstick-user-setup
+# We have to use /run/ instead of /tmp/ because /tmp/ gets overwritten during boot by
+# systemd's tmp.mount, which is also mounting over non-empty directories.
+DEBCONF_FILE=/run/lernstick-user-setup
 
 Cmdline ()
 {
@@ -82,6 +82,17 @@ user-setup passwd/user-fullname string ${LIVE_USER_FULLNAME}
 user-setup passwd/username string ${LIVE_USERNAME}
 user-setup passwd/user-uid string 1000
 EOF
+
+	retrying-debconf-set-selections ${DEBCONF_FILE}
+
+	# Workaround for bug in shadow
+	set +e
+	/usr/lib/user-setup/user-setup-apply 2>&1 \
+	| grep -v "Shadow passwords are now on"
+	set -e
+
+	# Creating state file (evaluated by systemd service file)
+	touch /var/lib/live/config/user-setup
 }
 
 Cmdline
