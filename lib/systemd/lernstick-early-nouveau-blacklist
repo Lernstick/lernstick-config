@@ -116,7 +116,7 @@ Config ()
 				echo "compatible nvidia driver detected, nouveau is already blacklisted"
 			else
 				echo "compatible nvidia driver detected, blacklisting nouveau"
-				ln -s /etc/alternatives/glx--nvidia-blacklists-nouveau.conf /etc/modprobe.d/nvidia-blacklists-nouveau.conf
+				ln -s /etc/nvidia/nvidia-blacklists-nouveau.conf /etc/modprobe.d/nvidia-blacklists-nouveau.conf
 			fi
 			;;
 
