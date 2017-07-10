@@ -1,0 +1,11 @@
+[Unit]
+Description=Update of nouveau blacklisting
+DefaultDependencies=no
+Before=systemd-udevd.service sysinit.target
+
+[Service]
+Type=oneshot
+ExecStart=/lib/systemd/lernstick-early-nouveau-blacklist
+
+[Install]
+WantedBy=sysinit.target
