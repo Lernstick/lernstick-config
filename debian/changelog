@@ -1,4 +1,10 @@
-lernstick-config (53.deb9) lernstick-8; urgency=medium
+lernstick-config (54.deb8) lernstick-8; urgency=medium
+
+  * [969417] use original file instead of alternatives link for nvidia-blacklists-nouveau.conf
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Mon, 10 Jul 2017 11:30:53 +0200
+
+lernstick-config (53.deb8) lernstick-8; urgency=medium
 
   * [f6f391] made the systemd parts of lernstick config simpler and more robust
   * [d1b686] added systemd service to updated nouveau blacklisting in early boot stage
