@@ -1,3 +1,11 @@
+lernstick-config (59) lernstick-9; urgency=medium
+
+  * [f6f391] made the systemd parts of lernstick config simpler and more robust
+  * [d1b686] added systemd service to updated nouveau blacklisting in early boot stage
+  * [969417] use original file instead of alternatives link for nvidia-blacklists-nouveau.conf
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Mon, 10 Jul 2017 14:45:17 +0200
+
 lernstick-config (58) lernstick-9; urgency=medium
 
   * [20e53b] updated lernstick-xserver-xorg-pre (remove another problematic
