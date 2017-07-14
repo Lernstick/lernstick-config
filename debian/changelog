@@ -1,3 +1,9 @@
+lernstick-config (55.deb8) lernstick-8; urgency=medium
+
+  * [cbb667] use plymouth theme "tribar" per default
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 14 Jul 2017 16:45:30 +0200
+
 lernstick-config (54.deb8) lernstick-8; urgency=medium
 
   * [969417] use original file instead of alternatives link for nvidia-blacklists-nouveau.conf
