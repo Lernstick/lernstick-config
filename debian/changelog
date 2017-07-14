@@ -1,3 +1,9 @@
+lernstick-config (60) lernstick-9; urgency=medium
+
+  * [cbb667] use plymouth theme "tribar" per default
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 14 Jul 2017 16:53:32 +0200
+
 lernstick-config (59) lernstick-9; urgency=medium
 
   * [f6f391] made the systemd parts of lernstick config simpler and more robust
