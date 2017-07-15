@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # On older and slower computers the Lernstick system sometimes fails to create the
 # default user because debconf-set-selections exits with this error message:
@@ -7,7 +7,7 @@
 # To provide more robust system startup scripts it is a good idea to retry
 # setting the debconf selections instead of simply failing.
 
-COUNTER=30
+COUNTER=100
 while
 	echo "calling debconf-set-selections < \"$1\""
 	debconf-set-selections < "$1"
@@ -16,8 +16,9 @@ while
 	if [ ${RETURN_VALUE} -ne 0 ]
 	then
 		echo "debconf-set-selections  < \"$1\" failed, maybe a temporary lock?"
-		echo "sleeping for a second before retrying..."
-		sleep 1
+		RANDOM_WAIT="$(printf "0.%02ds" $(( $RANDOM % 99 + 1)))"
+		echo "sleeping for a random time (${RANDOM_WAIT}) before retrying..."
+		sleep ${RANDOM_WAIT}
 	fi
 	COUNTER="$((COUNTER-1))"
 	[ "${COUNTER}" -gt 0 ] && [ ${RETURN_VALUE} -ne 0 ]
