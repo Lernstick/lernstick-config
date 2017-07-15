@@ -1,2 +1,3 @@
+/etc/apt/sources.list.d/jitsi-stable.list.lernstick
 /etc/dkms/framework.conf.lernstick
 /etc/plymouth/plymouthd.conf.lernstick
