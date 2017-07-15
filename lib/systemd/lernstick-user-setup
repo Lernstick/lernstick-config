@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ## live-config(7) - System Configuration Components
 ## Copyright (C) 2006-2015 Daniel Baumann <mail@daniel-baumann.ch>
@@ -85,11 +85,35 @@ EOF
 
 	retrying-debconf-set-selections ${DEBCONF_FILE}
 
-	# Workaround for bug in shadow
-	set +e
-	/usr/lib/user-setup/user-setup-apply 2>&1 \
-	| grep -v "Shadow passwords are now on"
-	set -e
+	# Because of the parallelism of systemd it might happen from time to time that
+	# another unit locks the debconf database in between returning from the line
+	# above and executing the line below. Yes, we have run into this bug and it
+	# produces error messages like this in the journal:
+	# lernstick-user-setup[435]: debconf: DbDriver "config": /var/cache/debconf/config.dat is locked by another process: Resource temporarily unavailabl
+	# The result is that the default user doesn't get created and the whole system
+	# is broken.
+	# Therefore we have to retry user-setup-apply below until it succeeds.
+
+	COUNTER=100
+	while
+		echo "calling /usr/lib/user-setup/user-setup-apply"
+		# Workaround for bug in shadow
+		set +e
+		/usr/lib/user-setup/user-setup-apply
+		RETURN_VALUE=$?
+		set -e
+		echo "return value of /usr/lib/user-setup/user-setup-apply: ${RETURN_VALUE}"
+		if [ ${RETURN_VALUE} -ne 0 ]
+		then
+			echo "/usr/lib/user-setup/user-setup-apply failed, maybe a temporary lock?"
+			RANDOM_WAIT="$(printf "0.%02ds" $(( $RANDOM % 99 + 1)))"
+			echo "sleeping for a random time (${RANDOM_WAIT}) before retrying..."
+			sleep ${RANDOM_WAIT}
+		fi
+		COUNTER="$((COUNTER-1))"
+		[ "${COUNTER}" -gt 0 ] && [ ${RETURN_VALUE} -ne 0 ]
+	do :
+	done
 
 	# Creating state file (evaluated by systemd service file)
 	touch /var/lib/live/config/user-setup
