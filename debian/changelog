@@ -1,3 +1,9 @@
+lernstick-config (62) lernstick-9; urgency=medium
+
+  * [f0d0e1] displace jitsi apt source to prevent live build failures
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sat, 15 Jul 2017 18:56:12 +0200
+
 lernstick-config (61) lernstick-9; urgency=medium
 
   * [3945d7] use random wait times for retries to improve parallel execution
