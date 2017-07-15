@@ -1,3 +1,10 @@
+lernstick-config (61) lernstick-9; urgency=medium
+
+  * [3945d7] use random wait times for retries to improve parallel execution
+  * [e0350a] retry user-setup-apply in lernstick-user-setup
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sat, 15 Jul 2017 16:35:23 +0200
+
 lernstick-config (60) lernstick-9; urgency=medium
 
   * [cbb667] use plymouth theme "tribar" per default
