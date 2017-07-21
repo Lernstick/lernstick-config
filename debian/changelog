@@ -1,3 +1,9 @@
+lernstick-config (57.deb8) lernstick-8; urgency=medium
+
+  * [01f8a5] use stable repository for jitsi
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 21 Jul 2017 20:04:33 +0200
+
 lernstick-config (56.deb8) lernstick-8; urgency=medium
 
   * [3945d7] use random wait times for retries to improve parallel execution
