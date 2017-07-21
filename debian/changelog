@@ -1,3 +1,9 @@
+lernstick-config (59.deb8) lernstick-8; urgency=medium
+
+  * [3bd853] removed jitsi apt source (it's now provided by jitsi-archive-keyring)
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 21 Jul 2017 20:12:59 +0200
+
 lernstick-config (57.deb8) lernstick-8; urgency=medium
 
   * [01f8a5] use stable repository for jitsi
