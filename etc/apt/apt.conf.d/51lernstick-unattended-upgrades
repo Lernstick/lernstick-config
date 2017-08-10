@@ -13,7 +13,8 @@ Unattended-Upgrade::AutoFixInterruptedDpkg "true";
 // is running is possible (with a small delay)
 Unattended-Upgrade::MinimalSteps "true";
 
-// Do automatic removal of new unused dependencies after the upgrade
-// (equivalent to apt-get autoremove)
-Unattended-Upgrade::Remove-Unused-Dependencies "true";
-
+// We already had some strange situations were important (local) packages were
+// removed by unattended upgrades for no apparent reason.
+// Therefore we enable maximum verbosity and by this debug level logging
+// for unattended upgrades until the problems have been sorted out.
+APT::Periodic::Verbose "3";
