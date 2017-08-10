@@ -1,3 +1,9 @@
+lernstick-config (60.deb8) lernstick-8; urgency=medium
+
+  * [50a7c7] made unattended upgrades more careful and more verbose
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Thu, 10 Aug 2017 16:51:27 +0200
+
 lernstick-config (59.deb8) lernstick-8; urgency=medium
 
   * [3bd853] removed jitsi apt source (it's now provided by jitsi-archive-keyring)
