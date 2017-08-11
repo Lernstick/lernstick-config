@@ -1,3 +1,10 @@
+lernstick-config (61.deb8) lernstick-8; urgency=medium
+
+  * [5db0a5] removed special plymouth config because plymouth doesn't seem to
+    work with symlinks created by config-package-dev
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 11 Aug 2017 18:20:15 +0200
+
 lernstick-config (60.deb8) lernstick-8; urgency=medium
 
   * [50a7c7] made unattended upgrades more careful and more verbose
