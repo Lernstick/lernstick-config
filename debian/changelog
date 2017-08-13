@@ -1,3 +1,10 @@
+lernstick-config (65) lernstick-9; urgency=medium
+
+  * [5db0a5] removed special plymouth config because plymouth doesn't seem to
+    work with symlinks created by config-package-dev
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sun, 13 Aug 2017 15:41:28 +0200
+
 lernstick-config (64) lernstick-9; urgency=medium
 
   * [50a7c7] made unattended upgrades more careful and more verbose
