@@ -1,3 +1,9 @@
+lernstick-config (66) lernstick-9; urgency=medium
+
+  * [6f172a] fixed and simplified nouveau/nvidia driver selection
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Tue, 15 Aug 2017 12:44:30 +0200
+
 lernstick-config (65) lernstick-9; urgency=medium
 
   * [5db0a5] removed special plymouth config because plymouth doesn't seem to
