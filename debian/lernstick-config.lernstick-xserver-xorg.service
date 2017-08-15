@@ -1,8 +1,7 @@
 [Unit]
 Description=Updating the xorg configuration
 DefaultDependencies=no
-After=systemd-tmpfiles-setup.service
-Before=basic.target
+Before=basic.target systemd-modules-load.service systemd-udevd.service
 
 [Service]
 Type=oneshot
