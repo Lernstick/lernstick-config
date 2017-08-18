@@ -1,0 +1,23 @@
+#!/bin/sh
+
+PREREQ=""
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+. /usr/share/initramfs-tools/hook-functions
+
+# We add vboxvideo to the initramfs so that a framebuffer is available so that
+# plymouth can show nice graphical splash screens instead of just text mode
+# themes.
+
+manual_add_modules vboxvideo
