@@ -1,3 +1,11 @@
+lernstick-config (63.deb8) lernstick-8; urgency=medium
+
+  * [40b8fc] added initramfs-tools hook to include vboxvideo in initramfs so
+    that a framebuffer becomes available and graphical plymouth themes are
+    supported in VirtualBox
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sat, 19 Aug 2017 00:07:02 +0200
+
 lernstick-config (62.deb8) lernstick-8; urgency=medium
 
   * [6f172a] fixed and simplified nouveau/nvidia driver selection
