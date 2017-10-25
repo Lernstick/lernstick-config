@@ -1,3 +1,9 @@
+lernstick-config (68) lernstick-9; urgency=medium
+
+  * [f88dac] replaced lernstick-8 sources list with lernstick-9 version
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Wed, 25 Oct 2017 20:51:10 +0200
+
 lernstick-config (67) lernstick-9; urgency=medium
 
   * [40b8fc] added initramfs-tools hook to include vboxvideo in initramfs so
