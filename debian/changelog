@@ -1,3 +1,9 @@
+lernstick-config (69) lernstick-9; urgency=medium
+
+  * [218117] disabled live-config's tzdata (will be configured during build-time)
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 01 Dec 2017 21:37:30 +0100
+
 lernstick-config (68) lernstick-9; urgency=medium
 
   * [f88dac] replaced lernstick-8 sources list with lernstick-9 version
