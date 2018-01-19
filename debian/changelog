@@ -1,3 +1,9 @@
+lernstick-config (71) lernstick-9; urgency=medium
+
+  * added sddm to the list of live-config components to ignore
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 19 Jan 2018 15:47:31 +0100
+
 lernstick-config (70) lernstick-9; urgency=medium
 
   * [d848df] updated Linux Advanced repository (address and key)
