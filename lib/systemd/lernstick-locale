@@ -306,3 +306,36 @@ then
 		${x2048_CONFIG_FILE}
 fi
 
+# Extreme TuxRacer
+ETR_CONFIG_FILE="/home/user/.etr/options.txt"
+case "${LANGUAGE}" in
+	de)
+		ETR_LANGUAGE="de_DE"
+		;;
+	cs)	
+		ETR_LANGUAGE="cs_CZ"
+		;;
+	fi)	
+		ETR_LANGUAGE="fi_FI"
+		;;
+	es)	
+		ETR_LANGUAGE="es_ES"
+		;;
+	fr)
+		ETR_LANGUAGE="fr_FR"
+		;;
+	pl)
+		ETR_LANGUAGE="pl_PL"
+		;;
+	*)
+		ETR_LANGUAGE="en_GB"
+		;;
+esac
+if [ -e ${ETR_CONFIG_FILE} ]
+then
+	sed -i -e 's|\[language\].*|[language] '${ETR_LANGUAGE}'|g' \
+		${ETR_CONFIG_FILE}
+else
+	echo "[language] ${ETR_LANGUAGE}" >${ETR_CONFIG_FILE}
+fi
+
