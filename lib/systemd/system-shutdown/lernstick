@@ -3,6 +3,9 @@
 DESTDIR="/run/initramfs"
 verbose="y"
 
+# remount /run executable because we use it to run our shutdown script
+mount -o remount,rw /var/run/ /run/
+
 # create directories
 for d in etc bin sbin proc ; do
   mkdir $DESTDIR/$d || true 2>/dev/null
