@@ -1,3 +1,10 @@
+lernstick-config (73) lernstick-9; urgency=medium
+
+  * [8dbffa] Revert "made vostro script more robust"
+  * [1d7ca3] Revert "added lernstick-vostro service"
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sun, 06 May 2018 11:07:12 +0200
+
 lernstick-config (72) lernstick-9; urgency=medium
 
   * [fbe1ec] updated Linux Advanced repository again
