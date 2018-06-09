@@ -1,3 +1,13 @@
+lernstick-config (74) lernstick-9; urgency=medium
+
+  [ Martin Gwerder ]
+  * [c01aab] Added localisation support for Extreme Tuxracer
+
+  [ Thore Sommer ]
+  * [2fa209] fixed lernstick shutdown
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sat, 09 Jun 2018 12:25:54 +0200
+
 lernstick-config (73) lernstick-9; urgency=medium
 
   * [8dbffa] Revert "made vostro script more robust"
