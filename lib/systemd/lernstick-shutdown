@@ -3,6 +3,12 @@
 BASEPATH="/lib/live/mount"
 ACTION="$1"
 
+# During shutdown plymouth is always running on vt 63.
+# If we create new ttys (by pressing Ctrl+Alt+F[1-6]), the shutdown process doesn't
+# automatically switch to the plymouth vt.
+# We work around this problem by enforcing a vt change here:
+chvt 63
+
 unmount_loop() {
     mount_path="$1"
     unmounted="y"
