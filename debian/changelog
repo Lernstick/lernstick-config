@@ -1,3 +1,9 @@
+lernstick-config (75) lernstick-9; urgency=medium
+
+  * [ff30e1] added workaround for always switching to plymouth vt
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sat, 09 Jun 2018 20:00:27 +0200
+
 lernstick-config (74) lernstick-9; urgency=medium
 
   [ Martin Gwerder ]
