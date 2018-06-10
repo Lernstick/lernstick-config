@@ -192,42 +192,6 @@ then
 		${ARMAGETRONAD_CONFIG_FILE}
 fi
 
-# extremetuxracer
-ETRACER_CONFIG_FILE="/home/user/.etracer/options"
-if [ -e ${ETRACER_CONFIG_FILE} ]
-then
-	case "${LANGUAGE}" in
-		de)
-			ETRACER_LANGUAGE="de_DE"
-			;;
-
-		es)
-			ETRACER_LANGUAGE="es_ES"
-			;;
-
-		fr)
-			ETRACER_LANGUAGE="fr_FR"
-			;;
-
-		it)
-			ETRACER_LANGUAGE="it_IT"
-			;;
-
-		pt)
-			ETRACER_LANGUAGE="pt_PT"
-			;;
-
-		ru)
-			ETRACER_LANGUAGE="ru_RU"
-			;;
-		*)
-			ETRACER_LANGUAGE="en_GB"
-			;;
-	esac
-	sed -i -e "s|set ui_language .*|set ui_language \"${ETRACER_LANGUAGE}\"|1" \
-		${ETRACER_CONFIG_FILE}
-fi
-
 # xmoto
 XMOTO_CONFIG_FILE="/home/user/.xmoto/xm.db"
 if [ -e ${XMOTO_CONFIG_FILE} ]
@@ -306,36 +270,50 @@ then
 		${x2048_CONFIG_FILE}
 fi
 
-# Extreme TuxRacer
+# extremetuxracer
 ETR_CONFIG_FILE="/home/user/.etr/options.txt"
-case "${LANGUAGE}" in
-	de)
-		ETR_LANGUAGE="de_DE"
-		;;
-	cs)	
-		ETR_LANGUAGE="cs_CZ"
-		;;
-	fi)	
-		ETR_LANGUAGE="fi_FI"
-		;;
-	es)	
-		ETR_LANGUAGE="es_ES"
-		;;
-	fr)
-		ETR_LANGUAGE="fr_FR"
-		;;
-	pl)
-		ETR_LANGUAGE="pl_PL"
-		;;
-	*)
-		ETR_LANGUAGE="en_GB"
-		;;
-esac
 if [ -e ${ETR_CONFIG_FILE} ]
 then
+	case "${LANGUAGE}" in
+		cs)
+			ETR_LANGUAGE="cs_CZ"
+			;;
+
+		de)
+			ETR_LANGUAGE="de_DE"
+			;;
+
+		es)
+			ETR_LANGUAGE="es_ES"
+			;;
+
+		fi)
+			ETR_LANGUAGE="fi_FI"
+			;;
+
+		fr)
+			ETR_LANGUAGE="fr_FR"
+			;;
+
+		it)
+			ETR_LANGUAGE="it_IT"
+			;;
+
+		pl)
+			ETR_LANGUAGE="pl_PL"
+			;;
+
+		pt)
+			ETR_LANGUAGE="pt_PT"
+			;;
+
+		ru)
+			ETR_LANGUAGE="ru_RU"
+			;;
+		*)
+			ETR_LANGUAGE="en_GB"
+			;;
+	esac
 	sed -i -e 's|\[language\].*|[language] '${ETR_LANGUAGE}'|g' \
 		${ETR_CONFIG_FILE}
-else
-	echo "[language] ${ETR_LANGUAGE}" >${ETR_CONFIG_FILE}
 fi
-
