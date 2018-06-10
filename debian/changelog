@@ -1,3 +1,9 @@
+lernstick-config (76) lernstick-9; urgency=medium
+
+  * [95f34a] run lernstick-locale.service after lernstick-user-setup.service
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sun, 10 Jun 2018 16:21:56 +0200
+
 lernstick-config (75) lernstick-9; urgency=medium
 
   * [ff30e1] added workaround for always switching to plymouth vt
