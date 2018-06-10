@@ -1,3 +1,9 @@
+lernstick-config (77) lernstick-9; urgency=medium
+
+  * [01e4d1] updated automatic locale setting for extremetuxracer
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sun, 10 Jun 2018 18:01:25 +0200
+
 lernstick-config (76) lernstick-9; urgency=medium
 
   * [95f34a] run lernstick-locale.service after lernstick-user-setup.service
