@@ -1,6 +1,7 @@
 [Unit]
 Description=Updating the Lernstick's user locale settings
 DefaultDependencies=no
+After=lernstick-user-setup.service
 Before=basic.target
 
 [Service]
