@@ -78,16 +78,6 @@ Detect_xorg_driver ()
 		done
 	fi
 
-	# xorg-driver automatic override for fglrx
-	if echo "${_DEVICE}" | grep -qs '^1002'
-	then
-		if grep -qs "${_DEVICE}" /usr/share/fglrx/fglrx.ids
-		then
-			LIVE_XORG_DRIVER="fglrx"
-			return
-		fi
-	fi
-
 	# xorg-driver automatic override for nvidia
 	if echo "${_DEVICE}" | grep -qs -E '^(10DE|12D2)'
 	then
@@ -270,11 +260,6 @@ EOF
 	then
 		echo "LIVE_XORG_DRIVER: ${LIVE_XORG_DRIVER}"
 		case "${LIVE_XORG_DRIVER}" in
-			fglrx)
-				update-alternatives --quiet --set glx /usr/lib/fglrx
-				modprobe --ignore-install fglrx || true
-				;;
-
 			nvidia)
 				update-alternatives --quiet --set glx /usr/lib/nvidia
 
