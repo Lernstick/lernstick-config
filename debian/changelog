@@ -1,3 +1,13 @@
+lernstick-config (78) lernstick-9; urgency=medium
+
+  * [bb0fc1] removed fglrx handling from lernstick-xserver-xorg (the fglrx
+             driver is no longer supported in Debian)
+  * [16eece] always blacklist the nouveau driver
+  * [6f3930] use newer update-glx instead of the classic update-alternatives
+             which is insufficient for switching glx and nvidia alternatives
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Wed, 08 Aug 2018 16:28:35 +0200
+
 lernstick-config (77) lernstick-9; urgency=medium
 
   * [01e4d1] updated automatic locale setting for extremetuxracer
