@@ -1,3 +1,9 @@
+lernstick-config (79) lernstick-9; urgency=medium
+
+  * [9a806c] fixed initramfs hook for blacklisting nouveau
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Wed, 08 Aug 2018 16:57:04 +0200
+
 lernstick-config (78) lernstick-9; urgency=medium
 
   * [bb0fc1] removed fglrx handling from lernstick-xserver-xorg (the fglrx
