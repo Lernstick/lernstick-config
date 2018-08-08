@@ -99,23 +99,6 @@ Detect_xorg_driver ()
 	LIVE_XORG_DRIVER="xorg-autoconfig"
 }
 
-Enable_update_initramfs ()
-{
-	chmod +x /usr/sbin/update-initramfs
-}
-
-Reconfigure_glx_alternative_nvidia ()
-{
-	# avoid updating the the initramfs as it takes way too long and is
-	# useless on live systems (we might be on completely different hardware
-	# on next boot)
-	trap Enable_update_initramfs 0
-	chmod -x /usr/sbin/update-initramfs
-	dpkg-reconfigure glx-alternative-nvidia
-	Enable_update_initramfs
-	trap - 0
-}
-
 Cmdline ()
 {
 	for _PARAMETER in $(cat /proc/cmdline)
@@ -159,6 +142,11 @@ Init ()
 	then
 		exit 0
 	fi
+}
+
+Enable_update_initramfs ()
+{
+	mv /usr/sbin/update-initramfs.backup /usr/sbin/update-initramfs
 }
 
 Config ()
@@ -258,29 +246,51 @@ EOF
 	# set correct glx alternative
 	if [ -e /etc/alternatives/glx ]
 	then
+		# avoid updating the initramfs as it takes way too long and is useless on live systems
+		# (we might be on completely different hardware on next boot)
+		trap Enable_update_initramfs 0
+		mv /usr/sbin/update-initramfs /usr/sbin/update-initramfs.backup
+		ln -s /bin/true /usr/sbin/update-initramfs
+
+		# Even when update-initramfs is disabled, update-glx takes a bit of time because it calls quite a lot of triggers.
+		# Therefore we always check in the next couple of lines if the wanted alternative is already configured.
+		_CURRENT_GLX="$(update-alternatives --query glx | grep -E '^Value: ' | cut -f 2 -d ' ')"
+		echo "CURRENT_GLX: ${_CURRENT_GLX}"
 		echo "LIVE_XORG_DRIVER: ${LIVE_XORG_DRIVER}"
 		case "${LIVE_XORG_DRIVER}" in
 			nvidia)
-				update-alternatives --quiet --set glx /usr/lib/nvidia
-
-				_NVIDIA_ALTERNATIVE="/usr/lib/nvidia/${_NVIDIA_VERSION:-current}"
-				echo "NVIDIA_ALTERNATIVE: ${_NVIDIA_ALTERNATIVE}"
-				# Check if the alternative is present and if it needs to be updated.
-				# Updating takes a bit of time because the glx-alternative-nvidia package
-				# needs to be reconfigured and calls ldconfig in it's postinst.
-				if [ -e /etc/alternatives/nvidia -a "$(update-alternatives --query nvidia | grep -E '^Value: ' | cut -f 2 -d ' ')" != "${_NVIDIA_ALTERNATIVE}" ]
+				if [ "${_CURRENT_GLX}" = "/usr/lib/nvidia" ]
 				then
-					update-alternatives --quiet --set nvidia ${_NVIDIA_ALTERNATIVE}
-					# reconfigure the GLX alternative package
-					# see /usr/share/doc/nvidia-driver/README.alternatives
-					Reconfigure_glx_alternative_nvidia
+					echo "skipping glx update, alternative is already set to \"/usr/lib/nvidia\""
+				else
+					echo "setting glx alternative to \"/usr/lib/nvidia\""
+					update-glx --set glx /usr/lib/nvidia
+				fi
+
+				_NVIDIA_ALTERNATIVE="/usr/lib/nvidia/${_NVIDIA_VERSION}"
+				echo "NVIDIA_ALTERNATIVE: ${_NVIDIA_ALTERNATIVE}"
+				if [ -e /etc/alternatives/nvidia -a "$(update-alternatives --query nvidia | grep -E '^Value: ' | cut -f 2 -d ' ')" = "${_NVIDIA_ALTERNATIVE}" ]
+				then
+					echo "skipping nvidia update, alternative is already set to \"${_NVIDIA_ALTERNATIVE}\""
+				else
+					echo "setting nvidia alternative to \"${_NVIDIA_ALTERNATIVE}\""
+					update-glx --set nvidia ${_NVIDIA_ALTERNATIVE}
 				fi
 				;;
 
 			*)
-				update-alternatives --quiet --set glx /usr/lib/mesa-diverted
+				if [ "${_CURRENT_GLX}" = "/usr/lib/mesa-diverted" ]
+				then
+					echo "skipping glx update, alternative is already set to \"/usr/lib/mesa-diverted\""
+				else
+					echo "setting glx alternative to \"/usr/lib/mesa-diverted\""
+					update-glx --set glx /usr/lib/mesa-diverted
+				fi
 				;;
 		esac
+
+		Enable_update_initramfs
+		trap - 0
 	fi
 
 	if [ -n "${LIVE_XORG_RESOLUTION}" ]
