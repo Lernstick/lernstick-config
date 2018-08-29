@@ -24,4 +24,7 @@ case "${1}" in
 		;;
 esac
 
-find "${DESTDIR}" -name nouveau.ko | xargs rm
+# Use "-exec rm {} \;" instead of "| xargs rm" so that the command doesn't fail
+# when no nouveau.ko is found. This was actually the case when we didn't install
+# plymouth.
+find "${DESTDIR}" -name nouveau.ko -exec rm {} \;
