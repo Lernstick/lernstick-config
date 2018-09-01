@@ -17,6 +17,8 @@ case  "${1}" in
 
 esac
 
+dpkg-maintscript-helper rm_conffile /etc/initramfs-tools/hooks/lernstick-no-nouveou 79 lernstick-config -- "$@"
+
 #DEBHELPER#
 
 exit 0
