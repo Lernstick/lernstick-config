@@ -1,3 +1,9 @@
+lernstick-config (81) lernstick-9; urgency=medium
+
+  * [f61864] correctly remove old config file
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sat, 01 Sep 2018 20:23:18 +0200
+
 lernstick-config (80) lernstick-9; urgency=medium
 
   * [923c73] made initramfs hook for removing the nouveau driver more robust
