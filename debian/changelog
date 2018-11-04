@@ -1,3 +1,16 @@
+lernstick-config (82) lernstick-9; urgency=medium
+
+  * [7d741f] All systems will renew their IP address via a simple DHCP renewal
+    request when the lease time is still valid. Exact system clones will by
+    default all use the same client identifier and this way succeed in getting
+    all exactly the same IP address via DHCP renewal requests. This leads to a
+    broken network during the lifetime of the first DHCP lease. We work around
+    this problem by adding a NetworkManager config file to use the current MAC
+    address of the hardware to generate a client identifier. This way even
+    exact system clones will get a different IP address on different hardware.
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sun, 04 Nov 2018 17:58:33 +0100
+
 lernstick-config (81) lernstick-9; urgency=medium
 
   * [f61864] correctly remove old config file
