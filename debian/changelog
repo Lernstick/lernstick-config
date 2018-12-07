@@ -1,3 +1,9 @@
+lernstick-config (83) lernstick-9; urgency=medium
+
+  * [4cfbbb] fixed updating of keyboard selectors in different desktop environments
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 07 Dec 2018 22:49:50 +0100
+
 lernstick-config (82) lernstick-9; urgency=medium
 
   * [7d741f] All systems will renew their IP address via a simple DHCP renewal
