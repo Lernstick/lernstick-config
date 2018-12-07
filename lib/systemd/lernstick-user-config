@@ -17,7 +17,7 @@ do
 done
 
 # Reading kernel command line
-for _PARAMETER in ${LIVE_CONFIG_CMDLINE}
+for _PARAMETER in $(cat /proc/cmdline)
 do
 	case "${_PARAMETER}" in
 		live-config.keyboard-layouts=*|keyboard-layouts=*)
@@ -30,8 +30,10 @@ do
 	esac
 done
 
-# Enabling keyboard selector
-cat > "/home/${LIVE_USERNAME}/.kde/share/config/kxkbrc" << EOF
+update_keyboard_selectors()
+{
+	# configure KDE
+	cat > "/home/${LIVE_USERNAME}/.kde/share/config/kxkbrc" << EOF
 [Layout]
 DisplayNames=${LIVE_KEYBOARD_LAYOUTS}
 IndicatorOnly=false
@@ -40,15 +42,82 @@ ShowFlag=false
 SwitchMode=Global
 Use=true
 EOF
-chown ${LIVE_USERNAME}:${LIVE_USERNAME} "/home/${LIVE_USERNAME}/.kde/share/config/kxkbrc"
+	chown ${LIVE_USERNAME}:${LIVE_USERNAME} "/home/${LIVE_USERNAME}/.kde/share/config/kxkbrc"
+	if [ -w  "/home/${LIVE_USERNAME}/.kde/share/apps/kded/session/keyboard/layout_memory.xml" ]
+	then
+		# set first layout in list as currently selected layout
+		FIRST_LAYOUT="$(echo "${LIVE_KEYBOARD_LAYOUTS}" | awk -F , '{ print $1 }')"
+		sed -i "s/currentLayout=\".*\"/currentLayout=\"${FIRST_LAYOUT}\"/1" \
+			"/home/${LIVE_USERNAME}/.kde/share/apps/kded/session/keyboard/layout_memory.xml"
+	fi
 
-if [ -w  "/home/${LIVE_USERNAME}/.kde/share/apps/kded/session/keyboard/layout_memory.xml" ]
+	# configure gsettings based desktops (GNOME, Cinnamon & MATE)
+	if [ -e /usr/bin/gsettings ]
+	then
+		GNOME_INPUT_SOURCES=""
+		GNOME_KEYBOARD_LAYOUTS=""
+		IFS=" "
+		for i in $(echo "$LIVE_KEYBOARD_LAYOUTS" | sed "s/,/ /g")
+		do
+		        # GNOME has its own standard of keyboard layout definitions (parentheses are removed and a "+" separator is added instead).
+			# Cinnamon and MATE (based on GNOME!) use
+			# - each a different gsettings key
+			# - even another standard for keyboard layout definitions (parentheses are removed and a tab separator is added instead).
+	                GNOME_INPUT_SOURCE="$(echo "$i" | sed "s/(/+/g" | sed "s/)//g")"
+			GNOME_KEYBOARD_LAYOUT="$(echo "$i" | sed "s/(/\t/g" | sed "s/)//g")"
+
+		        if [ -n "${GNOME_INPUT_SOURCES}" ]
+		        then
+		                GNOME_INPUT_SOURCES="${GNOME_INPUT_SOURCES}, "
+		        fi
+		        GNOME_INPUT_SOURCES="${GNOME_INPUT_SOURCES}('xkb', '${GNOME_INPUT_SOURCE}')"
+
+			if [ -n "${GNOME_KEYBOARD_LAYOUTS}" ]
+		        then
+		                GNOME_KEYBOARD_LAYOUTS="${GNOME_KEYBOARD_LAYOUTS}, "
+		        fi
+		        GNOME_KEYBOARD_LAYOUTS="${GNOME_KEYBOARD_LAYOUTS}'${GNOME_KEYBOARD_LAYOUT}'"
+		done
+		echo "GNOME_INPUT_SOURCES:\"${GNOME_INPUT_SOURCES}\""
+		echo "GNOME_KEYBOARD_LAYOUTS:\"${GNOME_KEYBOARD_LAYOUTS}\""
+
+		# For some unknown reason we first have to delete the settings and
+		# sleep for a second. Only then the settings are successfully applied.
+
+		# configure GNOME
+		sudo -u "${LIVE_USERNAME}" dbus-run-session gsettings set org.gnome.desktop.input-sources sources "[]"
+		sleep 1
+		sudo -u "${LIVE_USERNAME}" dbus-run-session gsettings set org.gnome.desktop.input-sources sources "[${GNOME_INPUT_SOURCES}]"
+
+		# configure Cinnamon
+		sudo -u "${LIVE_USERNAME}" dbus-run-session gsettings set org.gnome.libgnomekbd.keyboard layouts "[]"
+		sleep 1
+		sudo -u "${LIVE_USERNAME}" dbus-run-session gsettings set org.gnome.libgnomekbd.keyboard layouts "[${GNOME_KEYBOARD_LAYOUTS}]"
+
+		# configure MATE
+		sudo -u "${LIVE_USERNAME}" dbus-run-session gsettings set org.mate.peripherals-keyboard-xkb.kbd layouts "[]"
+		sleep 1
+		sudo -u "${LIVE_USERNAME}" dbus-run-session gsettings set org.mate.peripherals-keyboard-xkb.kbd layouts "[${GNOME_KEYBOARD_LAYOUTS}]"
+	fi
+}
+
+# enforce "lazy change" (only update the keyboard selectors if the keyboard setting was really changed)
+if [ -z "${LIVE_KEYBOARD_MODEL}" -a -x /usr/sbin/dmidecode ]
 then
-	# set first layout in list as currently selected layout
-	FIRST_LAYOUT="$(echo "${LIVE_KEYBOARD_LAYOUTS}" | awk -F , '{ print $1 }')"
-	sed -i "s/currentLayout=\".*\"/currentLayout=\"${FIRST_LAYOUT}\"/1" \
-		"/home/${LIVE_USERNAME}/.kde/share/apps/kded/session/keyboard/layout_memory.xml"
+	if /usr/sbin/dmidecode -s chassis-manufacturer | grep -q "Apple"
+	then
+		LIVE_KEYBOARD_MODEL="macintosh"
+	else
+		LIVE_KEYBOARD_MODEL="pc105"
+	fi
 fi
+KEYBOARD_STATE_FILE="/var/lib/live/config/keyboard-fixup"
+if [ ! -r ${KEYBOARD_STATE_FILE} ] || [ "${LIVE_KEYBOARD_LAYOUTS} ${LIVE_KEYBOARD_MODEL}" != "$(cat ${KEYBOARD_STATE_FILE})" ]
+then
+	echo "${LIVE_KEYBOARD_LAYOUTS} ${LIVE_KEYBOARD_MODEL}" > $KEYBOARD_STATE_FILE
+	update_keyboard_selectors
+fi
+
 
 XFCE4_PANEL_DEFAULTS="/etc/xdg/xfce4/panel/default.xml"
 if [ -e "${XFCE4_PANEL_DEFAULTS}" ]
