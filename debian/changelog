@@ -1,3 +1,10 @@
+lernstick-config (84) lernstick-9; urgency=medium
+
+  * [7a43b7] use separate state file for user setup keyboard selectors,
+             better logging, small speedup
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sat, 08 Dec 2018 10:55:59 +0100
+
 lernstick-config (83) lernstick-9; urgency=medium
 
   * [4cfbbb] fixed updating of keyboard selectors in different desktop environments
