@@ -83,20 +83,13 @@ EOF
 
 		# For some unknown reason we first have to delete the settings and
 		# sleep for a second. Only then the settings are successfully applied.
-
-		# configure GNOME
+		# (order: GNOME, Cinnamon, MATE)
 		sudo -u "${LIVE_USERNAME}" dbus-run-session gsettings set org.gnome.desktop.input-sources sources "[]"
-		sleep 1
-		sudo -u "${LIVE_USERNAME}" dbus-run-session gsettings set org.gnome.desktop.input-sources sources "[${GNOME_INPUT_SOURCES}]"
-
-		# configure Cinnamon
 		sudo -u "${LIVE_USERNAME}" dbus-run-session gsettings set org.gnome.libgnomekbd.keyboard layouts "[]"
-		sleep 1
-		sudo -u "${LIVE_USERNAME}" dbus-run-session gsettings set org.gnome.libgnomekbd.keyboard layouts "[${GNOME_KEYBOARD_LAYOUTS}]"
-
-		# configure MATE
 		sudo -u "${LIVE_USERNAME}" dbus-run-session gsettings set org.mate.peripherals-keyboard-xkb.kbd layouts "[]"
 		sleep 1
+		sudo -u "${LIVE_USERNAME}" dbus-run-session gsettings set org.gnome.desktop.input-sources sources "[${GNOME_INPUT_SOURCES}]"
+		sudo -u "${LIVE_USERNAME}" dbus-run-session gsettings set org.gnome.libgnomekbd.keyboard layouts "[${GNOME_KEYBOARD_LAYOUTS}]"
 		sudo -u "${LIVE_USERNAME}" dbus-run-session gsettings set org.mate.peripherals-keyboard-xkb.kbd layouts "[${GNOME_KEYBOARD_LAYOUTS}]"
 	fi
 }
@@ -111,9 +104,13 @@ then
 		LIVE_KEYBOARD_MODEL="pc105"
 	fi
 fi
-KEYBOARD_STATE_FILE="/var/lib/live/config/keyboard-fixup"
-if [ ! -r ${KEYBOARD_STATE_FILE} ] || [ "${LIVE_KEYBOARD_LAYOUTS} ${LIVE_KEYBOARD_MODEL}" != "$(cat ${KEYBOARD_STATE_FILE})" ]
+KEYBOARD_STATE_FILE="/var/lib/live/config/user-setup-keyboard-selectors"
+OLD_CONFIG="$(cat ${KEYBOARD_STATE_FILE})"
+if [ -r ${KEYBOARD_STATE_FILE} ] && [ "${LIVE_KEYBOARD_LAYOUTS} ${LIVE_KEYBOARD_MODEL}" = "${OLD_CONFIG}" ]
 then
+	echo "keyboard config (\"${LIVE_KEYBOARD_LAYOUTS} ${LIVE_KEYBOARD_MODEL}\") unchanged, skipping update"
+else
+	echo "keyboard config changed from \"${OLD_CONFIG}\" to \"${LIVE_KEYBOARD_LAYOUTS} ${LIVE_KEYBOARD_MODEL}\", updating"
 	echo "${LIVE_KEYBOARD_LAYOUTS} ${LIVE_KEYBOARD_MODEL}" > $KEYBOARD_STATE_FILE
 	update_keyboard_selectors
 fi
