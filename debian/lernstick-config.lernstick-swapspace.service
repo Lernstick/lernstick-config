@@ -1,0 +1,11 @@
+[Unit]
+Description=Updates the swapspace configuration
+DefaultDependencies=no
+Before=swapspace.service
+
+[Service]
+Type=oneshot
+ExecStart=/lib/systemd/lernstick-swapspace
+
+[Install]
+WantedBy=basic.target

@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# The default configuration of swapspace (creating swapfiles in
+# /var/lib/swapspace) is not usable on a Debian Live system.
+#
+# When a persistency partition is used, /var/lib/swapspace is accessed via the
+# overlay filesystem. Unfortunately, trying to enable swapfiles residing on an
+# overlay filesystem fails with the following error message:
+# swapon: /var/lib/swapspace/1: swapon failed: Invalid argument
+#
+# When no persistency partition is used, /var/lib/swapspace is located in a
+# tmpfs. Creating swapfiles there and allocating even more memory defeats the
+# whole purpose of swapfiles.
+#
+# We don't want to mount and write swapfiles to random partitions. Therefore we
+# only have two options:
+# 1) When read-write persistency is enabled, use the persistency partition directly.
+# 2) Otherwise disable swapspace.
+
+PERSISTENCE_PATH=$(cat /proc/mounts | grep /lib/live/mount/persistence/ | awk '{ print $2 }')
+
+if [ -z $PERSISTENCE_PATH ]
+then
+	echo "no mounted data partition found, not starting swapspace"
+	rm -f /tmp/swapspace_enabled
+else
+	echo "persistence path: $PERSISTENCE_PATH"
+	SWAP_PATH="$PERSISTENCE_PATH/rw/var/lib/swapspace"
+	echo "swap path : $SWAP_PATH"
+
+	TMP_FILE=$(mktemp -p $SWAP_PATH)
+	if [ -z $TMP_FILE ]
+	then
+		echo "could not write to swap path, not starting swapspace"
+		rm -f /tmp/swapspace_enabled
+	else
+		echo "writable swap path found, configuring and starting swapspace"
+		sed -i "s|#swappath=.*|swappath=\""$SWAP_PATH\""|" /etc/swapspace.conf
+		sed -i "s|swappath=.*|swappath=\""$SWAP_PATH\""|" /etc/swapspace.conf
+		touch /tmp/swapspace_enabled
+	fi
+fi
