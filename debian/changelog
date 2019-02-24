@@ -1,3 +1,10 @@
+lernstick-config (86) lernstick-9; urgency=medium
+
+  * [5fd2dc] removed superfluous whitespace
+  * [1a659b] fixed and simplified swapspace config
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sun, 24 Feb 2019 20:37:00 +0100
+
 lernstick-config (85) lernstick-9; urgency=medium
 
   * [706c50] configure swapspace
