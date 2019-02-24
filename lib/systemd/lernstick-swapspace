@@ -26,7 +26,7 @@ then
 else
 	echo "persistence path: $PERSISTENCE_PATH"
 	SWAP_PATH="$PERSISTENCE_PATH/rw/var/lib/swapspace"
-	echo "swap path : $SWAP_PATH"
+	echo "swap path: $SWAP_PATH"
 
 	TMP_FILE=$(mktemp -p $SWAP_PATH)
 	if [ -z $TMP_FILE ]
