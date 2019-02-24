@@ -22,21 +22,19 @@ PERSISTENCE_PATH=$(cat /proc/mounts | grep /lib/live/mount/persistence/ | awk '{
 if [ -z $PERSISTENCE_PATH ]
 then
 	echo "no mounted data partition found, not starting swapspace"
-	rm -f /tmp/swapspace_enabled
+	rm -f /run/swapspace_enabled
 else
 	echo "persistence path: $PERSISTENCE_PATH"
-	SWAP_PATH="$PERSISTENCE_PATH/rw/var/lib/swapspace"
-	echo "swap path: $SWAP_PATH"
-
-	TMP_FILE=$(mktemp -p $SWAP_PATH)
+	TMP_FILE=$(mktemp -p $PERSISTENCE_PATH)
 	if [ -z $TMP_FILE ]
 	then
-		echo "could not write to swap path, not starting swapspace"
-		rm -f /tmp/swapspace_enabled
+		echo "could not write to persistence path, not starting swapspace"
+		rm -f /run/swapspace_enabled
 	else
-		echo "writable swap path found, configuring and starting swapspace"
-		sed -i "s|#swappath=.*|swappath=\""$SWAP_PATH\""|" /etc/swapspace.conf
-		sed -i "s|swappath=.*|swappath=\""$SWAP_PATH\""|" /etc/swapspace.conf
-		touch /tmp/swapspace_enabled
+		rm -f "$TMP_FILE"
+		echo "writable persistence path found, configuring and starting swapspace"
+		sed -i "s|#swappath=.*|swappath=\""$PERSISTENCE_PATH\""|" /etc/swapspace.conf
+		sed -i "s|swappath=.*|swappath=\""$PERSISTENCE_PATH\""|" /etc/swapspace.conf
+		touch /run/swapspace_enabled
 	fi
 fi
