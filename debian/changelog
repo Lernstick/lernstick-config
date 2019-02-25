@@ -1,3 +1,9 @@
+lernstick-config (87) lernstick-9; urgency=medium
+
+  * [3ae428] fixed lernstick-desktop
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Mon, 25 Feb 2019 20:34:58 +0100
+
 lernstick-config (86) lernstick-9; urgency=medium
 
   * [5fd2dc] removed superfluous whitespace
