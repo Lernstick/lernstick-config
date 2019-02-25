@@ -1,3 +1,9 @@
+lernstick-config (88) lernstick-9; urgency=medium
+
+  * [1fd794] fixed mode of lernstick-desktop
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Mon, 25 Feb 2019 20:46:24 +0100
+
 lernstick-config (87) lernstick-9; urgency=medium
 
   * [3ae428] fixed lernstick-desktop
