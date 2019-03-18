@@ -1,3 +1,10 @@
+lernstick-config (89) lernstick-9; urgency=medium
+
+  * [21a7a3] added special keyboard configuration for Macs
+             (unfortunately with some side effects)
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Mon, 18 Mar 2019 23:17:05 +0100
+
 lernstick-config (88) lernstick-9; urgency=medium
 
   * [1fd794] fixed mode of lernstick-desktop
