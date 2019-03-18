@@ -91,6 +91,23 @@ EOF
 		sudo -u "${LIVE_USERNAME}" dbus-run-session gsettings set org.gnome.desktop.input-sources sources "[${GNOME_INPUT_SOURCES}]"
 		sudo -u "${LIVE_USERNAME}" dbus-run-session gsettings set org.gnome.libgnomekbd.keyboard layouts "[${GNOME_KEYBOARD_LAYOUTS}]"
 		sudo -u "${LIVE_USERNAME}" dbus-run-session gsettings set org.mate.peripherals-keyboard-xkb.kbd layouts "[${GNOME_KEYBOARD_LAYOUTS}]"
+
+		# We had many complaints from Mac users that the keyboard shortcuts they are used to no longer work in Linux.
+		# Therefore we try here to give Mac users more familiar keyboard settings:
+		#  - the "cmd" key (windows key on PC) now also acts as CTRL so that copy & paste works with cmd+c & cmd+v
+		#    -> side effect: the expose view in GNOME can no longer be triggered by pressing the cmd key
+		#  - the third level is now also enabled by the left alt key so that typing square brackets and curly braces can be done in combination with the left alt key
+		#    -> side effect: switching applications with alt+tab no longer works
+		if [ "${LIVE_KEYBOARD_MODEL}" = "macintosh" ]
+		then
+			sudo -u "${LIVE_USERNAME}" dbus-run-session gsettings set org.gnome.desktop.input-sources xkb-options "['altwin:ctrl_win', 'lv3:lalt_switch']"
+			sudo -u "${LIVE_USERNAME}" dbus-run-session gsettings set org.gnome.libgnomekbd.keyboard options "['altwin\taltwin:ctrl_win', 'lv3\tlv3:lalt_switch']"
+			sudo -u "${LIVE_USERNAME}" dbus-run-session gsettings set org.mate.desktop.peripherals.keyboard.kbd options "['altwin\taltwin:ctrl_win', 'lv3\tlv3:lalt_switch']"
+		else
+			sudo -u "${LIVE_USERNAME}" dbus-run-session gsettings set org.gnome.desktop.input-sources xkb-options "[]"
+			sudo -u "${LIVE_USERNAME}" dbus-run-session gsettings set org.gnome.libgnomekbd.keyboard options "[]"
+			sudo -u "${LIVE_USERNAME}" dbus-run-session gsettings set org.mate.desktop.peripherals.keyboard.kbd options "[]"
+		fi
 	fi
 }
 
@@ -114,7 +131,6 @@ else
 	echo "${LIVE_KEYBOARD_LAYOUTS} ${LIVE_KEYBOARD_MODEL}" > $KEYBOARD_STATE_FILE
 	update_keyboard_selectors
 fi
-
 
 XFCE4_PANEL_DEFAULTS="/etc/xdg/xfce4/panel/default.xml"
 if [ -e "${XFCE4_PANEL_DEFAULTS}" ]
