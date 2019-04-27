@@ -1,3 +1,10 @@
+lernstick-config (91) lernstick-9; urgency=medium
+
+  * [474d18] use special Mac keyboard layouts from lernstick-xkb-data in
+             lernstick-user-config
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sat, 27 Apr 2019 15:56:37 +0200
+
 lernstick-config (90) lernstick-9; urgency=medium
 
   * [c656e3] temporarily disable the Linux Advanced repository until it becomes
