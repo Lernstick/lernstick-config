@@ -11,7 +11,7 @@ Vcs-Git: https://github.com/imedias/lernstick-config.git
 
 Package: lernstick-config
 Architecture: all
-Depends: ${misc:Depends}, live-config (>= 5~), xmlstarlet, gfxboot, sqlite3, lernstick-archive-keyring
+Depends: ${misc:Depends}, live-config (>= 5~), xmlstarlet, gfxboot, sqlite3, lernstick-archive-keyring, lernstick-xkb-data
 Provides: ${diverted-files}
 Conflicts: ${diverted-files}
 Description: Lernstick System Configuration
