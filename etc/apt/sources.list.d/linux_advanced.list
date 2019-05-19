@@ -1,1 +1,1 @@
-#deb http://teachingsystem.brg-kremszeile.ac.at/downloads/debian/stretch/binary/ ./
+deb http://teachingsystem.kremszeile.at/binary/ ./
