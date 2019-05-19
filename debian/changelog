@@ -1,3 +1,9 @@
+lernstick-config (92) lernstick-9; urgency=medium
+
+  * [99b95b] added new lateaching repo
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sun, 19 May 2019 20:26:27 +0200
+
 lernstick-config (91) lernstick-9; urgency=medium
 
   * [474d18] use special Mac keyboard layouts from lernstick-xkb-data in
