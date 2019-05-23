@@ -1,3 +1,9 @@
+lernstick-config (93) lernstick-9; urgency=medium
+
+  * [92c711] added support for mac_special(ch_nodeadkeys)
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Thu, 23 May 2019 22:43:53 +0200
+
 lernstick-config (92) lernstick-9; urgency=medium
 
   * [99b95b] added new lateaching repo
