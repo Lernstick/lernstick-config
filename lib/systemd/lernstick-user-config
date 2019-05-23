@@ -2,6 +2,7 @@
 # (this must be bash instead of plain sh because we need hash tables)
 
 declare -A mac_layouts
+mac_layouts[ch(de_nodeadkeys)]="mac_special(ch_nodeadkeys)"
 mac_layouts[ch(fr)]="mac_special(ch_fr)"
 mac_layouts[ch]="mac_special(ch)"
 mac_layouts[de]="mac_special(de)"
