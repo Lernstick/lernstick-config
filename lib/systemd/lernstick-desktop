@@ -72,7 +72,7 @@ echo "new session manager: $_SESSION_MANAGER"
 if [ -n "${_SESSION_MANAGER}" -a "$PREVIOUS_SESSION_MANAGER" != "${_SESSION_MANAGER}" ]
 then
 	update-alternatives --set x-session-manager "${_SESSION_MANAGER}"
-	rm -f /var/lib/AccountsService/users/user
+	sed -i 's/XSession=.*/XSession=/g' /var/lib/AccountsService/users/user
 fi
 
 if ! grep -q "^${_DISPLAY_MANAGER}$" /etc/X11/default-display-manager

@@ -29,6 +29,9 @@ else
 	echo "${LOCALE};${VERSION}" > $LOCALE_STATE_FILE
 fi
 
+# user selected desktop language
+sed -i 's/Language=.*/Language=/g' /var/lib/AccountsService/users/user
+
 # Audacity
 if [ -e /home/user/.audacity-data/audacity.cfg ]
 then
