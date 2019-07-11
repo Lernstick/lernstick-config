@@ -1,3 +1,9 @@
+lernstick-config (94) lernstick-9; urgency=medium
+
+  * [e15bd5] more fine-grained handling of AccountsService config file
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Thu, 11 Jul 2019 17:11:41 +0200
+
 lernstick-config (93) lernstick-9; urgency=medium
 
   * [92c711] added support for mac_special(ch_nodeadkeys)
