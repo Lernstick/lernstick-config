@@ -1,3 +1,9 @@
+lernstick-config (95) lernstick-9; urgency=medium
+
+  * [fa7de0] made lernstick-user-setup script much simpler and faster
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sat, 10 Aug 2019 14:24:35 +0200
+
 lernstick-config (94) lernstick-9; urgency=medium
 
   * [e15bd5] more fine-grained handling of AccountsService config file
