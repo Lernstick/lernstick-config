@@ -7,15 +7,11 @@
 ## This is free software, and you are welcome to redistribute it
 ## under certain conditions; see COPYING for details.
 
-# We have to use /run/ instead of /tmp/ because /tmp/ gets overwritten during boot by
-# systemd's tmp.mount, which is also mounting over non-empty directories.
-DEBCONF_FILE=/run/lernstick-user-setup
-
 Cmdline ()
 {
 	LIVE_USERNAME="user"
 	LIVE_USER_FULLNAME="Debian Live user"
-	LIVE_USER_DEFAULT_GROUPS="audio cdrom dip floppy video plugdev netdev powerdev scanner bluetooth debian-tor"
+	LIVE_USER_DEFAULT_GROUPS="audio cdrom dip floppy video plugdev netdev scanner bluetooth"
 
         # Reading configuration files from filesystem and live-media
         for _FILE in /etc/live/config.conf /etc/live/config.conf.d/* \
@@ -54,12 +50,6 @@ Config ()
 		exit 0
 	fi
 
-	# Adjust formating of groups
-	if [ -n "${LIVE_USER_DEFAULT_GROUPS}" ]
-	then
-		LIVE_USER_DEFAULT_GROUPS="$(echo ${LIVE_USER_DEFAULT_GROUPS} | sed -e 's|,| |g')"
-	fi
-
 	# Make sure user is not in sudo group if sudo is disabled
 	case "${LIVE_CONFIG_NOROOT}" in
 		true)
@@ -73,47 +63,16 @@ Config ()
 	#   - a blank password is 'U6aMy0wojraho'
 	_PASSWORD="8Ab05sVQ4LLps"
 
-cat > ${DEBCONF_FILE} << EOF
-user-setup passwd/make-user boolean true
-user-setup passwd/root-password-crypted string *
-user-setup passwd/user-password-crypted string ${_PASSWORD}
-user-setup passwd/user-default-groups string ${LIVE_USER_DEFAULT_GROUPS}
-user-setup passwd/user-fullname string ${LIVE_USER_FULLNAME}
-user-setup passwd/username string ${LIVE_USERNAME}
-user-setup passwd/user-uid string 1000
-EOF
-
-	retrying-debconf-set-selections ${DEBCONF_FILE}
-
-	# Because of the parallelism of systemd it might happen from time to time that
-	# another unit locks the debconf database in between returning from the line
-	# above and executing the line below. Yes, we have run into this bug and it
-	# produces error messages like this in the journal:
-	# lernstick-user-setup[435]: debconf: DbDriver "config": /var/cache/debconf/config.dat is locked by another process: Resource temporarily unavailabl
-	# The result is that the default user doesn't get created and the whole system
-	# is broken.
-	# Therefore we have to retry user-setup-apply below until it succeeds.
-
-	COUNTER=100
-	while
-		echo "calling /usr/lib/user-setup/user-setup-apply"
-		# Workaround for bug in shadow
-		set +e
-		/usr/lib/user-setup/user-setup-apply
-		RETURN_VALUE=$?
-		set -e
-		echo "return value of /usr/lib/user-setup/user-setup-apply: ${RETURN_VALUE}"
-		if [ ${RETURN_VALUE} -ne 0 ]
-		then
-			echo "/usr/lib/user-setup/user-setup-apply failed, maybe a temporary lock?"
-			RANDOM_WAIT="$(printf "0.%02ds" $(( $RANDOM % 99 + 1)))"
-			echo "sleeping for a random time (${RANDOM_WAIT}) before retrying..."
-			sleep ${RANDOM_WAIT}
-		fi
-		COUNTER="$((COUNTER-1))"
-		[ "${COUNTER}" -gt 0 ] && [ ${RETURN_VALUE} -ne 0 ]
-	do :
-	done
+	# Adjust formating of groups
+	LIVE_USER_DEFAULT_GROUPS="$(echo ${LIVE_USER_DEFAULT_GROUPS} | sed -e 's| |,|g')"
+	useradd \
+		--comment "${LIVE_USER_FULLNAME}" \
+		--create-home \
+		--groups ${LIVE_USER_DEFAULT_GROUPS} \
+		--password ${_PASSWORD} \
+		--shell /bin/bash \
+		--uid 1000 \
+		${LIVE_USERNAME}
 
 	# Creating state file (evaluated by systemd service file)
 	touch /var/lib/live/config/user-setup
