@@ -12,6 +12,9 @@ case  "${1}" in
             dpkg-divert --package live-config --remove --rename ${ANACRON}
             rm ${STATEFILE}
         fi
+	# Enable gdm and sddm service based on preset
+	systemctl preset gdm
+	systemctl preset sddm
 
         ;;
 

@@ -42,7 +42,7 @@ case "${LERNSTICK_DESKTOP}" in
 		;;
 
 	xfce)
-		_SESSION_MANAGER="/usr/bin/xfce4-session"
+		_SESSION_MANAGER="/usr/bin/startxfce4"
 		_DISPLAY_MANAGER="/usr/sbin/gdm3"
 		_SERVICE_NAME="gdm3"
 		;;
@@ -51,6 +51,8 @@ case "${LERNSTICK_DESKTOP}" in
 		_SESSION_MANAGER="/usr/bin/lxsession"
 		_DISPLAY_MANAGER="/usr/sbin/gdm3"
 		_SERVICE_NAME="gdm3"
+		# The xsession name is diffrent from our flag
+		LERNSTICK_DESKTOP="LXDE"
 		;;
 
 	enlightenment)
@@ -72,22 +74,21 @@ echo "new session manager: $_SESSION_MANAGER"
 if [ -n "${_SESSION_MANAGER}" -a "$PREVIOUS_SESSION_MANAGER" != "${_SESSION_MANAGER}" ]
 then
 	update-alternatives --set x-session-manager "${_SESSION_MANAGER}"
-	sed -i 's/XSession=.*/XSession=/g' /var/lib/AccountsService/users/user
+	sed -i "s/XSession=.*/XSession=${LERNSTICK_DESKTOP}/g" /var/lib/AccountsService/users/user
 fi
+
+# This service file is not needed and should not be there
+rm -f /etc/systemd/system/display-manager.service
 
 if ! grep -q "^${_DISPLAY_MANAGER}$" /etc/X11/default-display-manager
 then
-	# The user changed the default display manager, update its file and systemd symlink.
+	# The user changed the default display manager, update its file.
 	echo "${_DISPLAY_MANAGER}" > /etc/X11/default-display-manager
-	if [ -z "${_SERVICE_NAME}" ]
+
+	# If there is no display manager drop to shell
+	if [ -z "${_DISPLAY_MANAGER}" ]
 	then
-		rm -f /etc/systemd/system/display-manager.service
-		systemctl daemon-reload
-	else
-		ln -sf /lib/systemd/system/${_SERVICE_NAME}.service /etc/systemd/system/display-manager.service
-		# As this does not start services which should be running but aren't, we have to start the display manager as well.
-		# But don't wait for it to start as this would create a deadlock with live-config.
-		systemctl daemon-reload
-		systemctl --no-block start display-manager.service
+		systemctl --no-block isolate multi-user.target 
 	fi
 fi
+
