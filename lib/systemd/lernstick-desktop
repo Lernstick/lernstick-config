@@ -84,11 +84,5 @@ if ! grep -q "^${_DISPLAY_MANAGER}$" /etc/X11/default-display-manager
 then
 	# The user changed the default display manager, update its file.
 	echo "${_DISPLAY_MANAGER}" > /etc/X11/default-display-manager
-
-	# If there is no display manager drop to shell
-	if [ -z "${_DISPLAY_MANAGER}" ]
-	then
-		systemctl --no-block isolate multi-user.target 
-	fi
 fi
 

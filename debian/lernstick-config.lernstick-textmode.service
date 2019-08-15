@@ -1,0 +1,12 @@
+[Unit]
+ConditionKernelCommandLine=desktop=no
+Description=Service for handling plymouth in textmode
+After=plymouth-quit.service
+Wants=plymouth-quit.service 
+
+[Service]
+Type=oneshot
+ExecStart=/bin/chvt 2
+
+[Install]
+WantedBy=getty.target
