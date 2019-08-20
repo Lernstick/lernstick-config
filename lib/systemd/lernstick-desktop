@@ -19,7 +19,7 @@ echo "selected desktop: \"${LERNSTICK_DESKTOP}\""
 DESKTOP_STATE_FILE="/var/lib/live/config/lernstick-desktop"
 if [ -r ${DESKTOP_STATE_FILE} ] && [ "${LERNSTICK_DESKTOP}" = "$(cat ${DESKTOP_STATE_FILE})" ]
 then
-	# desktop already set, nothing to do
+	echo "desktop \"${LERNSTICK_DESKTOP}\" already set, nothing to do"
 	exit 0
 fi
 
@@ -89,7 +89,17 @@ fi
 
 if [ -n "${_XSESSION}" ]
 then
-	sed -i "s/XSession=.*/XSession=${_XSESSION}/g" /var/lib/AccountsService/users/user
+	_AS_CONFIG_FILE="/var/lib/AccountsService/users/user"
+	if [ ! -f ${_AS_CONFIG_FILE} ]
+	then
+cat << EOF > ${_AS_CONFIG_FILE}
+[User]
+Language=
+XSession=
+SystemAccount=false
+EOF
+	fi
+	sed -i "s/XSession=.*/XSession=${_XSESSION}/g" ${_AS_CONFIG_FILE}
 fi
 
 if ! grep -q "^${_DISPLAY_MANAGER}$" /etc/X11/default-display-manager
