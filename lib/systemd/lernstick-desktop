@@ -42,7 +42,7 @@ case "${LERNSTICK_DESKTOP}" in
 		;;
 
 	xfce)
-		_SESSION_MANAGER="/usr/bin/xfce4-session"
+		_SESSION_MANAGER="/usr/bin/startxfce4"
 		_DISPLAY_MANAGER="/usr/sbin/gdm3"
 		_SERVICE_NAME="gdm3"
 		;;
