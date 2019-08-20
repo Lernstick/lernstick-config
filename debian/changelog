@@ -1,3 +1,10 @@
+lernstick-config (96) lernstick-10; urgency=medium
+
+  * [17892a] updated reference to Xfce session manager script
+             (thanks to Thore Sommer)
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Tue, 20 Aug 2019 09:52:45 +0200
+
 lernstick-config (95) lernstick-9; urgency=medium
 
   * [fa7de0] made lernstick-user-setup script much simpler and faster
