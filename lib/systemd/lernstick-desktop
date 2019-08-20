@@ -15,48 +15,65 @@ done
 
 echo "selected desktop: \"${LERNSTICK_DESKTOP}\""
 
+# support for "lazy" configuration changes
+DESKTOP_STATE_FILE="/var/lib/live/config/lernstick-desktop"
+if [ -r ${DESKTOP_STATE_FILE} ] && [ "${LERNSTICK_DESKTOP}" = "$(cat ${DESKTOP_STATE_FILE})" ]
+then
+	# desktop already set, nothing to do
+	exit 0
+fi
+
+# the values in _XSESSION have to match the file names in
+# /usr/share/xsessions/*.desktop
 case "${LERNSTICK_DESKTOP}" in
 	kde)
-		_SESSION_MANAGER="/usr/bin/startkde"
 		_DISPLAY_MANAGER="/usr/bin/sddm"
-		_SERVICE_NAME="sddm"
+		_DISPLAY_MANAGER_SERVICE_FILENAME="sddm"
+		_SESSION_MANAGER="/usr/bin/startkde"
+		_XSESSION="plasma"
 		sed -i 's/Session=.*/Session=plasma.desktop/' /etc/sddm.conf
 		;;
 
 	gnome)
-		_SESSION_MANAGER="/usr/bin/gnome-session"
 		_DISPLAY_MANAGER="/usr/sbin/gdm3"
-		_SERVICE_NAME="gdm3"
+		_DISPLAY_MANAGER_SERVICE_FILENAME="gdm3"
+		_SESSION_MANAGER="/usr/bin/gnome-session"
+		_XSESSION="gnome-xorg"
 		;;
 
 	cinnamon)
-		_SESSION_MANAGER="/usr/bin/cinnamon-session"
 		_DISPLAY_MANAGER="/usr/sbin/gdm3"
-		_SERVICE_NAME="gdm3"
+		_DISPLAY_MANAGER_SERVICE_FILENAME="gdm3"
+		_SESSION_MANAGER="/usr/bin/cinnamon-session"
+		_XSESSION="cinnamon"
 		;;
 
 	mate)
-		_SESSION_MANAGER="/usr/bin/mate-session"
 		_DISPLAY_MANAGER="/usr/sbin/gdm3"
-		_SERVICE_NAME="gdm3"
+		_DISPLAY_MANAGER_SERVICE_FILENAME="gdm3"
+		_SESSION_MANAGER="/usr/bin/mate-session"
+		_XSESSION="mate"
 		;;
 
 	xfce)
-		_SESSION_MANAGER="/usr/bin/startxfce4"
 		_DISPLAY_MANAGER="/usr/sbin/gdm3"
-		_SERVICE_NAME="gdm3"
+		_DISPLAY_MANAGER_SERVICE_FILENAME="gdm3"
+		_SESSION_MANAGER="/usr/bin/startxfce4"
+		_XSESSION="xfce"
 		;;
 
 	lxde)
-		_SESSION_MANAGER="/usr/bin/lxsession"
 		_DISPLAY_MANAGER="/usr/sbin/gdm3"
-		_SERVICE_NAME="gdm3"
+		_DISPLAY_MANAGER_SERVICE_FILENAME="gdm3"
+		_SESSION_MANAGER="/usr/bin/lxsession"
+		_XSESSION="LXDE"
 		;;
 
 	enlightenment)
-		# there is no alternatives option for enlightenment...
 		_DISPLAY_MANAGER="/usr/bin/sddm"
-		_SERVICE_NAME="sddm"
+		_DISPLAY_MANAGER_SERVICE_FILENAME="sddm"
+		# there is no session manager alternatives for enlightenment...
+		_XSESSION="enlightenment"
 		sed -i 's/Session=.*/Session=enlightenment.desktop/' /etc/sddm.conf
 		;;
 
@@ -65,29 +82,31 @@ case "${LERNSTICK_DESKTOP}" in
 		;;
 esac
 
-PREVIOUS_SESSION_MANAGER="$(update-alternatives --query x-session-manager | grep ^Value: | cut -f 2 -d ' ')"
-echo "previous session manager: $PREVIOUS_SESSION_MANAGER"
-echo "new session manager: $_SESSION_MANAGER"
-
-if [ -n "${_SESSION_MANAGER}" -a "$PREVIOUS_SESSION_MANAGER" != "${_SESSION_MANAGER}" ]
+if [ -n "${_SESSION_MANAGER}" ]
 then
 	update-alternatives --set x-session-manager "${_SESSION_MANAGER}"
-	sed -i 's/XSession=.*/XSession=/g' /var/lib/AccountsService/users/user
+fi
+
+if [ -n "${_XSESSION}" ]
+then
+	sed -i "s/XSession=.*/XSession=${_XSESSION}/g" /var/lib/AccountsService/users/user
 fi
 
 if ! grep -q "^${_DISPLAY_MANAGER}$" /etc/X11/default-display-manager
 then
 	# The user changed the default display manager, update its file and systemd symlink.
 	echo "${_DISPLAY_MANAGER}" > /etc/X11/default-display-manager
-	if [ -z "${_SERVICE_NAME}" ]
+	if [ -z "${_DISPLAY_MANAGER_SERVICE_FILENAME}" ]
 	then
 		rm -f /etc/systemd/system/display-manager.service
 		systemctl daemon-reload
 	else
-		ln -sf /lib/systemd/system/${_SERVICE_NAME}.service /etc/systemd/system/display-manager.service
+		ln -sf /lib/systemd/system/${_DISPLAY_MANAGER_SERVICE_FILENAME}.service /etc/systemd/system/display-manager.service
 		# As this does not start services which should be running but aren't, we have to start the display manager as well.
 		# But don't wait for it to start as this would create a deadlock with live-config.
 		systemctl daemon-reload
 		systemctl --no-block start display-manager.service
 	fi
 fi
+
+echo "${LERNSTICK_DESKTOP}" > ${DESKTOP_STATE_FILE}
