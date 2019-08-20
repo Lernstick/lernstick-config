@@ -1,3 +1,9 @@
+lernstick-config (98) lernstick-10; urgency=medium
+
+  * [4919cf] create user's AccountsService config file if not already there
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Tue, 20 Aug 2019 15:44:55 +0200
+
 lernstick-config (97) lernstick-10; urgency=medium
 
   * [8ea1c5] updated .gitignore to ingore newer debhelper files
