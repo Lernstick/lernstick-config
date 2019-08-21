@@ -25,6 +25,8 @@ fi
 
 # the values in _XSESSION have to match the file names in
 # /usr/share/xsessions/*.desktop
+_DISPLAY_MANAGER="/usr/sbin/gdm3"
+_DISPLAY_MANAGER_SERVICE_FILENAME="gdm3"
 case "${LERNSTICK_DESKTOP}" in
 	kde)
 		_DISPLAY_MANAGER="/usr/bin/sddm"
@@ -35,50 +37,38 @@ case "${LERNSTICK_DESKTOP}" in
 		;;
 
 	gnome)
-		_DISPLAY_MANAGER="/usr/sbin/gdm3"
-		_DISPLAY_MANAGER_SERVICE_FILENAME="gdm3"
 		_SESSION_MANAGER="/usr/bin/gnome-session"
 		_XSESSION="gnome-xorg"
 		;;
 
 	cinnamon)
-		_DISPLAY_MANAGER="/usr/sbin/gdm3"
-		_DISPLAY_MANAGER_SERVICE_FILENAME="gdm3"
 		_SESSION_MANAGER="/usr/bin/cinnamon-session"
 		_XSESSION="cinnamon"
 		;;
 
 	mate)
-		_DISPLAY_MANAGER="/usr/sbin/gdm3"
-		_DISPLAY_MANAGER_SERVICE_FILENAME="gdm3"
 		_SESSION_MANAGER="/usr/bin/mate-session"
 		_XSESSION="mate"
 		;;
 
 	xfce)
-		_DISPLAY_MANAGER="/usr/sbin/gdm3"
-		_DISPLAY_MANAGER_SERVICE_FILENAME="gdm3"
 		_SESSION_MANAGER="/usr/bin/startxfce4"
 		_XSESSION="xfce"
 		;;
 
 	lxde)
-		_DISPLAY_MANAGER="/usr/sbin/gdm3"
-		_DISPLAY_MANAGER_SERVICE_FILENAME="gdm3"
 		_SESSION_MANAGER="/usr/bin/lxsession"
 		_XSESSION="LXDE"
 		;;
 
 	enlightenment)
-		_DISPLAY_MANAGER="/usr/bin/sddm"
-		_DISPLAY_MANAGER_SERVICE_FILENAME="sddm"
 		# there is no session manager alternatives for enlightenment...
 		_XSESSION="enlightenment"
-		sed -i 's/Session=.*/Session=enlightenment.desktop/' /etc/sddm.conf
 		;;
 
 	no)
 		_DISPLAY_MANAGER=""
+		_DISPLAY_MANAGER_SERVICE_FILENAME=""
 		;;
 esac
 
@@ -104,19 +94,21 @@ fi
 
 if ! grep -q "^${_DISPLAY_MANAGER}$" /etc/X11/default-display-manager
 then
-	# The user changed the default display manager, update its file and systemd symlink.
 	echo "${_DISPLAY_MANAGER}" > /etc/X11/default-display-manager
+
 	if [ -z "${_DISPLAY_MANAGER_SERVICE_FILENAME}" ]
 	then
+		echo "removing /etc/systemd/system/display-manager.service"
 		rm -f /etc/systemd/system/display-manager.service
-		systemctl daemon-reload
+		_TARGET="multi-user.target"
 	else
+		echo "linking /lib/systemd/system/${_DISPLAY_MANAGER_SERVICE_FILENAME}.service to /etc/systemd/system/display-manager.service"
 		ln -sf /lib/systemd/system/${_DISPLAY_MANAGER_SERVICE_FILENAME}.service /etc/systemd/system/display-manager.service
-		# As this does not start services which should be running but aren't, we have to start the display manager as well.
-		# But don't wait for it to start as this would create a deadlock with live-config.
-		systemctl daemon-reload
-		systemctl --no-block start display-manager.service
+		_TARGET="graphical.target"
 	fi
+	systemctl set-default ${_TARGET}
+	systemctl daemon-reload
+	systemctl --no-block isolate ${_TARGET}
 fi
 
 echo "${LERNSTICK_DESKTOP}" > ${DESKTOP_STATE_FILE}
