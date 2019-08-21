@@ -1,3 +1,10 @@
+lernstick-config (99) lernstick-10; urgency=medium
+
+  * [936070] install lernstick-update-bootmenu.service in target "basic"
+  * [d6c253] fixed switching display managers
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Wed, 21 Aug 2019 14:43:29 +0200
+
 lernstick-config (98) lernstick-10; urgency=medium
 
   * [4919cf] create user's AccountsService config file if not already there
