@@ -5,4 +5,4 @@ Description=Updating the Lernstick XMLboot and GRUB config
 ExecStart=/lib/systemd/lernstick-update-bootmenu
 
 [Install]
-WantedBy=default.target
+WantedBy=basic.target
