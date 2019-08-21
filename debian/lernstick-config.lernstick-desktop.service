@@ -2,6 +2,20 @@
 Description=Configuration of the selected desktop and display manager
 DefaultDependencies=no
 Before=basic.target
+# systemd version 241 (the one we have in Debian 10) doesn't like concurrent
+# mounts and daemon reloads. For details see
+# https://github.com/systemd/systemd/issues/10872
+#
+# We run into exactly this issue when changing display managers. From time to
+# time the system then booted into emergency mode and after rebooting the
+# following messages could be found in the journal:
+# Aug 21 16:31:30 debian systemd[1]: tmp.mount: Mount process finished, but there is no mount.
+# Aug 21 16:31:30 debian systemd[1]: tmp.mount: Failed with result 'protocol'.
+# Aug 21 16:31:30 debian systemd[1]: Failed to mount /tmp.
+#
+# With the following line we serialize the units so that lernstick-desktop gets
+# executed after tmp.mount is done and the bug above is not triggered.
+After=tmp.mount
 
 [Service]
 Type=oneshot
