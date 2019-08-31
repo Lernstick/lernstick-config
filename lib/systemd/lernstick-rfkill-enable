@@ -1,0 +1,9 @@
+#!/bin/sh
+
+if rfkill >/dev/null 2>&1
+then
+	rfkill unblock wifi
+	rfkill unblock bluetooth
+else
+	echo "no wifi/bluetooth hardware found"
+fi

@@ -10,8 +10,7 @@ After=NetworkManager.service
 
 [Service]
 Type=oneshot
-ExecStart=/usr/sbin/rfkill unblock wifi
-ExecStart=/usr/sbin/rfkill unblock bluetooth
+ExecStart=/lib/systemd/lernstick-rfkill-enable
 
 [Install]
 WantedBy=default.target
