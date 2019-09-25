@@ -1,3 +1,9 @@
+lernstick-config (103) lernstick-10; urgency=medium
+
+  * [5ae8eb] use new partitioning schema in lernstick-update-bootmenu
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Wed, 25 Sep 2019 18:32:13 +0200
+
 lernstick-config (102) lernstick-10; urgency=medium
 
   * [a89422] fixed https://github.com/imedias/lernstick-config/issues/6
