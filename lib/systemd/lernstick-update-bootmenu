@@ -5,8 +5,8 @@
 #
 
 # this tends to change from release to release...
-BOOT_LABEL="boot"
-LIVE_MOUNTPOINT="/lib/live/mount/medium"
+BOOT_LABEL="EFI"
+LIVE_MOUNTPOINT="/run/live/medium"
 BOOTLOGO_DIR="bootlogo.dir"
 
 cleanup() {
@@ -317,7 +317,7 @@ echo "first label: \"${FIRST_LABEL}\""
 
 if [ "${FIRST_LABEL}" = "${BOOT_LABEL}" ]
 then
-	echo "system uses the legacy partitioning schema with bootloaders on the EFI partition"
+	echo "EFI partition is the first partition"
 	mount_boot_partition ${FIRST_PARTITION}
 	update_bootloaders
 else
@@ -327,9 +327,7 @@ else
 	echo "second label: \"${SECOND_LABEL}\""
 	if [ "${SECOND_LABEL}" = "${BOOT_LABEL}" ]
 	then
-		echo "system uses the legacy partitioning schema with bootloaders on the EFI partition"
-		echo "but for legacy (removable) USB flash drives"
-
+		echo "EFI partition is the second partiton - used for legacy (removable) USB flash drives"
 		echo "updating boot loader config on boot partition"
 		mount_boot_partition ${SECOND_PARTITION}
 		update_bootloaders
@@ -356,18 +354,9 @@ else
 		fi
 
 	else
-		echo "system uses the current partitioning schema with bootloaders on the system partition"
-		if mount -o remount,rw "${LIVE_MOUNTPOINT}"
-		then
-			IMAGE_DIR="${LIVE_MOUNTPOINT}"
-			update_bootloaders
-		else
-			# it's ok, system was probably booted from iso...
-			echo "The image directory \"${LIVE_MOUNTPOINT}\" could not be remounted in read-write mode."
-			echo "The system was probably booted from DVD."
-			echo "Exiting..."
-			exit 0
-		fi
+		echo "Could not find EFI partition. The system was probably booted from DVD."
+		echo "Exiting..."
+		exit 0
 	fi
 fi
 
