@@ -63,16 +63,21 @@ Config ()
 	#   - a blank password is 'U6aMy0wojraho'
 	_PASSWORD="8Ab05sVQ4LLps"
 
-	# Adjust formating of groups
-	LIVE_USER_DEFAULT_GROUPS="$(echo ${LIVE_USER_DEFAULT_GROUPS} | sed -e 's| |,|g')"
+	echo "adding user \"${LIVE_USERNAME}\""
 	useradd \
 		--comment "${LIVE_USER_FULLNAME}" \
 		--create-home \
-		--groups ${LIVE_USER_DEFAULT_GROUPS} \
 		--password ${_PASSWORD} \
 		--shell /bin/bash \
 		--uid 1000 \
 		${LIVE_USERNAME}
+	# useradd above just fails when we try to add the user to nonexisting groups
+	# therefore we do this here in a more robust loop
+	for _GROUP in ${LIVE_USER_DEFAULT_GROUPS}
+	do
+		echo "adding user \"${LIVE_USERNAME}\" to group \"${_GROUP}\""
+		usermod -a -G ${_GROUP} ${LIVE_USERNAME} || echo "adding user \"${LIVE_USERNAME}\" to group \"${_GROUP}\" failed."
+	done
 
 	# Creating state file (evaluated by systemd service file)
 	touch /var/lib/live/config/user-setup
