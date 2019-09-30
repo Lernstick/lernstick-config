@@ -1,3 +1,10 @@
+lernstick-config (104) lernstick-10; urgency=medium
+
+  * [7ff88d] made lernstick-user-setup more robust
+             (better handling of nonexisting groups)
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Mon, 30 Sep 2019 20:35:52 +0200
+
 lernstick-config (103) lernstick-10; urgency=medium
 
   * [5ae8eb] use new partitioning schema in lernstick-update-bootmenu
