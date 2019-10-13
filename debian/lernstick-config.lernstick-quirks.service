@@ -1,0 +1,11 @@
+[Unit]
+Description=Lernstick quirks
+DefaultDependencies=no
+Before=systemd-udevd.service
+
+[Service]
+Type=oneshot
+ExecStart=/lib/systemd/lernstick-quirks
+
+[Install]
+WantedBy=sysinit.target

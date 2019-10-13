@@ -1,0 +1,18 @@
+#!/bin/sh
+
+MODPROBE_CONF="/etc/modprobe.d/lernstick-quirks.conf"
+
+> $MODPROBE_CONF
+
+# Seen on a HP ZBook Studio x360 G5 (4QH74EA#UUZ) with the WLAN adapter
+# Intel Corporation Wireless-AC 9560 [Jefferson Peak] (rev 10)
+# with linux 5.2.9-2~bpo10+1 and firmware-linux-nonfree 20190717-2~bpo10+1:
+# The iwlwifi driver fails to load the firmware correctly, retries every 3 seconds,
+# almost freezes the system and makes using the touchpad and keyboard almost impossible.
+if lspci -n | grep 8086:a370 -q
+then
+	echo "blacklisting driver \"iwlwifi\""
+	echo "# The WLAN adapter in your machine is currently not supported." >> $MODPROBE_CONF
+	echo "# Please use a supported, external USB WLAN adapter." >> $MODPROBE_CONF
+	echo "blacklist iwlwifi" >> $MODPROBE_CONF
+fi
