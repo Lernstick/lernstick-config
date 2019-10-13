@@ -1,3 +1,9 @@
+lernstick-config (105) lernstick-10; urgency=medium
+
+  * [94f0d2] added lernstick-quirks.service
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sun, 13 Oct 2019 11:45:42 +0200
+
 lernstick-config (104) lernstick-10; urgency=medium
 
   * [7ff88d] made lernstick-user-setup more robust
