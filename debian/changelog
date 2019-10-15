@@ -1,3 +1,10 @@
+lernstick-config (106) lernstick-10; urgency=medium
+
+  * [15cac0] added safer default values for NetworkManager
+  * [fa9559] added quirk for HP ProBook 440 G6
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Tue, 15 Oct 2019 22:11:56 +0200
+
 lernstick-config (105) lernstick-10; urgency=medium
 
   * [94f0d2] added lernstick-quirks.service
