@@ -1,3 +1,10 @@
+lernstick-config (107) lernstick-10; urgency=medium
+
+  * [6bf6a9] made partition handling in lernstick-update-bootmenu simpler and
+             more robust (works now also on NVMe drives)
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sat, 30 Nov 2019 14:22:29 +0100
+
 lernstick-config (106) lernstick-10; urgency=medium
 
   * [15cac0] added safer default values for NetworkManager
