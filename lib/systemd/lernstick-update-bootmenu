@@ -32,7 +32,10 @@ cleanup() {
 
 get_partition() {
 	NUMBER=$1
-	echo ${SYSTEM_PARTITION} | sed "s|\(/dev/[a-z]*\).*|\1${NUMBER}|"
+	# examples (with NUMBER=1):
+	# "/dev/sda3" -> "/dev/sda1"
+	# "/dev/nvme0n1p3" -> "/dev/nvme0n1p1"
+	echo ${SYSTEM_PARTITION} | sed "s|[0-9]*$|${NUMBER}|"
 }
 
 get_partition_label() {
