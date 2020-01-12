@@ -52,15 +52,12 @@ Init ()
 	fi
 
 	# enforce "lazy change" (only run the remaining script if the keyboard setting was really changed)
-	#KEYBOARD_STATE_FILE="/var/lib/live/config/keyboard-fixup"
-	#if [ ! -r ${KEYBOARD_STATE_FILE} ] || [ "${LIVE_KEYBOARD_LAYOUTS} ${LIVE_KEYBOARD_MODEL}" != "$(cat ${KEYBOARD_STATE_FILE})" ]
-	#then
-	#	echo "${LIVE_KEYBOARD_LAYOUTS} ${LIVE_KEYBOARD_MODEL}" > $KEYBOARD_STATE_FILE
-	#	Config
-	#fi
-
-	# The "lazy" version above no longer works in Debian 10. For whatever reason we have to run this at every boot.
-	Config
+	KEYBOARD_STATE_FILE="/var/lib/live/config/keyboard-fixup"
+	if [ ! -r ${KEYBOARD_STATE_FILE} ] || [ "${LIVE_KEYBOARD_LAYOUTS} ${LIVE_KEYBOARD_MODEL}" != "$(cat ${KEYBOARD_STATE_FILE})" ]
+	then
+		echo "${LIVE_KEYBOARD_LAYOUTS} ${LIVE_KEYBOARD_MODEL}" > $KEYBOARD_STATE_FILE
+		Config
+	fi
 }
 
 Config ()
@@ -92,6 +89,13 @@ Config ()
 	if [ -e ${DEBCONF_FILE} ]
 	then
 		retrying-debconf-set-selections ${DEBCONF_FILE}
+
+		if [ -x $(which setupcon 2>/dev/null) ]; then
+			setupcon -k
+		fi
+
+		# udev already started, tell it to pick up the new config
+		udevadm trigger --subsystem-match=input --action=change
 	fi
 }
 
