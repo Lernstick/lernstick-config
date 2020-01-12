@@ -1,3 +1,9 @@
+lernstick-config (110) lernstick-10; urgency=medium
+
+  * [0f7f89] another attempt to fix the keyboard configuration in Debian 10...
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sun, 12 Jan 2020 22:13:08 +0100
+
 lernstick-config (109) lernstick-10; urgency=medium
 
   * [ea2fb4] found another way to fix keyboard configuration in Debian 10
