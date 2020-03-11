@@ -12,7 +12,11 @@ for d in etc bin sbin proc ; do
 done
 
 # copy busybox and dependencies to /run/initramfs
-. /usr/share/initramfs-tools/hooks/zz-busybox
+#. /usr/share/initramfs-tools/hooks/zz-busybox
+# I commented this out, because the script is sourced with set -e and zz-busybox
+# fails at line 38. When this script fails, systemd-shutdown will not switch to the 
+# shutdown initramfs by executing $DESTDIR/shutdown.
+# A bug is reported: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=953563
 
 # copy plymouth
 . /usr/share/initramfs-tools/hooks/plymouth
