@@ -1,3 +1,9 @@
+lernstick-config (111) lernstick-10; urgency=medium
+
+  * [1ae819] Commented /usr/share/initramfs-tools/hooks/zz-busybox
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 20 Mar 2020 17:52:04 +0100
+
 lernstick-config (110) lernstick-10; urgency=medium
 
   * [0f7f89] another attempt to fix the keyboard configuration in Debian 10...
