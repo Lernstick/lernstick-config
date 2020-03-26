@@ -1,3 +1,9 @@
+lernstick-config (112) lernstick-10; urgency=medium
+
+  * [562559] added Google Earth Debian repository
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Thu, 26 Mar 2020 17:43:41 +0100
+
 lernstick-config (111) lernstick-10; urgency=medium
 
   * [1ae819] Commented /usr/share/initramfs-tools/hooks/zz-busybox
