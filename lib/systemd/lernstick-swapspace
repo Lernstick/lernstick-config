@@ -17,24 +17,24 @@
 # 1) When read-write persistency is enabled, use the persistency partition directly.
 # 2) Otherwise disable swapspace.
 
-PERSISTENCE_PATH=$(cat /proc/mounts | grep /lib/live/mount/persistence/ | awk '{ print $2 }')
+PERSISTENCE_PATH=$(grep /run/live/persistence/ /proc/mounts | awk '{ print $2 }')
 
-if [ -z $PERSISTENCE_PATH ]
+if [ -z "$PERSISTENCE_PATH" ]
 then
 	echo "no mounted data partition found, not starting swapspace"
 	rm -f /run/swapspace_enabled
 else
 	echo "persistence path: $PERSISTENCE_PATH"
-	TMP_FILE=$(mktemp -p $PERSISTENCE_PATH)
-	if [ -z $TMP_FILE ]
+	TMP_FILE=$(mktemp -p "$PERSISTENCE_PATH")
+	if [ -z "$TMP_FILE" ]
 	then
 		echo "could not write to persistence path, not starting swapspace"
 		rm -f /run/swapspace_enabled
 	else
 		rm -f "$TMP_FILE"
 		echo "writable persistence path found, configuring and starting swapspace"
-		sed -i "s|#swappath=.*|swappath=\""$PERSISTENCE_PATH\""|" /etc/swapspace.conf
-		sed -i "s|swappath=.*|swappath=\""$PERSISTENCE_PATH\""|" /etc/swapspace.conf
+		sed -i "s|#swappath=.*|swappath=\"$PERSISTENCE_PATH\"|" /etc/swapspace.conf
+		sed -i "s|swappath=.*|swappath=\"$PERSISTENCE_PATH\"|" /etc/swapspace.conf
 		touch /run/swapspace_enabled
 	fi
 fi
