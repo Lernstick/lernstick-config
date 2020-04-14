@@ -1,3 +1,9 @@
+lernstick-config (114) lernstick-10; urgency=medium
+
+  * [2e2650] fixed grep statement
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Tue, 14 Apr 2020 20:01:28 +0200
+
 lernstick-config (113) lernstick-10; urgency=medium
 
   * [bf7cfc] use Debian 10 persistence path, code cleanup
