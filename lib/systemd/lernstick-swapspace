@@ -17,7 +17,7 @@
 # 1) When read-write persistency is enabled, use the persistency partition directly.
 # 2) Otherwise disable swapspace.
 
-PERSISTENCE_PATH=$(grep /run/live/persistence/ /proc/mounts | awk '{ print $2 }')
+PERSISTENCE_PATH=$(grep " /run/live/persistence/" /proc/mounts | awk '{ print $2 }')
 
 if [ -z "$PERSISTENCE_PATH" ]
 then
