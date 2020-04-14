@@ -1,3 +1,9 @@
+lernstick-config (113) lernstick-10; urgency=medium
+
+  * [bf7cfc] use Debian 10 persistence path, code cleanup
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Tue, 14 Apr 2020 19:49:29 +0200
+
 lernstick-config (112) lernstick-10; urgency=medium
 
   * [562559] added Google Earth Debian repository
