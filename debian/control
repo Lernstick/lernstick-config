@@ -1,8 +1,7 @@
 Source: lernstick-config
 Section: misc
 Priority: extra
-Maintainer: Lernstick Team <lernstick.ph@fhnw.ch>
-Uploaders: Ronny Standtke <ronny.standtke@fhnw.ch>, Gaudenz Steinlin <gaudenz@debian.org>
+Maintainer: Ronny Standtke <ronny.standtke@fhnw.ch>
 Build-Depends: debhelper (>= 9), config-package-dev, dh-systemd
 Standards-Version: 3.9.6
 Homepage: http://www.imedias.ch/lernstick/
@@ -11,7 +10,7 @@ Vcs-Git: https://github.com/imedias/lernstick-config.git
 
 Package: lernstick-config
 Architecture: all
-Depends: ${misc:Depends}, live-config (>= 5~), xmlstarlet, gfxboot, sqlite3, lernstick-archive-keyring, lernstick-xkb-data
+Depends: ${misc:Depends}, live-config (>= 5~), xmlstarlet, gfxboot, sqlite3, lernstick-archive-keyring, lernstick-xkb-data, sysfsutils
 Provides: ${diverted-files}
 Conflicts: ${diverted-files}
 Description: Lernstick System Configuration
