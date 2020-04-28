@@ -1,3 +1,9 @@
+lernstick-config (115) lernstick-10; urgency=medium
+
+  * [0a8059] enable zswap
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Tue, 28 Apr 2020 19:03:52 +0200
+
 lernstick-config (114) lernstick-10; urgency=medium
 
   * [2e2650] fixed grep statement
