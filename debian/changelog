@@ -1,3 +1,9 @@
+lernstick-config (119) lernstick-10; urgency=medium
+
+  * [ade720] made lernstick-keymap script executable
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Thu, 23 Jul 2020 16:14:34 +0200
+
 lernstick-config (118) lernstick-10; urgency=medium
 
   * [ff6729] use dh_installsystemd instead of dh_systemd_enable
