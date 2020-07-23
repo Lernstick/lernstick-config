@@ -1,3 +1,9 @@
+lernstick-config (117) lernstick-10; urgency=medium
+
+  * [9758ef] decleared compatibility level 11
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Thu, 23 Jul 2020 15:55:06 +0200
+
 lernstick-config (116) lernstick-10; urgency=medium
 
   * [ffc4cf] moved lernstick-no-nouveau hook to common hook directory
