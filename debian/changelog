@@ -1,3 +1,9 @@
+lernstick-config (120) lernstick-10; urgency=medium
+
+  * [dd9e18] moved lernstick-keymap script to correct place
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Thu, 23 Jul 2020 18:17:49 +0200
+
 lernstick-config (119) lernstick-10; urgency=medium
 
   * [ade720] made lernstick-keymap script executable
