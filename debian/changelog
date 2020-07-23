@@ -1,3 +1,10 @@
+lernstick-config (116) lernstick-10; urgency=medium
+
+  * [ffc4cf] moved lernstick-no-nouveau hook to common hook directory
+  * [f44a69] added support for selected keyboard layout in initramfs (thanks Roman!)
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Thu, 23 Jul 2020 15:53:12 +0200
+
 lernstick-config (115) lernstick-10; urgency=medium
 
   * [0a8059] enable zswap
