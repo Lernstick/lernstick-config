@@ -1,3 +1,9 @@
+lernstick-config (118) lernstick-10; urgency=medium
+
+  * [ff6729] use dh_installsystemd instead of dh_systemd_enable
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Thu, 23 Jul 2020 16:10:43 +0200
+
 lernstick-config (117) lernstick-10; urgency=medium
 
   * [9758ef] decleared compatibility level 11
