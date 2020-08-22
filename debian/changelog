@@ -1,3 +1,9 @@
+lernstick-config (121) lernstick-10; urgency=medium
+
+  * [4e716b] added udev rule for thymios
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sat, 22 Aug 2020 08:54:06 +0200
+
 lernstick-config (120) lernstick-10; urgency=medium
 
   * [dd9e18] moved lernstick-keymap script to correct place
