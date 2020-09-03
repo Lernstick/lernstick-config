@@ -1,0 +1,39 @@
+#!/bin/sh
+
+PREREQ=""
+
+prereqs()
+{
+   echo "$PREREQ"
+}
+
+case $1 in
+prereqs)
+    prereqs
+    exit 0
+    ;;
+esac
+
+. /scripts/functions
+
+# extract the locale from cmdline
+for x in $(cat /proc/cmdline); do
+    case $x in
+        locales=*)
+            locales=${x#locales=}
+            ;;
+    esac
+done
+
+# set the first locale
+IFS=","
+for locale in $locales; do
+    log_begin_msg "Setting locale ${locale}"
+    # Not possible to just export the variable, because the scripts are not sourced, this is a workaround.
+    # See: https://manpages.debian.org/jessie/initramfs-tools/initramfs-tools.8.en.html#Boot_parameters
+    echo "export LANG=\"${locale}\"" >> $DESTDIR/conf/param.conf
+    log_end_msg
+    break
+done
+
+exit 0 
