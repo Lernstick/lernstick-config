@@ -1,3 +1,11 @@
+lernstick-config (122) lernstick-10; urgency=medium
+
+  * [bad6f9] removed quirk for Intel Corporation Wireless-AC 9560 [Jefferson Peak] (rev 10)
+             PCI-ID: 8086:a370
+             (fixed with newer kernels and firmware)
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 04 Sep 2020 20:09:36 +0200
+
 lernstick-config (121) lernstick-10; urgency=medium
 
   * [4e716b] added udev rule for thymios
