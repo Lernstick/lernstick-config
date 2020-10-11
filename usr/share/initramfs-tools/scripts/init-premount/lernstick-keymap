@@ -31,6 +31,9 @@ for keymap in $keymaps; do
     if [ -r "/usr/share/keymaps/boottime.${keymap}.kmap.gz" ]; then
         log_begin_msg "Setting keymap ${keymap}"
         loadkeys "/usr/share/keymaps/boottime.${keymap}.kmap.gz"
+        # Not possible to just export the variable, because the scripts are not sourced, this is a workaround.
+        # See: https://manpages.debian.org/jessie/initramfs-tools/initramfs-tools.8.en.html#Boot_parameters
+        echo "export LAYOUT=\"${keymap}\"" >> $DESTDIR/conf/param.conf
         log_end_msg
         break
     fi

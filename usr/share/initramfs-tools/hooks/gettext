@@ -1,0 +1,27 @@
+#!/bin/sh
+
+PREREQ=""
+
+prereqs()
+{
+   echo "$PREREQ"
+}
+
+case $1 in
+prereqs)
+    prereqs
+    exit 0
+    ;;
+esac
+
+. /usr/share/initramfs-tools/hook-functions
+
+copy_file "script" /usr/bin/gettext.sh /usr/bin/gettext.sh
+copy_exec /usr/bin/gettext /usr/bin/gettext
+copy_exec /usr/bin/ngettext /usr/bin/ngettext
+copy_exec /usr/bin/envsubst /usr/bin/envsubst
+copy_file "file" /usr/share/locale/de/LC_MESSAGES/lernstick-luks-prompt.mo /usr/share/locale/de/LC_MESSAGES/lernstick-luks-prompt.mo
+copy_file "file" /usr/lib/locale/locale-archive /usr/lib/locale/locale-archive
+copy_file "file" /usr/share/locale/locale.alias /usr/share/locale/locale.alias
+
+exit 0 
