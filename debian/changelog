@@ -1,3 +1,17 @@
+lernstick-config (123) lernstick-10; urgency=medium
+
+  [ chaoos ]
+  * [9a41e5] added KEYMAP environment variable for the current keymap
+  * [5e44af] renamed variable KEYMAP to LAYOUT
+  * [a639fa] added support for multilanguage luks password prompt with plymouth as well as without
+
+  [ Ronny Standtke ]
+  * [e821bd] moved lib/live/boot/9990-misc-helpers.sh back to package live-boot
+  * [3bccd7] made usr/share/initramfs-tools/hooks/gettext executable
+  * [0bec50] removed superfluous whitespace
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sun, 11 Oct 2020 13:36:37 +0200
+
 lernstick-config (122) lernstick-10; urgency=medium
 
   * [bad6f9] removed quirk for Intel Corporation Wireless-AC 9560 [Jefferson Peak] (rev 10)
