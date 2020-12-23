@@ -1,3 +1,9 @@
+lernstick-config (124) lernstick-10; urgency=medium
+
+  * [3173be] removed flash update scripts
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Wed, 23 Dec 2020 14:55:44 +0100
+
 lernstick-config (123) lernstick-10; urgency=medium
 
   [ chaoos ]
