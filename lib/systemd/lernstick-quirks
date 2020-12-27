@@ -29,3 +29,22 @@ then
 	echo "# Please use a supported, external USB WLAN adapter." >> $MODPROBE_CONF
 	echo "blacklist iwlwifi" >> $MODPROBE_CONF
 fi
+
+# special handling of MacBook Pro 13,2 wifi driver
+# (MAC address of the wireless card has to be inserted into the corresponding firmware txt file)
+if lspci -n | grep 14e4:43ba -q
+then
+	TXT_FILE="/lib/firmware/brcm/brcmfmac43602-pcie.Apple Inc.-MacBookPro13,2.txt"
+	# to get the wifi adapter MAC address we have to first load the brcmfmac driver without our special txt file
+	mv "${TXT_FILE}" "${TXT_FILE}.bk"
+	echo "loading driver brcmfmac..."
+	modprobe brcmfmac
+	echo "waiting 5 seconds for brcmfmac driver to get the MAC address of the adapter..."
+	sleep 5
+	mv "${TXT_FILE}.bk" "${TXT_FILE}"
+	MAC_ADDRESS="$(ip l show $(awk 'NR==3{print $1}' /proc/net/wireless | tr -d :) | awk '/ether/{print $2}')"
+	echo "MAC address: ${MAC_ADDRESS}"
+	sed -i "s/macaddr=.*/macaddr=${MAC_ADDRESS}/g" "${TXT_FILE}"
+	echo "removing driver brcmfmac..."
+	modprobe -r brcmfmac
+fi
