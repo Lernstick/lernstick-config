@@ -48,3 +48,10 @@ then
 	echo "removing driver brcmfmac..."
 	modprobe -r brcmfmac
 fi
+
+# special handling for MacBook Pro's with T2 security chip
+if lspci -n | grep 106b:1801 -q
+then
+	echo "loading driver apple-bce..."
+	modprobe apple-bce
+fi
