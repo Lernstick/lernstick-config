@@ -1,3 +1,9 @@
+lernstick-config (126) lernstick-10; urgency=medium
+
+  * [3f7458] added quirk for MacBook Pro's with T2 security chip
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Mon, 28 Dec 2020 10:09:20 +0100
+
 lernstick-config (125) lernstick-10; urgency=medium
 
   * [d54085] added quirk for MacBook Pro 13,2 wifi
