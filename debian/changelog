@@ -1,3 +1,9 @@
+lernstick-config (127) lernstick-10; urgency=medium
+
+  * [3dc099] added X11 session file to support flatpak customizations
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Thu, 18 Feb 2021 19:39:26 +0100
+
 lernstick-config (126) lernstick-10; urgency=medium
 
   * [3f7458] added quirk for MacBook Pro's with T2 security chip
