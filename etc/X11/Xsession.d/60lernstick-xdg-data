@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# We want to have a mechanism close to dpkg-divert for flatpaks where we can
+# provide our distribution specific files that override package maintainer
+# files. This is mainly needed for our customizations of flatpak desktop files.
+#
+# The mechanism used here is to prepend a path to XDG_DATA_DIRS which is a
+# preference-ordered set of base directories where the order of base
+# directories denotes their importance: the first directory listed is the most
+# important, see here for more details:
+# https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
+
+if command -v flatpak > /dev/null; then
+
+	NEW_PATH="/usr/share/lernstick"
+
+	case ":$XDG_DATA_DIRS:" in
+		*":$NEW_PATH:"*) ;;
+		*":$NEW_PATH/:"*) ;;
+		*)
+			XDG_DATA_DIRS="${NEW_PATH}:${XDG_DATA_DIRS}"
+			export XDG_DATA_DIRS
+			;;
+	esac
+fi
