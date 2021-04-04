@@ -1,3 +1,9 @@
+lernstick-config (129) lernstick-11; urgency=medium
+
+  * [244af7] updated Debian control file
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sun, 04 Apr 2021 15:27:47 +0200
+
 lernstick-config (128) lernstick-11; urgency=medium
 
   * [ff64f1] updated to Debian 11
