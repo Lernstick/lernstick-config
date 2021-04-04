@@ -61,7 +61,7 @@ Config ()
 	# passwords can be generated with 'echo "live" | mkpasswd -s',
 	#   - "live" is           '8Ab05sVQ4LLps'
 	#   - a blank password is 'U6aMy0wojraho'
-	_PASSWORD="8Ab05sVQ4LLps"
+	_PASSWORD="U6aMy0wojraho"
 
 	echo "adding user \"${LIVE_USERNAME}\""
 	useradd \
