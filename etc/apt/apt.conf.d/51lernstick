@@ -1,0 +1,26 @@
+// ONLY Lernstick specific configuration changes
+// The default configuration is in 20auto-upgrades and 50unattended-upgrades
+
+// run "apt-get upgrade --download-only" every day
+APT::Periodic::Download-Upgradeable-Packages "1";
+
+// delete cache files that are older than one day
+APT::Periodic::MaxAge "1";
+
+// We already had some strange situations were important (local) packages were
+// removed by unattended upgrades for no apparent reason.
+// Therefore we enable maximum verbosity and by this debug level logging
+// for unattended upgrades until the problems have been sorted out.
+APT::Periodic::Verbose "3";
+
+// This option allows you to control if on a unclean dpkg exit
+// unattended-upgrades will automatically run
+//   dpkg --force-confold --configure -a
+// The default is true, to ensure updates keep getting installed
+Unattended-Upgrade::AutoFixInterruptedDpkg "true";
+
+// Split the upgrade into the smallest possible chunks so that
+// they can be interrupted with SIGUSR1. This makes the upgrade
+// a bit slower but it has the benefit that shutdown while a upgrade
+// is running is possible (with a small delay)
+Unattended-Upgrade::MinimalSteps "true";
