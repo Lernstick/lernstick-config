@@ -1,3 +1,10 @@
+lernstick-config (128) lernstick-11; urgency=medium
+
+  * [ff64f1] updated to Debian 11
+    (prevented config file clash with unattended-upgrades)
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sun, 04 Apr 2021 15:22:19 +0200
+
 lernstick-config (127) lernstick-10; urgency=medium
 
   * [3dc099] added X11 session file to support flatpak customizations
