@@ -8,4 +8,4 @@ Type=oneshot
 ExecStart=/lib/systemd/lernstick-quirks
 
 [Install]
-WantedBy=sysinit.target
+WantedBy=systemd-udevd.service
