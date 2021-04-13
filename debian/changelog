@@ -1,3 +1,10 @@
+lernstick-config (132) lernstick-11; urgency=medium
+
+  [ chaoos ]
+  * [84f0d7] Correct wantedby target
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Tue, 13 Apr 2021 19:03:26 +0200
+
 lernstick-config (131) lernstick-11; urgency=medium
 
   * [b86112] updated sources list for Debian 11
