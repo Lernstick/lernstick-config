@@ -1,3 +1,10 @@
+lernstick-config (127.1) lernstick-10; urgency=medium
+
+  [ chaoos ]
+  * [a4913b] Correct wantedby target
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Tue, 13 Apr 2021 18:57:30 +0200
+
 lernstick-config (127) lernstick-10; urgency=medium
 
   * [3dc099] added X11 session file to support flatpak customizations
