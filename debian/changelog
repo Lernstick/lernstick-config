@@ -1,3 +1,9 @@
+lernstick-config (133) lernstick-11; urgency=medium
+
+  * [42350c] updated KDE Plasma config in lernstick-desktop to Debian 11
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sat, 01 May 2021 14:33:20 +0200
+
 lernstick-config (132) lernstick-11; urgency=medium
 
   [ chaoos ]
