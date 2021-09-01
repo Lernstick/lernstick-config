@@ -1,3 +1,9 @@
+lernstick-config (134) lernstick-11; urgency=medium
+
+  * [531d14] google earth debian repository seems to be gone
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Wed, 01 Sep 2021 13:39:49 +0200
+
 lernstick-config (133) lernstick-11; urgency=medium
 
   * [42350c] updated KDE Plasma config in lernstick-desktop to Debian 11
