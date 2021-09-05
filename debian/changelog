@@ -1,3 +1,9 @@
+lernstick-config (135) lernstick-11; urgency=medium
+
+  * [df67c3] re-added (new version of) Google's Debian repo for Google Earth
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sun, 05 Sep 2021 14:11:19 +0200
+
 lernstick-config (134) lernstick-11; urgency=medium
 
   * [531d14] google earth debian repository seems to be gone
