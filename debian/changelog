@@ -1,3 +1,10 @@
+lernstick-config (136) lernstick-11; urgency=medium
+
+  * [62fd83] removed 8086:9df0 from our quirks
+             (forum members reported success with newer kernels and firmware)
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Thu, 28 Oct 2021 22:28:06 +0200
+
 lernstick-config (135) lernstick-11; urgency=medium
 
   * [df67c3] re-added (new version of) Google's Debian repo for Google Earth
