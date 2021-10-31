@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# workaround for the apple_ib_tb driver (needed for T1 versions of MacBookPro touchpads), see:
+# https://github.com/roadrunner2/macbook12-spi-driver/issues/42#issuecomment-753445371
+if lsusb -d 05ac:8600 > /dev/null
+then
+	# wait until apple_ib_tb module is loaded
+	while ! lsmod | grep -q ^apple_ib_tb
+	do
+		echo "waiting for apple_ib_tb module to load..."
+		sleep 1
+	done
+
+	echo '1-3' > /sys/bus/usb/drivers/usb/unbind
+	echo '1-3' > /sys/bus/usb/drivers/usb/bind
+fi

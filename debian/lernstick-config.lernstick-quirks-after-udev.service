@@ -1,0 +1,11 @@
+[Unit]
+Description=Lernstick quirks after udev
+DefaultDependencies=no
+After=systemd-udevd.service
+
+[Service]
+Type=oneshot
+ExecStart=/lib/systemd/lernstick-quirks-after-udev
+
+[Install]
+WantedBy=graphical.target

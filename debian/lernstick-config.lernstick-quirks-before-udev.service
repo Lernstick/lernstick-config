@@ -1,11 +1,11 @@
 [Unit]
-Description=Lernstick quirks
+Description=Lernstick quirks before udev
 DefaultDependencies=no
 Before=systemd-udevd.service
 
 [Service]
 Type=oneshot
-ExecStart=/lib/systemd/lernstick-quirks
+ExecStart=/lib/systemd/lernstick-quirks-before-udev
 
 [Install]
 WantedBy=systemd-udevd.service

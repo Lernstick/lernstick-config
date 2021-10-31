@@ -10,7 +10,8 @@ override_dh_installsystemd:
 	dh_installsystemd --name=lernstick-keyboard-configuration
 	dh_installsystemd --name=lernstick-locale
 	dh_installsystemd --name=lernstick-proprietary-x11-settings-tools
-	dh_installsystemd --name=lernstick-quirks
+	dh_installsystemd --name=lernstick-quirks-after-udev
+	dh_installsystemd --name=lernstick-quirks-before-udev
 	dh_installsystemd --name=lernstick-remove-mac-in-network-connections
 	dh_installsystemd --name=lernstick-rfkill-enable
 	dh_installsystemd --name=lernstick-swapspace
