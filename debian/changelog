@@ -1,3 +1,9 @@
+lernstick-config (137) lernstick-11; urgency=medium
+
+  * [4cf2ed] added workaround for the apple_ib_tb driver
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sun, 31 Oct 2021 21:51:40 +0100
+
 lernstick-config (136) lernstick-11; urgency=medium
 
   * [62fd83] removed 8086:9df0 from our quirks
