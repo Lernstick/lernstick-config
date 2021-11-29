@@ -5,6 +5,7 @@
 
 override_dh_installsystemd:
 	dh_installsystemd --name=lernstick-apt-fix
+	dh_installsystemd --name=lernstick-cleanup-networkmanager-connections
 	dh_installsystemd --name=lernstick-desktop
 	dh_installsystemd --name=lernstick-early-nouveau-blacklist
 	dh_installsystemd --name=lernstick-keyboard-configuration
@@ -12,7 +13,6 @@ override_dh_installsystemd:
 	dh_installsystemd --name=lernstick-proprietary-x11-settings-tools
 	dh_installsystemd --name=lernstick-quirks-after-udev
 	dh_installsystemd --name=lernstick-quirks-before-udev
-	dh_installsystemd --name=lernstick-remove-mac-in-network-connections
 	dh_installsystemd --name=lernstick-rfkill-enable
 	dh_installsystemd --name=lernstick-swapspace
 	dh_installsystemd --name=lernstick-update-bootmenu

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# NetworkManager connections are per default restricted to the MAC address or
+# interface name used at setup time. This is not what we want on a live system.
+# We want to use the configured network connections on any hardware we are
+# booting on. Therefore we remove the mac-address and interface-name lines from
+# the system connections config files.
+
+/usr/bin/find /etc/NetworkManager/system-connections/ -type f -exec sed -i '/mac-address=.*/d' {} \;
+/usr/bin/find /etc/NetworkManager/system-connections/ -type f -exec sed -i '/interface-name=.*/d' {} \;
