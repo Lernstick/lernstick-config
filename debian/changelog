@@ -1,3 +1,9 @@
+lernstick-config (139) lernstick-11; urgency=medium
+
+  * [7582e1] updated Google Earth repository key
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sat, 23 Jul 2022 20:04:12 +0200
+
 lernstick-config (138) lernstick-11; urgency=medium
 
   * [4c7b17] updated NetworkManager connections cleanup service for Debian 11
