@@ -19,6 +19,7 @@ DUALCARD="^10DE"
 Detect_xorg_driver ()
 {
 	# Side-effect: Sets _NVIDIA_VERSION if an NVIDIA card is detected
+	# Side-effect: Sets NVIDIA_VERSION environment if an NVIDIA card is detected
 
 	# without lspci this won't work
 	if ! [ -x /usr/bin/lspci ]
@@ -88,6 +89,7 @@ Detect_xorg_driver ()
 				if grep -qs "${_DEVICE}" ${_NVIDIA_IDS}
 				then
 					_NVIDIA_VERSION="$(basename $(dirname ${_NVIDIA_IDS}))"
+					systemctl set-environment NVIDIA_VERSION=nvidia-${_NVIDIA_VERSION}
 					LIVE_XORG_DRIVER="nvidia"
 					return
 				fi
