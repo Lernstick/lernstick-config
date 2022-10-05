@@ -1,3 +1,10 @@
+lernstick-config (140) lernstick-11; urgency=medium
+
+  [ Thore Sommer ]
+  * [33ee7d] lernstick-xserver-xorg: set env NVIDIA_VERSION
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Wed, 05 Oct 2022 18:37:10 +0200
+
 lernstick-config (139) lernstick-11; urgency=medium
 
   * [7582e1] updated Google Earth repository key
