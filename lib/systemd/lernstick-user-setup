@@ -58,10 +58,12 @@ Config ()
 	esac
 
 	# Default password is: live
-	# passwords can be generated with 'echo "live" | mkpasswd -s',
+	# Passwords can be generated with mkpasswd (in the package whois):
+	# $ echo "live" | mkpasswd -m descrypt -s'
 	#   - "live" is           '8Ab05sVQ4LLps'
 	#   - a blank password is 'U6aMy0wojraho'
-	_PASSWORD="U6aMy0wojraho"
+	# We can't use a blank password in Debian 12 because in this release KDE, Mate and Xfce don't support it.
+	_PASSWORD="8Ab05sVQ4LLps"
 
 	echo "adding user \"${LIVE_USERNAME}\""
 	useradd \
