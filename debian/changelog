@@ -1,3 +1,10 @@
+lernstick-config (142) lernstick-12; urgency=medium
+
+  * [d163d3] use password "live" again instead of blank password
+    (in Debian 12 KDE, Mate and Xfce don't support blank passwords)
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Tue, 22 Aug 2023 15:13:28 +0200
+
 lernstick-config (141) lernstick-12; urgency=medium
 
   * [2ecbac] updated Lernstick sources list for Lernstick 12
