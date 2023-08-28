@@ -55,3 +55,21 @@ then
 	echo "loading driver apple-bce..."
 	modprobe apple-bce
 fi
+
+# special handling for Broadcom wl driver
+# PCI id list based on https://salsa.debian.org/broadcom-sta-team/broadcom-sta/-/blob/7d9772e1a4bea7310ff8caeaae220c939de92b70/debian/broadcom-sta.ids
+if lspci -n | grep -e 14e4:4313 -e 14e4:4727 -e 14e4:432a  -e 14e4:432b -e 14e4:432d -e 14e4:4331 -e 14e4:4358 -e 14e4:4359 -e 14e4:4365 -e 14e4:43a0 -e 14e4:43b1 -q
+then
+	echo "blacklisting b43, b43legacy, bcm43xx, bcma, brcm80211, brcmfmac, brcmsmac, ssb..."
+
+	cat <<EOF>>$MODPROBE_CONF
+blacklist b43
+blacklist b43legacy
+blacklist bcm43xx
+blacklist bcma
+blacklist brcm80211
+blacklist brcmfmac
+blacklist brcmsmac
+blacklist ssb
+EOF
+fi
