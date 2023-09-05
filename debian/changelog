@@ -1,3 +1,10 @@
+lernstick-config (143) lernstick-12; urgency=medium
+
+  [ Thore Sommer ]
+  * [84f243] add quirks handling for Broadcom wl driver
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Tue, 05 Sep 2023 13:43:23 +0200
+
 lernstick-config (142) lernstick-12; urgency=medium
 
   * [d163d3] use password "live" again instead of blank password
