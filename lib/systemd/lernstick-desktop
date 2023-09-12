@@ -41,6 +41,11 @@ case "${LERNSTICK_DESKTOP}" in
 		_XSESSION="gnome-xorg"
 		;;
 
+	gnome-wayland)
+		_SESSION_MANAGER="/usr/bin/gnome-session"
+		_XSESSION="gnome"
+		;;
+
 	cinnamon)
 		_SESSION_MANAGER="/usr/bin/cinnamon-session"
 		_XSESSION="cinnamon"
