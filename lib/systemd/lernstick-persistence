@@ -1,0 +1,38 @@
+#!/bin/sh
+
+# find mounted persistence partition
+mounted_persistence=$(grep " /run/live/persistence/" /proc/mounts | grep -v ^tmpfs | grep -v ^aufs)
+echo "mounted_persistence: \"$mounted_persistence\""
+if [ -z "$mounted_persistence" ]
+then
+	echo "no mounted persistence partition found, exiting."
+	exit 0
+fi
+
+# get mount point of persistence partition
+mount_point="$(echo "$mounted_persistence" | awk '{ print $2 }')"
+echo "mount_point: \"$mount_point\""
+
+# make sure that unprivileged users have access to file system root
+# otherwise they are unable to access btrfs snapshots
+echo "changing permissions of \"$mount_point\" to 755"
+chmod 755 "$mount_point"
+
+# mount snapshots subvolume of btrfs persistence
+data_partition_device="$(echo "$mounted_persistence" | awk '{ print $1 }')"
+echo "data_partition_device: \"$data_partition_device\""
+filesystem="$(lsblk -f "$data_partition_device" --noheadings --output FSTYPE)"
+echo "filesystem: \"$filesystem\""
+if [ "$filesystem" = "btrfs" ]
+then
+	mounted_snapshots=$(grep " /snapshots " /proc/mounts)
+	if [ "$mounted_snapshots" ]
+	then
+		echo "snapshots subvolume already mounted"
+	else
+		echo "mounting snapshots subvolume"
+		destination="/snapshots/"
+		mkdir -p "$destination"
+		mount -o subvol=snapshots "$data_partition_device" "$destination"
+	fi
+fi

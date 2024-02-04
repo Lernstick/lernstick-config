@@ -10,6 +10,7 @@ override_dh_installsystemd:
 	dh_installsystemd --name=lernstick-early-nouveau-blacklist
 	dh_installsystemd --name=lernstick-keyboard-configuration
 	dh_installsystemd --name=lernstick-locale
+	dh_installsystemd --name=lernstick-persistence
 	dh_installsystemd --name=lernstick-proprietary-x11-settings-tools
 	dh_installsystemd --name=lernstick-quirks-after-udev
 	dh_installsystemd --name=lernstick-quirks-before-udev

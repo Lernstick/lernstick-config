@@ -1,0 +1,11 @@
+[Unit]
+Description=Setup persistence partition of Lernstick systems
+DefaultDependencies=no
+After=dbus.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/lib/systemd/lernstick-persistence
+
+[Install]
+WantedBy=basic.target
