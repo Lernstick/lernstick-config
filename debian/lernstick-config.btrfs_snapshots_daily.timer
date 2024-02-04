@@ -1,0 +1,12 @@
+[Unit]
+Description=Daily btrfs snapshots
+
+[Timer]
+# Don't create a daily snapshot on Monday.
+# This is already handled by the weekly snapshots.
+OnCalendar=Tue..Sun *-*-* 00:00:00
+Unit=btrfs_snapshots@daily.service
+Persistent=true
+
+[Install]
+WantedBy=multi-user.target

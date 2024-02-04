@@ -1,0 +1,12 @@
+[Unit]
+Description=Hourly btrfs snapshots
+
+[Timer]
+# Don't create an hourly snapshot at midnight.
+# This is already handled by the daily snapshots.
+OnCalendar=*-*-* 1..23:00:00
+Unit=btrfs_snapshots@hourly.service
+Persistent=true
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,10 @@
+[Unit]
+Description=Yearly btrfs snapshots
+
+[Timer]
+OnCalendar=yearly
+Unit=btrfs_snapshots@yearly.service
+Persistent=true
+
+[Install]
+WantedBy=multi-user.target

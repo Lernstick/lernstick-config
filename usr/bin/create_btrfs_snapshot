@@ -1,0 +1,48 @@
+#!/bin/sh
+
+destination="/snapshots/"
+max_snapshots=3
+snapshot_type="$1"
+
+# find mounted persistence partition
+mounted_persistence=$(grep " /run/live/persistence/" /proc/mounts | grep -v ^tmpfs | grep -v ^aufs)
+echo "mounted_persistence: \"$mounted_persistence\""
+if echo "${mounted_persistence}" | grep -q "rw,"
+then
+	echo "data partition is in read-write mode"
+	# check if data partition is a btrfs
+	data_partition_device="$(echo "$mounted_persistence" | awk '{ print $1 }')"
+	echo "data_partition_device: \"$data_partition_device\""
+	filesystem="$(lsblk -f "$data_partition_device" --noheadings --output FSTYPE)"
+	echo "filesystem: \"$filesystem\""
+	if [ "$filesystem" != "btrfs" ]
+	then
+		echo "file system of data partition is $filesystem instead of btrfs, exiting."
+		exit 0
+	fi
+else
+	echo "data partition is in read-only mode, exiting."
+	exit 0
+fi
+
+# get mount point of persistence partition
+mount_point="$(echo "$mounted_persistence" | awk '{ print $2 }')"
+echo "mount_point: \"$mount_point\""
+
+# create new snapshot
+btrfs subvolume snapshot -r "$mount_point" "$destination/$(date '+%F %H:%M:%S') $snapshot_type"
+
+# plain 'ls' is meant for humans, not for scripting, see:
+# https://github.com/koalaman/shellcheck/wiki/SC2012
+safe_ls() {
+	find "$1" -maxdepth 1 ! -path "$1" -name "*$snapshot_type"
+}
+
+# exit immediately if deleting subvolume failes
+# (might happen if snapshot to be deleted is still processed in an incremental send/receive backup run)
+set -e
+
+# delete oldest snapshots
+while [ "$(safe_ls "$destination" | wc -l)" -gt $max_snapshots ] ; do
+	btrfs subvolume delete "$(safe_ls "$destination" | sort | head -1)"
+done

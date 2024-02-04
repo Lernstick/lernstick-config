@@ -1,0 +1,12 @@
+[Unit]
+Description=Monthly btrfs snapshots
+
+[Timer]
+# Don't create a monthly snapshot in January.
+# This is already handled by the yearly snapshots.
+OnCalendar=*-02..12-01 00:00:00
+Unit=btrfs_snapshots@monthly.service
+Persistent=true
+
+[Install]
+WantedBy=multi-user.target

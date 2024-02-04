@@ -1,0 +1,10 @@
+[Unit]
+Description=Weekly btrfs snapshots
+
+[Timer]
+OnCalendar=weekly
+Unit=btrfs_snapshots@weekly.service
+Persistent=true
+
+[Install]
+WantedBy=multi-user.target
