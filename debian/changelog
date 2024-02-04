@@ -1,3 +1,13 @@
+lernstick-config (144) lernstick-12; urgency=medium
+
+  [ Thore Sommer ]
+  * [1d0e47] lernstick-desktop: add gnome-wayland option
+
+  [ Ronny Standtke ]
+  * [c79f4c] added Lernstick specific persistence handling
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sun, 04 Feb 2024 17:08:04 +0100
+
 lernstick-config (143) lernstick-12; urgency=medium
 
   [ Thore Sommer ]
