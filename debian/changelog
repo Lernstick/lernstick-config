@@ -1,3 +1,9 @@
+lernstick-config (145) lernstick-12; urgency=medium
+
+  * [c6ee66] create snapshots if persistence is formatted with btrfs
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sun, 04 Feb 2024 19:08:40 +0100
+
 lernstick-config (144) lernstick-12; urgency=medium
 
   [ Thore Sommer ]
