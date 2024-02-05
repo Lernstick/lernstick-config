@@ -1,3 +1,9 @@
+lernstick-config (148) lernstick-12; urgency=medium
+
+  * [fa4ace] clean up orphaned subvolume
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Mon, 05 Feb 2024 18:27:09 +0100
+
 lernstick-config (147) lernstick-12; urgency=medium
 
   * [3b83a1] fixed bug when deleting old snapshots
