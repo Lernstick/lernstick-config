@@ -1,3 +1,9 @@
+lernstick-config (147) lernstick-12; urgency=medium
+
+  * [3b83a1] fixed bug when deleting old snapshots
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Mon, 05 Feb 2024 10:21:41 +0100
+
 lernstick-config (146) lernstick-12; urgency=medium
 
   * [63e8c0] added 5min Btrfs snapshot, improved timer descriptions
