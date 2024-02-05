@@ -36,3 +36,14 @@ then
 		mount -o subvol=snapshots "$data_partition_device" "$destination"
 	fi
 fi
+
+# clean up orphaned subvolume
+# (created from the root subvolume when booting into a snapshot)
+orphaned_id=$(btrfs subvolume list "$mount_point" | grep orphaned$ | awk '{ print $2 }')
+if [ "$orphaned_id" ]
+then
+	echo "found orphaned subvolume with ID $orphaned_id, deleting it."
+	btrfs subvolume delete --subvolid "$orphaned_id" "$mount_point"
+else
+	echo "no orphaned subvolume found"
+fi
