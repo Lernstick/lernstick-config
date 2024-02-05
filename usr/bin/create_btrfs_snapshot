@@ -35,7 +35,7 @@ btrfs subvolume snapshot -r "$mount_point" "$destination/$(date '+%F %H:%M:%S') 
 # plain 'ls' is meant for humans, not for scripting, see:
 # https://github.com/koalaman/shellcheck/wiki/SC2012
 safe_ls() {
-	find "$1" -maxdepth 1 ! -path "$1" -name "*$snapshot_type"
+	find "$1" -maxdepth 1 ! -path "$1" -name "* $snapshot_type"
 }
 
 # exit immediately if deleting subvolume failes
