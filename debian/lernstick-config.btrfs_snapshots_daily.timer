@@ -1,5 +1,5 @@
 [Unit]
-Description=Daily btrfs snapshots
+Description=Daily Btrfs snapshot
 
 [Timer]
 # Don't create a daily snapshot on Monday.

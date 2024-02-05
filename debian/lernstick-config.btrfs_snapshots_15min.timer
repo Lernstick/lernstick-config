@@ -1,11 +1,11 @@
 [Unit]
-Description=15 minutely btrfs snapshots
+Description=Btrfs snapshot every 15 minutes
 
 [Timer]
-# Don't create a 15 minutely snapshot on the hour.
+# Don't create a 15min snapshot on the hour.
 # This is already handled by the hourly snapshots.
 OnCalendar=*:15,30,45
-Unit=btrfs_snapshots@15minutely.service
+Unit=btrfs_snapshots@15min.service
 Persistent=true
 
 [Install]

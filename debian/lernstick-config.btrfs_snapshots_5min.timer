@@ -1,0 +1,12 @@
+[Unit]
+Description=Btrfs snapshot every 5 minutes
+
+[Timer]
+# Don't create a 5min snapshot at :00, :15, :30 and :45.
+# This is already handled by the 15min snapshots.
+OnCalendar=*:5,10,20,25,35,40,50,55
+Unit=btrfs_snapshots@5min.service
+Persistent=true
+
+[Install]
+WantedBy=multi-user.target

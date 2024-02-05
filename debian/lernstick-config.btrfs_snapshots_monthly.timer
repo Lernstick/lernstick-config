@@ -1,5 +1,5 @@
 [Unit]
-Description=Monthly btrfs snapshots
+Description=Monthly Btrfs snapshot
 
 [Timer]
 # Don't create a monthly snapshot in January.

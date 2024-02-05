@@ -1,5 +1,5 @@
 [Unit]
-Description=Yearly btrfs snapshots
+Description=Yearly Btrfs snapshot
 
 [Timer]
 OnCalendar=yearly

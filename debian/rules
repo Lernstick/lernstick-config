@@ -5,7 +5,8 @@
 
 override_dh_installsystemd:
 	dh_installsystemd --name=btrfs_snapshots@
-	dh_installsystemd --name=btrfs_snapshots_15_minutely
+	dh_installsystemd --name=btrfs_snapshots_15min
+	dh_installsystemd --name=btrfs_snapshots_5min
 	dh_installsystemd --name=btrfs_snapshots_daily
 	dh_installsystemd --name=btrfs_snapshots_hourly
 	dh_installsystemd --name=btrfs_snapshots_monthly

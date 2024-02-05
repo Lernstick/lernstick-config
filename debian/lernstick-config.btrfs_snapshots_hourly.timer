@@ -1,5 +1,5 @@
 [Unit]
-Description=Hourly btrfs snapshots
+Description=Hourly Btrfs snapshot
 
 [Timer]
 # Don't create an hourly snapshot at midnight.

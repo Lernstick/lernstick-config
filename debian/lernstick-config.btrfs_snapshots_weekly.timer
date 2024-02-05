@@ -1,5 +1,5 @@
 [Unit]
-Description=Weekly btrfs snapshots
+Description=Weekly Btrfs snapshot
 
 [Timer]
 OnCalendar=weekly
