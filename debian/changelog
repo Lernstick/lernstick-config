@@ -1,3 +1,13 @@
+lernstick-config (149) lernstick-12; urgency=medium
+
+  [ Thore Sommer ]
+  * [3607d1] update Google apt key
+
+  [ Ronny Standtke ]
+  * [de34d9] activate btrfs compression (zstd on default level 3)
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Tue, 27 Feb 2024 17:11:28 +0100
+
 lernstick-config (148) lernstick-12; urgency=medium
 
   * [fa4ace] clean up orphaned subvolume
