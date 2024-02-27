@@ -25,6 +25,11 @@ filesystem="$(lsblk -f "$data_partition_device" --noheadings --output FSTYPE)"
 echo "filesystem: \"$filesystem\""
 if [ "$filesystem" = "btrfs" ]
 then
+	# activate compression via remount
+	# we use zstd on default compression level (which is level 3)
+	mount -o remount,compress=zstd "$data_partition_device" "$mount_point"
+
+	# mount snapshots
 	mounted_snapshots=$(grep " /snapshots " /proc/mounts)
 	if [ "$mounted_snapshots" ]
 	then
