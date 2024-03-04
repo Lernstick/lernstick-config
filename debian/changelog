@@ -1,3 +1,10 @@
+lernstick-config (141) lernstick-11; urgency=medium
+
+  [ Thore Sommer ]
+  * [39eee7] update Google apt key
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Mon, 04 Mar 2024 07:20:19 +0100
+
 lernstick-config (140) lernstick-11; urgency=medium
 
   [ Thore Sommer ]
