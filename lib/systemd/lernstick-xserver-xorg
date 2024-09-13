@@ -28,13 +28,14 @@ Detect_xorg_driver ()
 		return
 	fi
 
+	# search for class 0300 ("VGA compatible controller")
 	_DEVICES="$(lspci -mn | awk '$2 == "\"0300\"" { gsub ("\"",""); print toupper($3$4) }' | uniq)"
 
 	# Using anything other than native xorg drivers has (so far) failed on most systems
         # with several different display controllers. DUALCARD is a regex of PCI IDs which support
         # more than one card with proprietary drivers.
 	# In all other cases we just fall back to xorg-autoconfig.
-	if [ $(echo "${_DEVICES}" | wc -l) -ne 1 -a $(echo "$_DEVICES" | grep -c ${DUALCARD} ) -ne 2 ]
+	if [ "$(echo "${_DEVICES}" | wc -l)" -ne 1 ] && [ "$(echo "$_DEVICES" | grep -c ${DUALCARD})" -ne 2 ]
 	then
 		LIVE_XORG_DRIVER="xorg-autoconfig"
 		return
@@ -49,7 +50,7 @@ Detect_xorg_driver ()
 	# that enforces the usage of the open source drivers.
 	if grep -q lernstick_efi_boot /proc/cmdline
 	then
-		if grep -q ${_DEVICE} /usr/share/lernstick-config/efi_blacklist
+		if grep -q "${_DEVICE}" /usr/share/lernstick-config/efi_blacklist
 		then
 			LIVE_XORG_DRIVER="xorg-autoconfig"
 			return
@@ -86,10 +87,10 @@ Detect_xorg_driver ()
 		do
 			if [ -e "${_NVIDIA_IDS}" ]
 			then
-				if grep -qs "${_DEVICE}" ${_NVIDIA_IDS}
+				if grep -qs "${_DEVICE}" "${_NVIDIA_IDS}"
 				then
-					_NVIDIA_VERSION="$(basename $(dirname ${_NVIDIA_IDS}))"
-					systemctl set-environment NVIDIA_VERSION=nvidia-${_NVIDIA_VERSION}
+					_NVIDIA_VERSION="$(basename "$(dirname "${_NVIDIA_IDS}")")"
+					systemctl set-environment NVIDIA_VERSION=nvidia-"${_NVIDIA_VERSION}"
 					LIVE_XORG_DRIVER="nvidia"
 					return
 				fi
@@ -99,6 +100,36 @@ Detect_xorg_driver ()
 
 	# fall back to xorg autoconfiguration
 	LIVE_XORG_DRIVER="xorg-autoconfig"
+}
+
+Detect_3D_controller ()
+{
+	# Side-effect: Sets NVIDIA_VERSION environment if an NVIDIA 3D controller is detected
+
+	# On laptops with Nvidia Optimus GPU switching technology the lower-performace
+	# integrated GPU is used for rendering the majority of the X screen (see
+	# detection of the xorg-driver above).
+	# An additional dedicated high-performace GPU can be used to offload certain
+	# application rendering.
+
+	# search for class 0302 ("3D controller")
+	_3D_CONTROLLERS="$(lspci -mn | awk '$2 == "\"0302\"" { gsub ("\"",""); print toupper($3$4) }' | uniq)"
+
+	if echo "${_3D_CONTROLLERS}" | grep -qs -E '^(10DE|12D2)'
+	then
+		for _NVIDIA_IDS in /usr/lib/nvidia/current/nvidia.ids $(ls /usr/lib/nvidia/legacy-*/nvidia.ids | sort -V -r)
+		do
+			if [ -e "${_NVIDIA_IDS}" ]
+			then
+				if grep -qs "${_3D_CONTROLLERS}" "${_NVIDIA_IDS}"
+				then
+					_3D_CONTROLLER_NVIDIA_VERSION="$(basename "$(dirname "${_NVIDIA_IDS}")")"
+					systemctl set-environment NVIDIA_VERSION=nvidia-"${_3D_CONTROLLER_NVIDIA_VERSION}"
+					return
+				fi
+			fi
+		done
+	fi
 }
 
 Cmdline ()
@@ -190,6 +221,7 @@ Config ()
 	then
 		Detect_xorg_driver
 	fi
+	Detect_3D_controller
 
 	mkdir -p /etc/X11/xorg.conf.d
 
@@ -271,12 +303,12 @@ EOF
 
 				_NVIDIA_ALTERNATIVE="/usr/lib/nvidia/${_NVIDIA_VERSION}"
 				echo "NVIDIA_ALTERNATIVE: ${_NVIDIA_ALTERNATIVE}"
-				if [ -e /etc/alternatives/nvidia -a "$(update-alternatives --query nvidia | grep -E '^Value: ' | cut -f 2 -d ' ')" = "${_NVIDIA_ALTERNATIVE}" ]
+				if [ -e /etc/alternatives/nvidia ] && [ "$(update-alternatives --query nvidia | grep -E '^Value: ' | cut -f 2 -d ' ')" = "${_NVIDIA_ALTERNATIVE}" ]
 				then
 					echo "skipping nvidia update, alternative is already set to \"${_NVIDIA_ALTERNATIVE}\""
 				else
 					echo "setting nvidia alternative to \"${_NVIDIA_ALTERNATIVE}\""
-					update-glx --set nvidia ${_NVIDIA_ALTERNATIVE}
+					update-glx --set nvidia "${_NVIDIA_ALTERNATIVE}"
 				fi
 				;;
 
