@@ -1,3 +1,9 @@
+lernstick-config (151) lernstick-12; urgency=medium
+
+  * [635969] improved support for Nvidia Optimus
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sat, 14 Sep 2024 17:37:16 +0200
+
 lernstick-config (150) lernstick-12; urgency=medium
 
   * [ec3b44] detect 3D controllers on Nvidia Optimus systems
