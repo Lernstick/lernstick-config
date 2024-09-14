@@ -14,3 +14,14 @@ then
 	echo '1-3' > /sys/bus/usb/drivers/usb/unbind
 	echo '1-3' > /sys/bus/usb/drivers/usb/bind
 fi
+
+# On Nvidia Optimus systems the module nvidia_uvm is not automatically loaded
+# (maybe because the xserver uses a different driver?) but the module is needed
+# for CUDA workloads (e.g. for ollama). Therefore we try to load the module
+# here.
+eval systemctl show-environment | grep NVIDIA_VERSION
+
+if [ -n "$NVIDIA_VERSION" ]
+then
+	modprobe "${NVIDIA_VERSION}"-uvm
+fi

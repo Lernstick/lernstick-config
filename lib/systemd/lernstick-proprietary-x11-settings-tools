@@ -77,4 +77,10 @@ find_driver() {
 }
 
 DRIVER=$(find_driver)
-activate_$DRIVER
+activate_"$DRIVER"
+
+# on Nvidia Optimus systems we also enable the Nvidia settings
+if systemctl show-environment | grep -q NVIDIA_VERSION
+then
+	showApplication /usr/share/applications/nvidia-settings.desktop
+fi
