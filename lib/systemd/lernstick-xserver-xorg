@@ -124,7 +124,20 @@ Detect_3D_controller ()
 				if grep -qs "${_3D_CONTROLLERS}" "${_NVIDIA_IDS}"
 				then
 					_3D_CONTROLLER_NVIDIA_VERSION="$(basename "$(dirname "${_NVIDIA_IDS}")")"
+
 					systemctl set-environment NVIDIA_VERSION=nvidia-"${_3D_CONTROLLER_NVIDIA_VERSION}"
+
+					update-glx --set glx /usr/lib/nvidia
+
+					_NVIDIA_ALTERNATIVE="/usr/lib/nvidia/${_3D_CONTROLLER_NVIDIA_VERSION}"
+					echo "NVIDIA_ALTERNATIVE: ${_NVIDIA_ALTERNATIVE}"
+					if [ -e /etc/alternatives/nvidia ] && [ "$(update-alternatives --query nvidia | grep -E '^Value: ' | cut -f 2 -d ' ')" = "${_NVIDIA_ALTERNATIVE}" ]
+					then
+						echo "skipping nvidia update, alternative is already set to \"${_NVIDIA_ALTERNATIVE}\""
+					else
+						echo "setting nvidia alternative to \"${_NVIDIA_ALTERNATIVE}\""
+						update-glx --set nvidia "${_NVIDIA_ALTERNATIVE}"
+					fi
 					return
 				fi
 			fi
@@ -221,7 +234,6 @@ Config ()
 	then
 		Detect_xorg_driver
 	fi
-	Detect_3D_controller
 
 	mkdir -p /etc/X11/xorg.conf.d
 
@@ -326,6 +338,9 @@ EOF
 		Enable_update_initramfs
 		trap - 0
 	fi
+
+	# run this method late, because it needs to override the update-glx settings done above
+	Detect_3D_controller
 
 	if [ -n "${LIVE_XORG_RESOLUTION}" ]
 	then
