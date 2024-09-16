@@ -9,14 +9,23 @@ Vcs-Browser: https://github.com/imedias/lernstick-config
 Vcs-Git: https://github.com/imedias/lernstick-config.git
 
 Package: lernstick-config
-Architecture: all
-Depends: ${misc:Depends}, live-config (>= 5~), xmlstarlet, gfxboot, sqlite3, lernstick-archive-keyring, lernstick-xkb-data, sysfsutils
+Architecture: any
+Depends: ${misc:Depends}, live-config (>= 5~), xmlstarlet, gfxboot [amd64], sqlite3, lernstick-archive-keyring, lernstick-xkb-data, sysfsutils
 Provides: ${diverted-files}
 Conflicts: ${diverted-files}
 Description: Lernstick System Configuration
  This package contains the additional Lernstick live-config components and
  configuration files for the Lernstick system. It uses config-package-dev to
  divert config files where necessary.
+
+Package: lernstick-arm-config
+Architecture: any
+Depends: ${misc:Depends}, lernstick-config
+Provides: ${diverted-files}
+Conflicts: ${diverted-files}
+Description: Lernstick System Configuration for ARM
+ This package contains the additional repository for ARM variant
+
 
 Package: lernstick-staging
 Architecture: all
