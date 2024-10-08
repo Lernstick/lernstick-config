@@ -1,3 +1,9 @@
+lernstick-config (153) lernstick-12; urgency=medium
+
+  * [d66124] simplified lernstick-persistence and handle read-only case
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Tue, 08 Oct 2024 16:47:52 +0200
+
 lernstick-config (152) lernstick-12; urgency=medium
 
   * [442788] improved support for Nvidia Optimus
