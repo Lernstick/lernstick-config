@@ -1,27 +1,29 @@
 #!/bin/sh
 
 # find mounted persistence partition
-mounted_persistence=$(grep " /run/live/persistence/" /proc/mounts | grep -v ^tmpfs | grep -v ^aufs)
-echo "mounted_persistence: \"$mounted_persistence\""
-if [ -z "$mounted_persistence" ]
+eval "$(awk '$2 ~ "^/run/live/persistence/" { print "data_partition_device="$1"; mount_point="$2"; filesystem="$3"; mount_options="$4"" }' /proc/mounts)"
+
+if [ -z "$data_partition_device" ]
 then
 	echo "no mounted persistence partition found, exiting."
 	exit 0
 fi
 
-# get mount point of persistence partition
-mount_point="$(echo "$mounted_persistence" | awk '{ print $2 }')"
-echo "mount_point: \"$mount_point\""
+# shellcheck disable=SC2154
+if echo "$mount_options" | tr ',' '\n' | grep -q "^ro$"
+then
+	echo "persistence $MOUNT_POINT is read-only, exiting"
+	exit 0
+fi
 
 # make sure that unprivileged users have access to file system root
 # otherwise they are unable to access btrfs snapshots
+# shellcheck disable=SC2154
 echo "changing permissions of \"$mount_point\" to 755"
 chmod 755 "$mount_point"
 
 # mount snapshots subvolume of btrfs persistence
-data_partition_device="$(echo "$mounted_persistence" | awk '{ print $1 }')"
-echo "data_partition_device: \"$data_partition_device\""
-filesystem="$(lsblk -f "$data_partition_device" --noheadings --output FSTYPE)"
+# shellcheck disable=SC2154
 echo "filesystem: \"$filesystem\""
 if [ "$filesystem" = "btrfs" ]
 then
