@@ -1,3 +1,9 @@
+lernstick-config (154) lernstick-12; urgency=medium
+
+  * [237866] use swap subvolume on btrfs
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sat, 12 Oct 2024 15:21:28 +0200
+
 lernstick-config (153) lernstick-12; urgency=medium
 
   * [d66124] simplified lernstick-persistence and handle read-only case
