@@ -14,27 +14,38 @@
 #
 # We don't want to mount and write swapfiles to random partitions. Therefore we
 # only have two options:
-# 1) When read-write persistency is enabled, use the persistency partition directly.
+# 1) When read-write persistency is enabled, it depends on its file system:
+#	- btrfs: use the /swap subvolume
+#	- ext4: use the persistency partition directly
 # 2) Otherwise disable swapspace.
 
-PERSISTENCE_PATH=$(grep " /run/live/persistence/" /proc/mounts | awk '{ print $2 }')
+# find mounted persistence partition
+eval "$(awk '$2 ~ "^/run/live/persistence/" { print "data_partition_device="$1"; mount_point="$2"; filesystem="$3"; mount_options="$4"" }' /proc/mounts)"
 
-if [ -z "$PERSISTENCE_PATH" ]
+if [ -z "$data_partition_device" ]
 then
 	echo "no mounted data partition found, not starting swapspace"
 	rm -f /run/swapspace_enabled
 else
-	echo "persistence path: $PERSISTENCE_PATH"
-	TMP_FILE=$(mktemp -p "$PERSISTENCE_PATH")
+	echo "filesystem: \"$filesystem\""
+	if [ "$filesystem" = "btrfs" ]
+	then
+		swapspace_path="/swap/"
+	else
+		swapspace_path="$mount_point"
+	fi
+
+	echo "swapspace path: $swapspace_path"
+	TMP_FILE=$(mktemp -p "$swapspace_path")
 	if [ -z "$TMP_FILE" ]
 	then
-		echo "could not write to persistence path, not starting swapspace"
+		echo "could not write to $swapspace_path, not starting swapspace"
 		rm -f /run/swapspace_enabled
 	else
 		rm -f "$TMP_FILE"
 		echo "writable persistence path found, configuring and starting swapspace"
-		sed -i "s|#swappath=.*|swappath=\"$PERSISTENCE_PATH\"|" /etc/swapspace.conf
-		sed -i "s|swappath=.*|swappath=\"$PERSISTENCE_PATH\"|" /etc/swapspace.conf
+		sed -i "s|#swappath=.*|swappath=\"$swapspace_path\"|" /etc/swapspace.conf
+		sed -i "s|swappath=.*|swappath=\"$swapspace_path\"|" /etc/swapspace.conf
 		touch /run/swapspace_enabled
 	fi
 fi

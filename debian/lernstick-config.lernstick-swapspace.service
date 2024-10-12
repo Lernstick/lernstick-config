@@ -1,6 +1,7 @@
 [Unit]
 Description=Updates the swapspace configuration
 DefaultDependencies=no
+After=lernstick-persistence.service
 Before=swapspace.service
 
 [Service]

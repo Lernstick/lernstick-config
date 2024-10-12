@@ -12,7 +12,7 @@ fi
 # shellcheck disable=SC2154
 if echo "$mount_options" | tr ',' '\n' | grep -q "^ro$"
 then
-	echo "persistence $MOUNT_POINT is read-only, exiting"
+	echo "persistence $mount_point is read-only, exiting"
 	exit 0
 fi
 
@@ -22,7 +22,21 @@ fi
 echo "changing permissions of \"$mount_point\" to 755"
 chmod 755 "$mount_point"
 
-# mount snapshots subvolume of btrfs persistence
+mount_subvolume()
+{
+	subvolume=$1
+	mounted_subvolume="$(awk '$2 ~ "^/'"$subvolume"'" { print $2 }' /proc/mounts)"
+	if [ "$mounted_subvolume" ]
+	then
+		echo "subvolume $subvolume already mounted"
+	else
+		echo "mounting subvolume $subvolume"
+		destination="/$subvolume"
+		mkdir -p "$destination"
+		mount -o subvol="$subvolume" "$data_partition_device" "$destination"
+	fi
+}
+
 # shellcheck disable=SC2154
 echo "filesystem: \"$filesystem\""
 if [ "$filesystem" = "btrfs" ]
@@ -31,17 +45,9 @@ then
 	# we use zstd on default compression level (which is level 3)
 	mount -o remount,compress=zstd "$data_partition_device" "$mount_point"
 
-	# mount snapshots
-	mounted_snapshots=$(grep " /snapshots " /proc/mounts)
-	if [ "$mounted_snapshots" ]
-	then
-		echo "snapshots subvolume already mounted"
-	else
-		echo "mounting snapshots subvolume"
-		destination="/snapshots/"
-		mkdir -p "$destination"
-		mount -o subvol=snapshots "$data_partition_device" "$destination"
-	fi
+	# mount known btrfs subvolumes
+	mount_subvolume "snapshots"
+	mount_subvolume "swap"
 fi
 
 # clean up orphaned subvolume
