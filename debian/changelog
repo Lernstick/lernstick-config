@@ -1,3 +1,9 @@
+lernstick-config (155) lernstick-12; urgency=medium
+
+  * [07db38] added non-free-firmware component to our sources list
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 01 Nov 2024 20:18:00 +0100
+
 lernstick-config (154) lernstick-12; urgency=medium
 
   * [237866] use swap subvolume on btrfs
