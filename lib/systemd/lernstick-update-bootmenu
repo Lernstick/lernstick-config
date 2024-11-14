@@ -316,6 +316,7 @@ echo "first label: \"${FIRST_LABEL}\""
 
 for BOOT_LABEL in $BOOT_LABELS
 do
+	echo "Searching for EFI partition with label \"$BOOT_LABEL\"."
 	if [ "${FIRST_LABEL}" = "${BOOT_LABEL}" ]
 	then
 		echo "EFI partition is the first partition"
@@ -355,12 +356,9 @@ do
 			fi
 
 		else
-			echo "Could not find EFI partition. The system was probably booted from DVD."
-			echo "Exiting..."
-			exit 0
+			echo "Could not find EFI partition \"$BOOT_LABEL\"."
 		fi
 	fi
 done
-
 
 echo "Done."
