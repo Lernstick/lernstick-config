@@ -1,3 +1,10 @@
+lernstick-config (156) lernstick-12; urgency=medium
+
+  * [2a8e0a] code cleanup, support for new EFI label
+  * [76f511] don't exit if EFI label is not found
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Thu, 14 Nov 2024 11:20:46 +0100
+
 lernstick-config (155) lernstick-12; urgency=medium
 
   * [07db38] added non-free-firmware component to our sources list
