@@ -5,7 +5,7 @@
 #
 
 # this tends to change from release to release...
-BOOT_LABEL="EFI"
+BOOT_LABELS="Lernstick EFI"
 LIVE_MOUNTPOINT="/run/live/medium"
 BOOTLOGO_DIR="bootlogo.dir"
 
@@ -18,7 +18,7 @@ cleanup() {
 		if [ -n "${IMAGE_DIR}" ]
 		then
 			echo "remounting ${IMAGE_DIR} read-only"
-			mount -o remount,ro ${IMAGE_DIR} 2>&1
+			mount -o remount,ro "${IMAGE_DIR}" 2>&1
 		fi
 	fi
 
@@ -35,22 +35,22 @@ get_partition() {
 	# examples (with NUMBER=1):
 	# "/dev/sda3" -> "/dev/sda1"
 	# "/dev/nvme0n1p3" -> "/dev/nvme0n1p1"
-	echo ${SYSTEM_PARTITION} | sed "s|[0-9]*$|${NUMBER}|"
+	echo "${SYSTEM_PARTITION}" | sed "s|[0-9]*$|${NUMBER}|"
 }
 
 get_partition_label() {
 	PARTITION=$1
-	echo "$(/sbin/blkid ${PARTITION} -o udev | grep "ID_FS_LABEL=" | awk -F= '{ print $2 }')"
+	/sbin/blkid "${PARTITION}" -o udev | grep "ID_FS_LABEL=" | awk -F= '{ print $2 }'
 }
 
 get_partition_fstype() {
 	PARTITION=$1
-	echo "$(/sbin/blkid ${PARTITION} -o udev | grep "ID_FS_TYPE=" | awk -F= '{ print $2 }')"
+	/sbin/blkid "${PARTITION}" -o udev | grep "ID_FS_TYPE=" | awk -F= '{ print $2 }'
 }
 
 get_mountpoint() {
 	PARTITION=$1
-	echo "$(cat /proc/mounts | grep ${PARTITION} | awk '{ print $2 }')"
+	grep "${PARTITION}" /proc/mounts | awk '{ print $2 }'
 }
 
 mount_boot_partition() {
@@ -73,11 +73,10 @@ set_xmlboot_config()
 	ATTRIBUTE_ID="${2}"
 	ATTRIBUTE_VALUE="${3}"
 	echo "set_xmlboot_config ${1} ${2} ${3}"
-	cat ${XMLBOOT_CONFIG} | \
-	xmlstarlet ed -d "/xmlboot/configs/config[@id='${CONFIG_ID}']/option/@selected" | \
+	xmlstarlet ed -d "/xmlboot/configs/config[@id='${CONFIG_ID}']/option/@selected" "${XMLBOOT_CONFIG}" | \
 	xmlstarlet ed -i "/xmlboot/configs/config[@id='${CONFIG_ID}']/option[@${ATTRIBUTE_ID}='${ATTRIBUTE_VALUE}']" \
-		--type attr -n selected -v true > ${XMLBOOT_CONFIG}.tmp
-	mv ${XMLBOOT_CONFIG}.tmp ${XMLBOOT_CONFIG}
+		--type attr -n selected -v true > "${XMLBOOT_CONFIG}".tmp
+	mv "${XMLBOOT_CONFIG}".tmp "${XMLBOOT_CONFIG}"
 }
 
 set_grub_config()
@@ -97,10 +96,9 @@ deselect_option()
 		return 0
 	fi
 	echo "deselect_option ${1}"
-	cat ${XMLBOOT_CONFIG} | \
 	xmlstarlet ed -d "/xmlboot/options/option[@id='${1}']/@selected" \
-		> ${XMLBOOT_CONFIG}.tmp
-	mv ${XMLBOOT_CONFIG}.tmp ${XMLBOOT_CONFIG}
+		"${XMLBOOT_CONFIG}" > "${XMLBOOT_CONFIG}".tmp
+	mv "${XMLBOOT_CONFIG}".tmp "${XMLBOOT_CONFIG}"
 }
 
 select_option()
@@ -112,11 +110,10 @@ select_option()
 		return 0
 	fi
 	echo "select_option ${1}"
-	cat ${XMLBOOT_CONFIG} | \
-	xmlstarlet ed -d "/xmlboot/options/option[@id='${1}']/@selected" | \
+	xmlstarlet ed -d "/xmlboot/options/option[@id='${1}']/@selected" "${XMLBOOT_CONFIG}" | \
 	xmlstarlet ed -i "/xmlboot/options/option[@id='${1}']" \
-		--type attr -n selected -v true > ${XMLBOOT_CONFIG}.tmp
-	mv ${XMLBOOT_CONFIG}.tmp ${XMLBOOT_CONFIG}
+		--type attr -n selected -v true > "${XMLBOOT_CONFIG}".tmp
+	mv "${XMLBOOT_CONFIG}".tmp "${XMLBOOT_CONFIG}"
 }
 
 update_selected_option()
@@ -156,10 +153,10 @@ update_bootloaders() {
 
 	# determine correct configuration directory
 	echo "IMAGE_DIR: \"${IMAGE_DIR}\""
-	if [ -d ${IMAGE_DIR}/isolinux/ ]
+	if [ -d "${IMAGE_DIR}"/isolinux/ ]
 	then
 		SYSLINUX_CONFIG_DIR="${IMAGE_DIR}/isolinux"
-	elif [ -d ${IMAGE_DIR}/syslinux/ ]
+	elif [ -d "${IMAGE_DIR}"/syslinux/ ]
 	then
 		SYSLINUX_CONFIG_DIR="${IMAGE_DIR}/syslinux"
 	else
@@ -177,7 +174,7 @@ update_bootloaders() {
 		# ! read-only filesystems! Therefore, do not change !
 		# ! the first line with /bin/bash in this script!   !
 		# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		if [ ! -w ${SYSLINUX_CONFIG_DIR} ]
+		if [ ! -w "${SYSLINUX_CONFIG_DIR}" ]
 		then
 			# it's ok, system was probably booted from iso...
 			echo "The configuration directory \"${SYSLINUX_CONFIG_DIR}\" is not writable."
@@ -193,7 +190,7 @@ update_bootloaders() {
 	echo "GRUB_CONFIG: \"${GRUB_CONFIG}\""
 
 	# get current append line
-	APPEND="$(cat /proc/cmdline | sed 's|BOOT_IMAGE=\S* ||')"
+	APPEND="$(sed 's|BOOT_IMAGE=\S* ||' /proc/cmdline)"
 	echo "APPEND: \"${APPEND}\""
 
 	for _PARAMETER in ${APPEND}
@@ -264,13 +261,12 @@ update_bootloaders() {
 	update_nonselected_option "nohz=off" "dynamic_ticks"
 
 	# special handling for custom options
-	CUSTOM_OPTIONS="$(cat /proc/cmdline | grep "custom_options" | sed 's|.*custom_options\s*\(.*\)|\1|1')"
+	CUSTOM_OPTIONS="$(grep "custom_options" /proc/cmdline | sed 's|.*custom_options\s*\(.*\)|\1|1')"
 	echo "CUSTOM_OPTIONS: \"${CUSTOM_OPTIONS}\""
 	if [ -n "${XMLBOOT_CONFIG}" ]
 	then
-		cat ${XMLBOOT_CONFIG} | \
-		xmlstarlet ed -u "/xmlboot/custom_options/@text" -v "${CUSTOM_OPTIONS}" > ${XMLBOOT_CONFIG}.tmp
-		mv ${XMLBOOT_CONFIG}.tmp ${XMLBOOT_CONFIG}
+		xmlstarlet ed -u "/xmlboot/custom_options/@text" -v "${CUSTOM_OPTIONS}" "${XMLBOOT_CONFIG}" > "${XMLBOOT_CONFIG}".tmp
+		mv "${XMLBOOT_CONFIG}".tmp "${XMLBOOT_CONFIG}"
 	fi
 	set_grub_config "CUSTOM_OPTIONS" "${CUSTOM_OPTIONS}"
 
@@ -315,52 +311,56 @@ echo "system partition: \"${SYSTEM_PARTITION}\""
 # get infos about first partition
 FIRST_PARTITION="$(get_partition 1)"
 echo "first partition: \"${FIRST_PARTITION}\""
-FIRST_LABEL="$(get_partition_label ${FIRST_PARTITION})"
+FIRST_LABEL="$(get_partition_label "${FIRST_PARTITION}")"
 echo "first label: \"${FIRST_LABEL}\""
 
-if [ "${FIRST_LABEL}" = "${BOOT_LABEL}" ]
-then
-	echo "EFI partition is the first partition"
-	mount_boot_partition ${FIRST_PARTITION}
-	update_bootloaders
-else
-	SECOND_PARTITION="$(get_partition 2)"
-	echo "second partition: \"${SECOND_PARTITION}\""
-	SECOND_LABEL="$(get_partition_label ${SECOND_PARTITION})"
-	echo "second label: \"${SECOND_LABEL}\""
-	if [ "${SECOND_LABEL}" = "${BOOT_LABEL}" ]
+for BOOT_LABEL in $BOOT_LABELS
+do
+	if [ "${FIRST_LABEL}" = "${BOOT_LABEL}" ]
 	then
-		echo "EFI partition is the second partiton - used for legacy (removable) USB flash drives"
-		echo "updating boot loader config on boot partition"
-		mount_boot_partition ${SECOND_PARTITION}
+		echo "EFI partition is the first partition"
+		mount_boot_partition "${FIRST_PARTITION}"
 		update_bootloaders
-
-		FS_TYPE="$(get_partition_fstype ${FIRST_PARTITION})"
-		echo "file system of exchange partiton: ${FS_TYPE}"
-		if [ "${FS_TYPE}" = "vfat" ]
-		then
-			echo "must update bootloader on exchange partition"
-			IMAGE_DIR="$(get_mountpoint ${FIRST_PARTITION})"
-			if [ -n "${IMAGE_DIR}" ]
-			then
-				echo "exchange partition was already mounted"
-				update_bootloaders
-			else
-				echo "exchange partition was NOT already mounted"
-				IMAGE_DIR="${TMP_MOUNT_DIR}/exchange"
-				mkdir "${IMAGE_DIR}"
-				mount "${FIRST_PARTITION}" "${IMAGE_DIR}" && EXCHANGE_TMP_MOUNT="${IMAGE_DIR}"
-				update_bootloaders
-			fi
-		else
-			echo "no bootloader needed on exchange partition"
-		fi
-
 	else
-		echo "Could not find EFI partition. The system was probably booted from DVD."
-		echo "Exiting..."
-		exit 0
+		SECOND_PARTITION="$(get_partition 2)"
+		echo "second partition: \"${SECOND_PARTITION}\""
+		SECOND_LABEL="$(get_partition_label "${SECOND_PARTITION}")"
+		echo "second label: \"${SECOND_LABEL}\""
+		if [ "${SECOND_LABEL}" = "${BOOT_LABEL}" ]
+		then
+			echo "EFI partition is the second partiton - used for legacy (removable) USB flash drives"
+			echo "updating boot loader config on boot partition"
+			mount_boot_partition "${SECOND_PARTITION}"
+			update_bootloaders
+
+			FS_TYPE="$(get_partition_fstype "${FIRST_PARTITION}")"
+			echo "file system of exchange partiton: ${FS_TYPE}"
+			if [ "${FS_TYPE}" = "vfat" ]
+			then
+				echo "must update bootloader on exchange partition"
+				IMAGE_DIR="$(get_mountpoint "${FIRST_PARTITION}")"
+				if [ -n "${IMAGE_DIR}" ]
+				then
+					echo "exchange partition was already mounted"
+					update_bootloaders
+				else
+					echo "exchange partition was NOT already mounted"
+					IMAGE_DIR="${TMP_MOUNT_DIR}/exchange"
+					mkdir "${IMAGE_DIR}"
+					mount "${FIRST_PARTITION}" "${IMAGE_DIR}" && EXCHANGE_TMP_MOUNT="${IMAGE_DIR}"
+					update_bootloaders
+				fi
+			else
+				echo "no bootloader needed on exchange partition"
+			fi
+
+		else
+			echo "Could not find EFI partition. The system was probably booted from DVD."
+			echo "Exiting..."
+			exit 0
+		fi
 	fi
-fi
+done
+
 
 echo "Done."
