@@ -1,0 +1,23 @@
+#!/bin/sh
+
+PREREQ=""
+prereqs()
+{
+        echo "$PREREQ"
+}
+
+case $1 in
+prereqs)
+        prereqs
+        exit 0
+        ;;
+esac
+
+. /usr/share/initramfs-tools/hook-functions
+
+# See https://wiki.t2linux.org/guides/postinstall/#make-modules-load-on-early-boot
+manual_add_modules snd
+manual_add_modules snd_pcm
+manual_add_modules apple-bce
+
+exit 0
