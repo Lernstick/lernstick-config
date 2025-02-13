@@ -1,5 +1,5 @@
 # Lernstick specific packages
-deb  http://packages.lernstick.ch/lernstick lernstick-12 main contrib non-free
+deb http://packages.lernstick.ch/lernstick lernstick-12 main contrib non-free
 deb-src http://packages.lernstick.ch/lernstick lernstick-12 main contrib non-free
 
 # Backports done by the Lernstick team of other packages
