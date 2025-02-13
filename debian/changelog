@@ -1,3 +1,14 @@
+lernstick-config (157) lernstick-12; urgency=medium
+
+  [ Thore Sommer ]
+  * [e8189f] Changes for enabling ARM repos
+  * [fd6bf0] Include modules in initramfs for T2 macs
+
+  [ Ronny Standtke ]
+  * [77d28e] formatting fix
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Thu, 13 Feb 2025 16:57:05 +0100
+
 lernstick-config (156) lernstick-12; urgency=medium
 
   * [2a8e0a] code cleanup, support for new EFI label
