@@ -1,6 +1,9 @@
 debian/.debhelper/
 debian/debhelper-build-stamp
 debian/files
+debian/lernstick-arm-config/
+debian/lernstick-arm-config.debhelper.log
+debian/lernstick-arm-config.substvars
 debian/lernstick-config/
 debian/lernstick-config.debhelper.log
 debian/lernstick-config.postinst.debhelper
