@@ -1,3 +1,9 @@
+lernstick-config (159) lernstick-12; urgency=medium
+
+  * [25f5bb] added i386 to architectures of backports and thirdparty archives
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Thu, 29 May 2025 19:58:42 +0200
+
 lernstick-config (158) lernstick-12; urgency=medium
 
   * [8e1ff3] re-added (correct) architecture flags to our archives
