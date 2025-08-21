@@ -1,3 +1,9 @@
+lernstick-config (160) lernstick-13; urgency=medium
+
+  * [d3a37b] updated lernstick-desktop for Plasma(X11) in Debian 13
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Thu, 21 Aug 2025 18:04:03 +0200
+
 lernstick-config (159) lernstick-12; urgency=medium
 
   * [25f5bb] added i386 to architectures of backports and thirdparty archives
