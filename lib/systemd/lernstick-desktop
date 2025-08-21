@@ -33,7 +33,7 @@ case "${LERNSTICK_DESKTOP}" in
 		_DISPLAY_MANAGER_SERVICE_FILENAME="sddm"
 		_SESSION_MANAGER="/usr/bin/startplasma-x11"
 		_XSESSION="plasma"
-		sed -i 's/Session=.*/Session=plasma.desktop/' /etc/sddm.conf
+		sed -i 's/Session=.*/Session=/usr/share/xsessions/plasmax11.desktop/' /etc/sddm.conf
 		;;
 
 	gnome)
