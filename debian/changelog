@@ -1,3 +1,9 @@
+lernstick-config (162) lernstick-13; urgency=medium
+
+  * [255476] added lernstick-13 apt sources
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sat, 23 Aug 2025 16:30:25 +0200
+
 lernstick-config (161) lernstick-13; urgency=medium
 
   * [6ec7b8] fixed sed syntax in lernstick-desktop
