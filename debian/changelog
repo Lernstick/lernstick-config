@@ -1,3 +1,9 @@
+lernstick-config (163) lernstick-13; urgency=medium
+
+  * [c9d35e] added more lernstick-13 archives
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 26 Sep 2025 13:33:50 +0200
+
 lernstick-config (162) lernstick-13; urgency=medium
 
   * [255476] added lernstick-13 apt sources
