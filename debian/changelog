@@ -1,3 +1,9 @@
+lernstick-config (164) lernstick-13; urgency=medium
+
+  * [ee95d8] removed lernstick-12 archives
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Fri, 31 Oct 2025 12:35:47 +0100
+
 lernstick-config (163) lernstick-13; urgency=medium
 
   * [c9d35e] added more lernstick-13 archives
