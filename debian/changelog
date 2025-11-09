@@ -1,3 +1,9 @@
+lernstick-config (165) lernstick-13; urgency=medium
+
+  * [c53627] updated default user groups
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sun, 09 Nov 2025 23:33:13 +0100
+
 lernstick-config (164) lernstick-13; urgency=medium
 
   * [ee95d8] removed lernstick-12 archives
