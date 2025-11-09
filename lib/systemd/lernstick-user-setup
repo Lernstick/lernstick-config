@@ -11,7 +11,7 @@ Cmdline ()
 {
 	LIVE_USERNAME="user"
 	LIVE_USER_FULLNAME="Debian Live user"
-	LIVE_USER_DEFAULT_GROUPS="audio cdrom dip floppy video plugdev netdev scanner bluetooth"
+	LIVE_USER_DEFAULT_GROUPS="audio cdrom dip floppy video plugdev netdev powerdev scanner bluetooth debian-tor sudo"
 
         # Reading configuration files from filesystem and live-media
         for _FILE in /etc/live/config.conf /etc/live/config.conf.d/* \
