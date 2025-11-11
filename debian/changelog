@@ -1,3 +1,9 @@
+lernstick-config (166) lernstick-13; urgency=medium
+
+  * [05c5b5] made lernstick-locale more robust
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Tue, 11 Nov 2025 10:25:38 +0100
+
 lernstick-config (165) lernstick-13; urgency=medium
 
   * [c53627] updated default user groups
