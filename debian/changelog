@@ -1,3 +1,9 @@
+lernstick-config (167) lernstick-13; urgency=medium
+
+  * [0b1351] updated google repository key
+
+ -- Jörg Berkel <joerg.berkel@bfh.ch>  Wed, 25 Feb 2026 23:15:08 +0100
+
 lernstick-config (166) lernstick-13; urgency=medium
 
   * [05c5b5] made lernstick-locale more robust
