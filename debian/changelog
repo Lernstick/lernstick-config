@@ -1,3 +1,9 @@
+lernstick-config (168) lernstick-13; urgency=medium
+
+  * [74ee2f] delete more snapshots if free space is low
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sat, 30 May 2026 14:02:03 +0200
+
 lernstick-config (167) lernstick-13; urgency=medium
 
   * [0b1351] updated google repository key
