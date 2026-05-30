@@ -1,7 +1,9 @@
 #!/bin/sh
 
 destination="/snapshots/"
-max_snapshots=3
+desired_snapshots=3
+min_snapshots=1
+min_free_percent=20
 snapshot_type="$1"
 
 # find mounted persistence partition
@@ -32,17 +34,84 @@ echo "mount_point: \"$mount_point\""
 # create new snapshot
 btrfs subvolume snapshot -r "$mount_point" "$destination/$(date '+%F %H:%M:%S') $snapshot_type"
 
-# plain 'ls' is meant for humans, not for scripting, see:
-# https://github.com/koalaman/shellcheck/wiki/SC2012
-safe_ls() {
-	find "$1" -maxdepth 1 ! -path "$1" -name "* $snapshot_type"
-}
-
 # exit immediately if deleting subvolume failes
 # (might happen if snapshot to be deleted is still processed in an incremental send/receive backup run)
 set -e
 
-# delete oldest snapshots
-while [ "$(safe_ls "$destination" | wc -l)" -gt $max_snapshots ] ; do
-	btrfs subvolume delete "$(safe_ls "$destination" | sort | head -1)"
+all_snapshot_types() {
+    find "$destination" -maxdepth 1 -mindepth 1 -printf '%f\n' |
+    awk '
+        {
+            # last field = type
+            print $NF
+        }
+    ' |
+    grep -v '^manually$' |
+    sort -u
+}
+
+snapshot_count_for_type() {
+    type="$1"
+    find "$destination" -maxdepth 1 -mindepth 1 -name "* $type" | wc -l
+}
+
+oldest_snapshot_for_type() {
+    type="$1"
+
+    find "$destination" -maxdepth 1 -mindepth 1 -name "* $type" -printf '%f\n' |
+    sort |
+    head -n 1 |
+    while IFS= read -r name; do
+        printf '%s/%s\n' "$destination" "$name"
+    done
+}
+
+free_percent() {
+    LC_ALL=C btrfs filesystem usage -b "$mount_point" |
+    awk '
+        /^[[:space:]]*Device size:/        { size=$3 }
+        /^[[:space:]]*Free \(estimated\):/ { free=$3 }
+        END {
+            if (size > 0)
+                printf "%.0f\n", free * 100 / size
+            else
+                print 0
+        }
+    '
+}
+
+delete_oldest_snapshot_for_type() {
+    type="$1"
+    oldest="$(oldest_snapshot_for_type "$type")"
+    [ -n "$oldest" ] || return 1
+
+    echo "Deleting snapshot: $oldest"
+    btrfs subvolume delete "$oldest"
+    btrfs subvolume sync "$mount_point"
+}
+
+while [ "$desired_snapshots" -ge "$min_snapshots" ]
+do
+    all_snapshot_types |
+    while IFS= read -r type
+    do
+        while [ "$(snapshot_count_for_type "$type")" -gt "$desired_snapshots" ]
+        do
+            delete_oldest_snapshot_for_type "$type"
+        done
+    done
+
+    free="$(free_percent)"
+    echo "Free space (estimated): ${free}%"
+
+    [ "$free" -ge "$min_free_percent" ] && break
+
+    echo "Low space → reducing snapshot target to $((desired_snapshots - 1))"
+    desired_snapshots=$((desired_snapshots - 1))
 done
+
+free="$(free_percent)"
+if [ "$free" -lt "$min_free_percent" ]; then
+    echo "WARNING: Still below ${min_free_percent}% free space."
+    echo "Manual snapshots are preserved and not deleted automatically."
+fi
