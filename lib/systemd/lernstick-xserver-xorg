@@ -16,6 +16,16 @@ rm -f ${DEBCONF_FILE}
 # drivers
 DUALCARD="^10DE"
 
+Get_nvidia_ids ()
+{
+       [ -f /usr/lib/nvidia/current/nvidia.ids ] &&
+                echo "/usr/lib/nvidia/current/nvidia.ids"
+
+        find /usr/lib/nvidia/legacy-* \
+                -name nvidia.ids \
+		-type f 2>/dev/null | sort -V -r
+}
+
 Detect_xorg_driver ()
 {
 	# Side-effect: Sets _NVIDIA_VERSION if an NVIDIA card is detected
@@ -30,6 +40,22 @@ Detect_xorg_driver ()
 
 	# search for class 0300 ("VGA compatible controller")
 	_DEVICES="$(lspci -mn | awk '$2 == "\"0300\"" { gsub ("\"",""); print toupper($3$4) }' | uniq)"
+
+	# set NVIDIA_VERSION early, so that the correct NVIDIA driver is assembled later in the boot process,
+	# even when we are using a different driver for the xserver for now
+	case "${_DEVICE}" in
+		10DE*|12D2*)
+			for _NVIDIA_IDS in $(Get_nvidia_ids)
+			do
+				if grep -qs "${_DEVICE}" "${_NVIDIA_IDS}"
+				then
+					_NVIDIA_VERSION="$(basename "$(dirname "${_NVIDIA_IDS}")")"
+					systemctl set-environment NVIDIA_VERSION="nvidia-${_NVIDIA_VERSION}"
+					break
+				fi
+			done
+			;;
+	esac
 
 	# Using anything other than native xorg drivers has (so far) failed on most systems
         # with several different display controllers. DUALCARD is a regex of PCI IDs which support
@@ -81,21 +107,9 @@ Detect_xorg_driver ()
 	fi
 
 	# xorg-driver automatic override for nvidia
-	if echo "${_DEVICE}" | grep -qs -E '^(10DE|12D2)'
-	then
-		for _NVIDIA_IDS in /usr/lib/nvidia/current/nvidia.ids $(ls /usr/lib/nvidia/legacy-*/nvidia.ids | sort -V -r)
-		do
-			if [ -e "${_NVIDIA_IDS}" ]
-			then
-				if grep -qs "${_DEVICE}" "${_NVIDIA_IDS}"
-				then
-					_NVIDIA_VERSION="$(basename "$(dirname "${_NVIDIA_IDS}")")"
-					systemctl set-environment NVIDIA_VERSION=nvidia-"${_NVIDIA_VERSION}"
-					LIVE_XORG_DRIVER="nvidia"
-					return
-				fi
-			fi
-		done
+	if [ -n "${_NVIDIA_VERSION}" ]; then
+		LIVE_XORG_DRIVER="nvidia"
+		return
 	fi
 
 	# fall back to xorg autoconfiguration
