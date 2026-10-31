@@ -1,3 +1,9 @@
+lernstick-config (169) lernstick-13; urgency=medium
+
+  * [79038f] assemble NVIDIA driver also when using a different driver for the main GPU
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sat, 31 Oct 2026 18:12:59 +0100
+
 lernstick-config (168) lernstick-13; urgency=medium
 
   * [74ee2f] delete more snapshots if free space is low
