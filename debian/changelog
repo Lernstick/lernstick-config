@@ -1,3 +1,9 @@
+lernstick-config (170) lernstick-13; urgency=medium
+
+  * [745e99] added missing for loop, code cleanup
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sat, 31 Oct 2026 18:50:13 +0100
+
 lernstick-config (169) lernstick-13; urgency=medium
 
   * [79038f] assemble NVIDIA driver also when using a different driver for the main GPU
